@@ -23,6 +23,7 @@
 #include <QMenu>
 #include <QResource>
 #include <QDebug>
+#include <QFileDialog>
 
 #include <coreplugin/icore.h>
 #include <coreplugin/icontext.h>
@@ -34,6 +35,7 @@
 #include <coreplugin/fileiconprovider.h>
 #include <projectexplorer/devicesupport/devicemanager.h>
 #include <projectexplorer/kitmanager.h>
+#include <projectexplorer/session.h>
 
 #include "constants.hh"
 #include "freeboxplugin.hh"
@@ -44,6 +46,7 @@
 #include "wizard.hh"
 #include "devicefactory.hh"
 #include "device.hh"
+#include "freestorepackager.hh"
 
 namespace Freebox {
 namespace Internal {
@@ -91,6 +94,31 @@ bool FreeboxPlugin::initialize(const QStringList &arguments, QString *errorStrin
 
     Core::FileIconProvider::registerIconOverlayForSuffix(":/freebox/images/qmlproject.png",
                                                          "fbxproject");
+
+    m_actionMakePackage = new QAction(tr("Make FreeStore &Package"), this);
+    m_actionMakePackage->setEnabled(false);
+    Core::Command *cmd = Core::ActionManager::registerAction(m_actionMakePackage, Constants::MAKE_PACKAGE_ACTION_ID,
+                                                             Core::Context(Core::Constants::C_GLOBAL));
+    cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+P")));
+    connect(m_actionMakePackage, SIGNAL(triggered()), this, SLOT(makeFreeStorePackageAction()));
+
+    m_actionMakePackageAs = new QAction(tr("Make FreeStore &Package As..."), this);
+    m_actionMakePackageAs->setEnabled(false);
+    Core::Command *cmdAs = Core::ActionManager::registerAction(m_actionMakePackageAs, Constants::MAKE_PACKAGE_AS_ACTION_ID,
+                                                               Core::Context(Core::Constants::C_GLOBAL));
+    cmdAs->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Shift+P")));
+    connect(m_actionMakePackageAs, SIGNAL(triggered()), this, SLOT(makeFreeStorePackageAsAction()));
+
+    Core::ActionContainer *menu = Core::ActionManager::createMenu(Constants::MENU_ID);
+    menu->menu()->setTitle(tr("&Freebox SDK"));
+    menu->addAction(cmd);
+    menu->addAction(cmdAs);
+    Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
+
+    connect(ProjectExplorer::SessionManager::instance(),
+            SIGNAL(startupProjectChanged(ProjectExplorer::Project*)),
+            SLOT(onCurrentProjectChanged(ProjectExplorer::Project*)));
+
     return true;
 }
 
@@ -105,12 +133,65 @@ ExtensionSystem::IPlugin::ShutdownFlag FreeboxPlugin::aboutToShutdown()
 {
     // Save settings
     // Disconnect from signals that are not needed during shutdown
+    disconnect(ProjectExplorer::SessionManager::instance(), 0, this, 0);
     // Hide UI (if you add UI that is not in the main window directly)
     return SynchronousShutdown;
+}
+
+void FreeboxPlugin::onCurrentProjectChanged(ProjectExplorer::Project *project)
+{
+    bool enabled = project ? (typeid(*project) == typeid(Freebox::Project)) : false;
+
+    m_actionMakePackage->setEnabled(enabled);
+    m_actionMakePackageAs->setEnabled(enabled);
+}
+
+void FreeboxPlugin::makeFreeStorePackageAction()
+{
+    makeFreeStorePackage(false);
+}
+
+void FreeboxPlugin::makeFreeStorePackageAsAction()
+{
+    makeFreeStorePackage(true);
+}
+
+void FreeboxPlugin::makeFreeStorePackage(bool saveAs)
+{
+    ProjectExplorer::Project *project = ProjectExplorer::SessionManager::startupProject();
+
+    QTC_ASSERT(project && (typeid(*project) == typeid(Freebox::Project)), return); // just in case
+
+    Freebox::Project *fbxProject = qobject_cast<Freebox::Project *>(project);
+
+    QString packageFileName = fbxProject->packageFileName();
+
+    if (packageFileName.isEmpty())
+        fbxProject->setPackageFileName(packageFileName = fbxProject->projectDir().canonicalPath() + QString::fromAscii(".tgz"));
+
+    if (saveAs) {
+        QString outFileName =
+            QFileDialog::getSaveFileName(Core::ICore::mainWindow(),
+                                         tr("Make FreeStore Package"),
+                                         packageFileName,
+                                         tr("Gzip compressed tar files (*.tgz *.tar.gz)"));
+        if (outFileName.isEmpty())
+            return;
+
+        fbxProject->setPackageFileName(packageFileName = outFileName);
+    }
+
+    Freebox::Internal::FreeStorePackager packager(fbxProject, packageFileName);
+    if (packager()) {
+        QMessageBox::information(Core::ICore::mainWindow(),
+                                 tr("Make FreeStore Package Successful"),
+                                 tr("FreeStore package for project %1 done in '%2'.")
+                                 .arg(fbxProject->displayName())
+                                 .arg(packager.outFileName()));
+    }
 }
 
 } // namespace Internal
 } // namespace Freebox
 
 Q_EXPORT_PLUGIN2(Freebox, FreeboxPlugin)
-

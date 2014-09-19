@@ -79,6 +79,8 @@ public:
     void refreshProjectFile();
     bool supportsKit(ProjectExplorer::Kit *k, QString *errorMessage) const;
     Fileformat::Manifest &manifest() { return m_manifest; }
+    QString packageFileName() { return m_packageFileName; }
+    void setPackageFileName(QString fn) { m_packageFileName = fn; }
 
 private slots:
     void refreshFiles(const QSet<QString> &added, const QSet<QString> &removed);
@@ -96,6 +98,7 @@ private:
     Internal::Node *m_rootNode;
     Internal::Manager *m_manager;
     QString m_fileName;
+    QString m_packageFileName;
     QString m_projectName;
     Internal::File *m_file;
     QStringList m_files;

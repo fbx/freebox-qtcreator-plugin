@@ -37,6 +37,8 @@ public:
     virtual const char *message() const = 0;
 };
 
+#ifdef __GNUC__
+
 template<unsigned int Code, const char *Name>
 class Response : public IResponse
 {
@@ -51,6 +53,27 @@ typedef Response<400, Constants::BAD_REQUEST>           BadRequest;
 typedef Response<404, Constants::NOT_FOUND>             NotFound;
 typedef Response<500, Constants::INTERNAL_SERVER_ERROR> InternalServerError;
 } // namespace Reply
+
+#else // workaround msvc2010 not being c++11 compliant
+
+namespace Reply {
+
+#define DECLARE_RESPONSE(Value, Code, Name) \
+    class Value : public IResponse \
+    { \
+    public: \
+        unsigned int code() const { return Code; } \
+        const char *message() const { return Name; } \
+    }
+
+DECLARE_RESPONSE(Ok, 200, HTTP_CONSTANT_OK);
+DECLARE_RESPONSE(BadRequest, 400, HTTP_CONSTANT_BAD_REQUEST);
+DECLARE_RESPONSE(NotFound, 404, HTTP_CONSTANT_NOT_FOUND);
+DECLARE_RESPONSE(InternalServerError, 500, HTTP_CONSTANT_INTERNAL_SERVER_ERROR);
+
+} // namespace Reply
+
+#endif // __GNUC__
 
 class Method
 {

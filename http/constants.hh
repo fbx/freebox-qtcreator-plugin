@@ -20,6 +20,8 @@
 #ifndef CONSTANTS_HH_
 # define CONSTANTS_HH_
 
+#ifdef __GNUC__
+
 namespace Freebox {
 namespace Http {
 namespace Constants {
@@ -32,5 +34,14 @@ constexpr const char INTERNAL_SERVER_ERROR[] = "Internal server error";
 } // namespace Constants
 } // namespace Http
 } // namespace Freebox
+
+#else // workaround msvc2010 not being c++11 compliant
+
+#define HTTP_CONSTANT_OK "OK"
+#define HTTP_CONSTANT_BAD_REQUEST  "Bad request";
+#define HTTP_CONSTANT_NOT_FOUND "Not found";
+#define HTTP_CONSTANT_INTERNAL_SERVER_ERROR "Internal server error";
+
+#endif // __GNUC__
 
 #endif // !CONSTANTS_HH_

@@ -20,9 +20,14 @@
 #ifndef MANIFEST_HH_
 # define MANIFEST_HH_
 
-# include <QFile>
+# include <QObject>
 # include <QJsonDocument>
+# include <QJsonObject>
 # include <QJsonValue>
+# include <QJsonArray>
+
+#define MAN_ASSERT(cond, action) if (cond) {} else { action; } do {} while (0)
+#define MAN_ASSERT_ERR(cond, action, error) MAN_ASSERT(cond, { m_lastError = error; action; })
 
 namespace Freebox {
 namespace Fileformat {
@@ -30,8 +35,9 @@ namespace Fileformat {
 class Manifest
 {
 public:
-    Manifest();
+    Manifest() { m_isValid = false; }
     Manifest(const QString &file);
+    Manifest(const QJsonDocument &jsonDoc);
 
     QString name() const;
     QString identifier() const;
@@ -39,15 +45,55 @@ public:
     QStringList entryPoints() const;
     QString entryPointFile(const QString &entry) const;
 
-    bool isValid() const;
+    QStringList &files() { return m_files; }
+    QString &defaultEntryPoint() { return m_defaultEntryPoint; }
+
+    bool isValid() { return m_isValid; }
+    QString &lastError() { return m_lastError; }
 
 private:
-    void read();
-    QJsonValue value(const QString &name) const;
-    QString stringValue(const QString &name) const;
+    bool read();
+    QJsonValue value(const QString &name, const QJsonObject &obj) const;
+    QJsonValue value(const QString &name) const { return value(name, m_obj); }
+
+    bool isStringValue(const QString &name, const QJsonObject &obj) const;
+    bool isStringValue(const QString &name) const { return isStringValue(name, m_obj); }
+
+    QString stringValue(const QString &name, const QJsonObject &obj) const;
+    QString stringValue(const QString &name) const { return stringValue(name, m_obj); }
+
+    bool isNumberValue(const QString &name, const QJsonObject &obj) const;
+    bool isNumberValue(const QString &name) const { return isNumberValue(name, m_obj); }
+
+    int intValue(const QString &name, const QJsonObject &obj) const;
+    int intValue(const QString &name) const { return intValue(name, m_obj); }
+
+    QJsonObject objectValue(const QString &name, const QJsonObject &obj) const;
+    QJsonObject objectValue(const QString &name) const { return objectValue(name, m_obj); }
+
+    bool entryPointsIsValid() const;
+    bool entryPointsValueIsValid(const QString &entry) const;
+    bool isEntryPointsFileValid(const QString &entry) const;
+    QString entryPointsFile(const QString &entry) const;
+    bool isEntryPointsUrlHandlerValid(const QString &entry) const;
+    QJsonArray entryPointsUrlHandler(const QString &entry) const;
+    QString getString(const QString &key) const;
+    bool checkRequiredProperty(QJsonObject &obj, const QString &key, const QString &where);
+    bool checkNumberProperty(QJsonObject &obj, const QString &key, int min, int max, const QString &where);
+    bool checkRegExpProperty(QJsonObject &obj, QString &key, QString &where);
+    bool checkStringProperty(QJsonObject &obj, const QString &key, const QString &regExp, const QString &where);
+    bool check();
 
     QString m_filename;
     QJsonDocument m_json;
+    QJsonObject m_obj;
+
+    QString m_lastError;
+    bool m_isValid;
+    int m_nbDefaults;
+
+    QString m_defaultEntryPoint;
+    QStringList m_files;
 };
 
 } // namespace Fileformat

@@ -36,6 +36,10 @@ const char FBXPROJECT_MIMETYPE[] = "application/x-fbxproject";
 const char FBX_VIEWER_ARGUMENTS_KEY[] = "FbxProjectManager.RunConfiguration.QDeclarativeViewerArguments";
 const char FBX_MAINSCRIPT_KEY[] = "FbxProjectManager.RunConfiguration.MainScript";
 
+const char MAKE_PACKAGE_ACTION_ID[] = "Freebox.MakePackageAction";
+const char MAKE_PACKAGE_AS_ACTION_ID[] = "Freebox.MakePackageAsAction";
+const char MENU_ID[] = "Freebox.Menu";
+
 } // namespace Freebox
 } // namespace Constants
 

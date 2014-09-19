@@ -7,9 +7,13 @@ isEmpty(QTCREATOR_SOURCES):error(QTC_SOURCE env variable not defined)
 isEmpty(IDE_BUILD_TREE):error(QTC_BUILD env variable not defined)
 USE_USER_DESTDIR = yes
 
+win32 {
+    DEFINES += uint16_t=quint16
+}
+
 # Sources
 
-INCLUDEPATH += src
+INCLUDEPATH += src .
 
 SOURCES += \
     src/analyzer.cc \
@@ -21,9 +25,9 @@ SOURCES += \
     src/environment.cc \
     src/file.cc \
     src/freeboxplugin.cc \
+    src/freestorepackager.cc \
     src/localrunconfiguration.cc \
     src/manager.cc \
-    src/manifest.cc \
     src/node.cc \
     src/processsignaloperation.cc \
     src/project.cc \
@@ -32,6 +36,7 @@ SOURCES += \
     src/runconfigurationwidget.cc \
     src/runcontrol.cc \
     src/runcontrolfactory.cc \
+    src/tar.cc \
     src/wizard.cc \
     src/wizardpages.cc \
     ssdp/ssdpclient.cc \
@@ -39,10 +44,13 @@ SOURCES += \
     ssdp/ssdpsearch.cc \
     ssdp/udplistener.cc \
     ssdp/udpsocket.cc \
+    util/crc32.c \
+    util/gzipper.cc \
     util/jsonrpc.cc \
     fileformat/filefilteritems.cc \
     fileformat/qmlprojectfileformat.cpp \
     fileformat/qmlprojectitem.cpp \
+    fileformat/manifest.cc \
     remote/remoteqml.cc \
     http/client.cc \
     http/http.cc \
@@ -60,9 +68,9 @@ HEADERS += \
     src/file.hh \
     src/freebox_global.hh \
     src/freeboxplugin.hh \
+    src/freestorepackager.hh \
     src/localrunconfiguration.hh \
     src/manager.hh \
-    src/manifest.hh \
     src/node.hh \
     src/processsignaloperation.hh \
     src/project.hh \
@@ -71,6 +79,7 @@ HEADERS += \
     src/runconfigurationwidget.hh \
     src/runcontrol.hh \
     src/runcontrolfactory.hh \
+    src/tar.hh \
     src/wizard.hh \
     src/wizardpages.hh \
     ssdp/ssdpclient.hh \
@@ -86,12 +95,15 @@ HEADERS += \
     http/server.hh \
     remote/remoteconstants.hh \
     remote/remoteqml.hh \
+    util/crc32.h \
+    util/gzipper.hh \
     util/jsonrpc.hh \
     fileformat/filefilteritems.hh \
     fileformat/qmlprojectfileformat.hh \
-    fileformat/qmlprojectitem.hh
+    fileformat/qmlprojectitem.hh \
+    fileformat/manifest.hh
 
-DEFINES += FBXQML_LIBRARY
+DEFINES += FREEBOX_LIBRARY
 
 # Qt Creator linking
 
@@ -114,4 +126,3 @@ RESOURCES += freebox.qrc
 include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
 
 OTHER_FILES += Freebox.json
-

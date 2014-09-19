@@ -1,0 +1,29 @@
+#ifndef TAR_H
+#define TAR_H
+
+#include <QObject>
+#include "freestorepackager.hh"
+
+class QFileInfo;
+class QByteArray;
+
+namespace Freebox {
+namespace Internal {
+
+class Tar : public QObject
+{
+    Q_OBJECT
+
+public:
+    Tar() {}
+    QByteArray package(QMap<int, FreeStorePackageFile> packages);
+
+private:
+    bool addFile(QByteArray &ba, const FreeStorePackageFile &pf);
+    QByteArray entryHeader(const FreeStorePackageFile &pf);
+};
+
+} // namespace Internal
+} // namespace Freebox
+
+#endif // TAR_H

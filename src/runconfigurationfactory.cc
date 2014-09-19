@@ -65,14 +65,14 @@ RunConfigurationFactory::availableCreationIds(ProjectExplorer::Target *parent,
 }
 
 QString
-RunConfigurationFactory::displayNameForId(const Core::Id id) const
+RunConfigurationFactory::displayNameForId(Core::Id id) const
 {
     return QString::fromUtf8(id.name());
 }
 
 bool
 RunConfigurationFactory::canCreate(ProjectExplorer::Target *parent,
-                                   const Core::Id id) const
+                                   Core::Id id) const
 {
     Q_UNUSED(id);
 
@@ -130,7 +130,7 @@ RunConfigurationFactory::clone(ProjectExplorer::Target *parent,
 
 ProjectExplorer::RunConfiguration *
 RunConfigurationFactory::doCreate(ProjectExplorer::Target *parent,
-                                  const Core::Id id)
+                                  Core::Id id)
 {
     Core::Id deviceTypeId =
             ProjectExplorer::DeviceTypeKitInformation::deviceTypeId(parent->kit());

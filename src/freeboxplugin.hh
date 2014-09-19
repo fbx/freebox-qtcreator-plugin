@@ -20,7 +20,9 @@
 #ifndef FREEBOX_H
 #define FREEBOX_H
 
+#include <QAction>
 #include <extensionsystem/iplugin.h>
+#include <projectexplorer/projectexplorer.h>
 
 #include "freebox_global.hh"
 
@@ -39,10 +41,20 @@ public:
     bool initialize(const QStringList &arguments, QString *errorString);
     void extensionsInitialized();
     ShutdownFlag aboutToShutdown();
+private slots:
+    void makeFreeStorePackageAsAction();
+    void makeFreeStorePackageAction();
+    void onCurrentProjectChanged(ProjectExplorer::Project *project);
+
+private:
+    void makeFreeStorePackage(bool saveAs);
+
+    QAction *m_actionMakePackage;
+    QAction *m_actionMakePackageAs;
+    QString m_outFileName;
 };
 
 } // namespace Internal
 } // namespace Freebox
 
 #endif // FREEBOX_H
-

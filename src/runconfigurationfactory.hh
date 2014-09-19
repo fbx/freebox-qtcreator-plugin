@@ -33,10 +33,10 @@ public:
 
     QList<Core::Id> availableCreationIds(ProjectExplorer::Target *parent,
             ProjectExplorer::IRunConfigurationFactory::CreationMode mode = UserCreate) const;
-    QString displayNameForId(const Core::Id id) const;
+    QString displayNameForId(Core::Id id) const;
 
     bool canHandle(ProjectExplorer::Target *parent) const;
-    bool canCreate(ProjectExplorer::Target *parent, const Core::Id id) const;
+    bool canCreate(ProjectExplorer::Target *parent, Core::Id id) const;
     bool canRestore(ProjectExplorer::Target *parent, const QVariantMap &map) const;
     bool canClone(ProjectExplorer::Target *parent,
                   ProjectExplorer::RunConfiguration *source) const;
@@ -46,7 +46,7 @@ public:
 private:
 
     ProjectExplorer::RunConfiguration *doCreate(ProjectExplorer::Target *parent,
-                                                const Core::Id id);
+                                                Core::Id id);
     ProjectExplorer::RunConfiguration *doRestore(ProjectExplorer::Target *parent,
                                                  const QVariantMap &map);
 };
