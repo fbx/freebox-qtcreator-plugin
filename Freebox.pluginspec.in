@@ -3,8 +3,8 @@
     <copyright>(C) Freebox 2014</copyright>
     <license>LGPL-2.1</license>
     <description>Support plugin for Freebox Player QML Application development</description>
-    <url>http://dev.freebox.fr/sdk/</url>
     <category>Device Support</category>
+    <url>http://dev.freebox.fr/sdk/</url>
     $$dependencyList
 </plugin>
 
