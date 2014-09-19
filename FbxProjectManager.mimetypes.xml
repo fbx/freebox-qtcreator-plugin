@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
+  <mime-type type="application/x-fbxproject">
+    <sub-class-of type="application/x-qml"/>
+    <comment>Freebox Project file</comment>
+    <glob pattern="*.fbxproject"/>
+  </mime-type>
+</mime-info>

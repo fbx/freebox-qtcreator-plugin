@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template openeditor="main.qml" priority="C"
+    featuresRequired="QtSupport.Wizards.FeatureQtQuickProject, QtSupport.Wizards.FeatureQtQuick.2.2">
+    <displayname>Minimal project</displayname>
+    <description>
+      This is a minimal project with a single view.
+    </description>
+</template>

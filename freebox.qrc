@@ -1,0 +1,24 @@
+<RCC>
+	<qresource prefix="/freebox">
+		<file>FbxProjectManager.mimetypes.xml</file>
+        <file>templates/qml/01-hello/main.fbxproject</file>
+        <file>templates/qml/01-hello/main.qml</file>
+        <file>templates/qml/01-hello/manifest.json</file>
+        <file>templates/qml/01-hello/template.xml</file>
+        <file>templates/qml/02-stack/main.fbxproject</file>
+        <file>templates/qml/02-stack/main.qml</file>
+        <file>templates/qml/02-stack/manifest.json</file>
+        <file>templates/qml/02-stack/pages/page0.qml</file>
+        <file>templates/qml/02-stack/pages/page1.qml</file>
+        <file>templates/qml/02-stack/template.xml</file>
+        <file>templates/qml/05-settings/main.fbxproject</file>
+        <file>templates/qml/05-settings/main.qml</file>
+        <file>templates/qml/05-settings/manifest.json</file>
+        <file>templates/qml/05-settings/settings/login.qml</file>
+        <file>templates/qml/05-settings/settings/main.qml</file>
+        <file>templates/qml/05-settings/settings.qml</file>
+        <file>templates/qml/05-settings/template.xml</file>
+		<file>images/qmlfolder.png</file>
+		<file>images/qmlproject.png</file>
+	</qresource>
+</RCC>

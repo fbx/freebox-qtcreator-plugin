@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template openeditor="settings.qml" priority="C"
+    featuresRequired="QtSupport.Wizards.FeatureQtQuickProject, QtSupport.Wizards.FeatureQtQuick.2.2">
+    <displayname>Settings entry point</displayname>
+    <description>
+      Creates a Freebox project two entry points, one for the main app
+      behavior, and another for user settings.
+    </description>
+</template>

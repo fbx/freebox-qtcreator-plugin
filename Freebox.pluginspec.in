@@ -1,0 +1,10 @@
+<plugin name=\"Freebox\" version=\"0.9.0\" compatVersion=\"0.9.0\">
+    <vendor>Freebox SAS</vendor>
+    <copyright>(C) Freebox 2014</copyright>
+    <license>LGPL-2.1</license>
+    <description>Support plugin for Freebox Player QML Application development</description>
+    <url>http://dev.freebox.fr/sdk/</url>
+    <category>Device Support</category>
+    $$dependencyList
+</plugin>
+
