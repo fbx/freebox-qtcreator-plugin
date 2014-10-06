@@ -43,17 +43,17 @@ public slots:
     virtual StopResult stop();
 
 signals:
-    void remoteStarted(uint16_t port);
+    void remoteStarted(quint16 port);
     void remoteStopped();
 
 private slots:
-    void emitRemoteStarted(uint16_t port,
-                           uint16_t out,
-                           uint16_t err);
+    void emitRemoteStarted(quint16 port,
+                           quint16 out,
+                           quint16 err);
     void emitRemoteFailed(const QString &err);
     void emitRemoteStopped();
 
-    void linkOutput(uint16_t out, uint16_t err);
+    void linkOutput(quint16 out, quint16 err);
     void unlinkOutput();
     void readOutput();
 

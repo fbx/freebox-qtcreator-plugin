@@ -7,7 +7,7 @@ extern "C" {
 # include "crc32.h"
 }
 
-using namespace Freebox;
+namespace Freebox {
 
 QByteArray Gzipper::gzip(QByteArray &ba)
 {
@@ -40,3 +40,5 @@ quint32 Gzipper::CRC32(const QByteArray& data)
 {
     return crc32(~0, (const unsigned char *) data.constData(), data.size()) ^ ~0;
 }
+
+} // namespace Freebox

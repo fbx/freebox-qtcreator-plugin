@@ -40,15 +40,15 @@ public:
     explicit QmlRemote(QObject *parent = 0);
     virtual ~QmlRemote();
 
-    void start(const QString &entry, uint16_t port, bool wait = false);
+    void start(const QString &entry, quint16 port, bool wait = false);
 
     void setAddress(const QHostAddress &addr);
     const QHostAddress &address() const;
 
 signals:
-    void started(uint16_t port,
-                 uint16_t out,
-                 uint16_t err);
+    void started(quint16 port,
+                 quint16 out,
+                 quint16 err);
     void failed(const QString &err);
     void stopped();
 

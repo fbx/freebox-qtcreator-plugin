@@ -1,4 +1,4 @@
-<plugin name=\"Freebox\" version=\"0.9.0\" compatVersion=\"0.9.0\">
+<plugin name=\"Freebox\" version=\"0.9.1\" compatVersion=\"0.9.0\">
     <vendor>Freebox SAS</vendor>
     <copyright>(C) Freebox 2014</copyright>
     <license>LGPL-2.1</license>

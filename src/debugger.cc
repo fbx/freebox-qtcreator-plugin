@@ -35,8 +35,8 @@ DebuggerRunControl::DebuggerRunControl(Debugger::DebuggerRunControl *runControl)
     connect(mRunControl, SIGNAL(finished()), SLOT(remoteStop()));
     connect(mRunControl, SIGNAL(started()), SLOT(remoteStart()));
     connect(this,
-            SIGNAL(remoteStarted(uint16_t)),
-            SLOT(remoteSetupDone(uint16_t)));
+            SIGNAL(remoteStarted(quint16)),
+            SLOT(remoteSetupDone(quint16)));
     connect(this, SIGNAL(appendMessage(ProjectExplorer::RunControl *,
                                        const QString &,
                                        Utils::OutputFormat)),
@@ -64,7 +64,7 @@ void DebuggerRunControl::remoteStop()
     stop();
 }
 
-void DebuggerRunControl::remoteSetupDone(uint16_t port)
+void DebuggerRunControl::remoteSetupDone(quint16 port)
 {
     mRunControl->engine()->notifyEngineRemoteSetupDone(-1, port);
 }

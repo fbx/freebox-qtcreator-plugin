@@ -82,7 +82,7 @@ void QmlRemote::startDone(const QJsonValue &rep)
     mCurrent = 0;
 }
 
-void QmlRemote::start(const QString &entry, uint16_t port, bool wait)
+void QmlRemote::start(const QString &entry, quint16 port, bool wait)
 {
     if (mStarting)
         return;

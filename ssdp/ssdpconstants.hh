@@ -27,7 +27,7 @@ namespace Ssdp {
 namespace Constants {
 
 const char ADDR4[] = "239.255.255.250";
-const uint16_t PORT = 1900;
+const quint16 PORT = 1900;
 
 } // namespace Constants
 } // namespace SSDP

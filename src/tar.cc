@@ -7,8 +7,8 @@
 #include "util/gzipper.hh"
 #include "freestorepackager.hh"
 
-using namespace Freebox;
-using namespace Internal;
+namespace Freebox {
+namespace Internal {
 
 // borrowed from .../qt-creator/src/plugins/remotelinux/tarpackagecreationstep.cpp
 const int tarBlockSize = 512;
@@ -133,3 +133,6 @@ QByteArray Tar::entryHeader(const FreeStorePackageFile &pf)
 
     return finalHeader;
 }
+
+} // namespace Internal
+} // namespace Freebox

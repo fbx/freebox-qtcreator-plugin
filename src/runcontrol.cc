@@ -56,8 +56,8 @@ RunControl::RunControl(ProjectExplorer::RunConfiguration *rc,
     if (project)
         mServer.setPath(project->projectDir().absolutePath());
 
-    connect(&mQmlRemote, SIGNAL(started(uint16_t, uint16_t, uint16_t)),
-            SLOT(emitRemoteStarted(uint16_t, uint16_t, uint16_t)));
+    connect(&mQmlRemote, SIGNAL(started(quint16, quint16, quint16)),
+            SLOT(emitRemoteStarted(quint16, quint16, quint16)));
     connect(&mQmlRemote, SIGNAL(failed(const QString &)),
             SLOT(emitRemoteFailed(const QString &)));
     connect(&mStdout, SIGNAL(readyRead()), SLOT(readOutput()));
@@ -105,9 +105,9 @@ QIcon RunControl::icon() const
     return QIcon();
 }
 
-void RunControl::emitRemoteStarted(uint16_t port,
-                                   uint16_t out,
-                                   uint16_t err)
+void RunControl::emitRemoteStarted(quint16 port,
+                                   quint16 out,
+                                   quint16 err)
 {
     emit remoteStarted(port);
     linkOutput(out, err);
@@ -124,7 +124,7 @@ void RunControl::emitRemoteStopped()
     emit remoteStopped();
 }
 
-void RunControl::linkOutput(uint16_t out, uint16_t err)
+void RunControl::linkOutput(quint16 out, quint16 err)
 {
     mStdout.connectToHost(mAddress, out);
     mStderr.connectToHost(mAddress, err);

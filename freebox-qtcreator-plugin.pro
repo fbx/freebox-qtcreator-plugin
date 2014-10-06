@@ -7,10 +7,6 @@ isEmpty(QTCREATOR_SOURCES):error(QTC_SOURCE env variable not defined)
 isEmpty(IDE_BUILD_TREE):error(QTC_BUILD env variable not defined)
 USE_USER_DESTDIR = yes
 
-win32 {
-    DEFINES += uint16_t=quint16
-}
-
 # Sources
 
 INCLUDEPATH += src .

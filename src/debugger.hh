@@ -43,7 +43,7 @@ private slots:
     void redirectMessage(ProjectExplorer::RunControl *rc,
                          const QString &msg,
                          Utils::OutputFormat format);
-    void remoteSetupDone(uint16_t port);
+    void remoteSetupDone(quint16 port);
     void remoteStart();
     void remoteStop();
 

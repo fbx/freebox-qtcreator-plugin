@@ -12,8 +12,8 @@
 #include "freestorepackager.hh"
 #include "fileformat/manifest.hh"
 
-using namespace Freebox;
-using namespace Freebox::Internal;
+namespace Freebox {
+namespace Internal {
 
 FreeStorePackager::FreeStorePackager(Freebox::Project *fbxProject, QString outFileName)
     : m_project(fbxProject),
@@ -205,3 +205,6 @@ bool FreeStorePackager::operator()()
 
     return true;
 }
+
+} // namespace Internal
+} // namespace Freebox
