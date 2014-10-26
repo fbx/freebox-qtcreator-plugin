@@ -49,7 +49,9 @@ void Client::start(const QString &nt)
 
     foreach(QNetworkInterface iface, QNetworkInterface::allInterfaces()) {
         mListeners << new UdpListener(iface);
-        mSearches << new Search(iface, nt);
+        foreach(QHostAddress addr, iface.allAddresses()) {
+            mSearches << new Search(iface, addr, nt);
+        }
     }
 
     foreach(UdpListener *l, mListeners) {

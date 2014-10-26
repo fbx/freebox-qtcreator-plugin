@@ -31,6 +31,7 @@ class Search : public UdpSocket
 {
 public:
     Search(const QNetworkInterface &iface,
+           const QHostAddress &addr,
            const QString &st,
            QObject *parent = 0);
 

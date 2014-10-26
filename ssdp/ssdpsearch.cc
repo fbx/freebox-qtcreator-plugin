@@ -27,13 +27,14 @@ namespace Freebox {
 namespace Ssdp {
 
 Search::Search(const QNetworkInterface &iface,
+               const QHostAddress &addr,
                const QString &st,
                QObject *parent) :
     UdpSocket(parent),
     mIface(iface),
     mSt(st)
 {
-    if (!bind()) {
+    if (!bind(addr)) {
         qWarning() << "failed bind for SSDP search:" << errorString();
         return;
     }
