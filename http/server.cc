@@ -112,6 +112,7 @@ void Server::methodGet(Client *client,
     }
 
     reply(client, version, Reply::Ok());
+    replyHeader(client, QStringLiteral("Connection: close"), file.size());
     replyHeader(client, QStringLiteral("Content-Length"), file.size());
     replyHeader(client, QStringLiteral("Cache-Control"), QStringLiteral("no-cache"));
     replyHeader(client, QStringLiteral("Pragma"), QStringLiteral("no-cache"));
