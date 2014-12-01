@@ -116,6 +116,7 @@ void Server::methodGet(Client *client,
     replyHeader(client, QStringLiteral("Content-Length"), file.size());
     replyHeader(client, QStringLiteral("Cache-Control"), QStringLiteral("no-cache"));
     replyHeader(client, QStringLiteral("Pragma"), QStringLiteral("no-cache"));
+    replyHeader(client, QStringLiteral("Accept-Ranges"), QStringLiteral("none"));
     replyHeaderEnd(client);
 
     while (!file.atEnd()) {
