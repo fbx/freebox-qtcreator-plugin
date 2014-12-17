@@ -34,7 +34,7 @@ namespace Remote {
 
 static QString makeUrl(const QHostAddress &addr)
 {
-    return QString::fromAscii(Constants::URL).arg(addr.toString());
+    return QString::fromLocal8Bit(Constants::URL).arg(addr.toString());
 }
 
 QmlRemote::QmlRemote(QObject *parent) :
@@ -102,7 +102,7 @@ void QmlRemote::start(const QString &entry, quint16 port, bool wait)
     socket.close();
 
     QJsonObject arg;
-    arg[QStringLiteral("manifest_url")] = QString::fromAscii(Constants::MANIFEST_URL)
+    arg[QStringLiteral("manifest_url")] = QString::fromLocal8Bit(Constants::MANIFEST_URL)
         .arg(me.toString())
         .arg(QString::number(port));
     arg[QStringLiteral("entry_point")] = entry;

@@ -167,7 +167,7 @@ void FreeboxPlugin::makeFreeStorePackage(bool saveAs)
     QString packageFileName = fbxProject->packageFileName();
 
     if (packageFileName.isEmpty())
-        fbxProject->setPackageFileName(packageFileName = fbxProject->projectDir().canonicalPath() + QString::fromAscii(".tgz"));
+        fbxProject->setPackageFileName(packageFileName = fbxProject->projectDir().canonicalPath() + QString::fromLocal8Bit(".tgz"));
 
     if (saveAs) {
         QString outFileName =
@@ -193,5 +193,3 @@ void FreeboxPlugin::makeFreeStorePackage(bool saveAs)
 
 } // namespace Internal
 } // namespace Freebox
-
-Q_EXPORT_PLUGIN2(Freebox, FreeboxPlugin)

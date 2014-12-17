@@ -90,7 +90,7 @@ void FreeboxConfiguration::updateKits()
         QTC_ASSERT(freebox, continue);
 
         Kit *kit = new Kit();
-        kit->setDisplayName(QString::fromAscii("Freebox (") + freebox->address().toString() + QString::fromAscii(")"));
+        kit->setUnexpandedDisplayName(tr("Freebox (%1)").arg(freebox->address().toString()));
         kit->setAutoDetected(true);
         QtSupport::QtKitInformation::setQtVersion(kit, 0);
         DeviceTypeKitInformation::setDeviceTypeId(kit, Core::Id(Constants::FREEBOX_DEVICE_TYPE));
@@ -102,7 +102,7 @@ void FreeboxConfiguration::updateKits()
 
 void FreeboxConfiguration::updateDevices()
 {
-    mSSDPClient->start(QString::fromAscii(Constants::FREEBOX_DEVICE_NT));
+    mSSDPClient->start(QString::fromLocal8Bit(Constants::FREEBOX_DEVICE_NT));
     mSSDPClient->search();
 }
 
@@ -146,7 +146,7 @@ void FreeboxConfiguration::filterMessage(const QHostAddress &addr,
 {
     switch (message.type()) {
     case Ssdp::Message::NOTIFY: {
-        if (message.fieldValue(QStringLiteral("NT")) != QString::fromAscii(Constants::FREEBOX_DEVICE_NT))
+        if (message.fieldValue(QStringLiteral("NT")) != QString::fromLocal8Bit(Constants::FREEBOX_DEVICE_NT))
             return;
 
         QString nts = message.fieldValue(QStringLiteral("NTS"));
@@ -159,7 +159,7 @@ void FreeboxConfiguration::filterMessage(const QHostAddress &addr,
         break;
     }
     case Ssdp::Message::REPLY: {
-        if (message.fieldValue(QStringLiteral("ST")) != QString::fromAscii(Constants::FREEBOX_DEVICE_NT))
+        if (message.fieldValue(QStringLiteral("ST")) != QString::fromLocal8Bit(Constants::FREEBOX_DEVICE_NT))
             return;
 
         QString usn = message.fieldValue(QStringLiteral("USN"));

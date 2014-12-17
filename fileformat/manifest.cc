@@ -41,7 +41,7 @@ Manifest::Manifest(const QJsonDocument &jsonDoc)
     m_json = jsonDoc;
 
     if (!m_json.isObject()) {
-        m_lastError = QString::fromAscii("JSON document root is not an object");
+        m_lastError = QStringLiteral("JSON document root is not an object");
         return;
     }
 

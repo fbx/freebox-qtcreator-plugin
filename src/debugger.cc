@@ -66,7 +66,11 @@ void DebuggerRunControl::remoteStop()
 
 void DebuggerRunControl::remoteSetupDone(quint16 port)
 {
-    mRunControl->engine()->notifyEngineRemoteSetupDone(-1, port);
+    Debugger::RemoteSetupResult result;
+    result.success = true;
+    result.gdbServerPort = -1;
+    result.qmlServerPort = port;
+    mRunControl->engine()->notifyEngineRemoteSetupFinished(result);
 }
 
 } // namespace Freebox

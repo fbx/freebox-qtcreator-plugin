@@ -144,10 +144,10 @@ void RunControl::readOutput()
         QByteArray data = output->readAll();
 
         if (output == &mStdout) {
-            appendMessage(QString::fromAscii(data), Utils::StdOutFormat);
+            appendMessage(QString::fromUtf8(data), Utils::StdOutFormat);
         }
         else if (output == &mStderr) {
-            appendMessage(QString::fromAscii(data), Utils::StdErrFormat);
+            appendMessage(QString::fromUtf8(data), Utils::StdErrFormat);
         }
     }
 }

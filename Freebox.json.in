@@ -1,0 +1,13 @@
+
+{
+    \"Name\" : \"Freebox\",
+    \"Version\" : \"$$QTCREATOR_VERSION\",
+    \"CompatVersion\" : \"$$QTCREATOR_COMPAT_VERSION\",
+    \"Vendor\" : \"Freebox SAS\",
+    \"Copyright\" : \"(C) 2014 Freebox SAS\",
+    \"License\" : \"GNU LGPL 2.1\",
+    \"Category\" : \"Device Support\",
+    \"Description\" : \"Support plugin for Freebox Player QML Application development\",
+    \"Url\" : \"http://dev.freebox.fr/sdk/\",
+    $$dependencyList
+}

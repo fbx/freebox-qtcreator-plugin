@@ -33,7 +33,7 @@ UdpListener::UdpListener(const QNetworkInterface &iface,
     connect(this, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             SLOT(join(QAbstractSocket::SocketState)));
 
-    if (!bind(QHostAddress(QString::fromAscii(Constants::ADDR4)), Constants::PORT,
+    if (!bind(QHostAddress(QLatin1String(Constants::ADDR4)), Constants::PORT,
               QAbstractSocket::ShareAddress |
               QAbstractSocket::ReuseAddressHint)) {
         qWarning() << "failed to bind SSDP socket:" << errorString();
@@ -51,7 +51,7 @@ void UdpListener::join(QAbstractSocket::SocketState state)
         return;
 
     setMulticastInterface(mIface);
-    if (!joinMulticastGroup(QHostAddress(QString::fromAscii(Constants::ADDR4)), mIface))
+    if (!joinMulticastGroup(QHostAddress(QLatin1String(Constants::ADDR4)), mIface))
         qWarning() << "failed to join SSDP multicast address:" << errorString();
 }
 

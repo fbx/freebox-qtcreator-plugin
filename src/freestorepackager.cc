@@ -100,19 +100,19 @@ bool FreeStorePackager::checkPackage()
         if (!pf.toCheck)
             continue;
 
-        QmlJS::Language::Enum language = QmlJS::ModelManagerInterface::guessLanguageOfFile(pf.filePath);
-        QmlJS::Document::MutablePtr doc = QmlJS::Document::create(pf.filePath, language);
+        QmlJS::Dialect dialect = QmlJS::ModelManagerInterface::guessLanguageOfFile(pf.filePath);
+        QmlJS::Document::MutablePtr doc = QmlJS::Document::create(pf.filePath, dialect);
 
         bool checkingError = false;
         QString checkingErrorStr(tr("Syntax Error"));
 
-        if (language == QmlJS::Language::Json) {
+        if (dialect.dialect() == QmlJS::Dialect::Json) {
             QJsonParseError jsError;
             const QJsonDocument jsonDoc = QJsonDocument::fromJson(pf.content, &jsError);
 
             if ((checkingError = jsonDoc.isNull()))
                 checkingErrorStr = jsError.errorString();
-            else if (pf.fileNameRelative == QString::fromAscii("manifest.json")) {
+            else if (pf.fileNameRelative == QLatin1String("manifest.json")) {
                 m_seenManifest = true;
                 Freebox::Fileformat::Manifest man(jsonDoc);
                 if ((checkingError = !man.isValid()))
@@ -132,17 +132,17 @@ bool FreeStorePackager::checkPackage()
                     }
                 }
             }
-        } else if (QmlJS::Document::isFullySupportedLanguage(language)) {
+        } else if (dialect.isFullySupportedLanguage()) {
             doc->setSource(QString::fromUtf8(pf.content));
 
-            switch (language) {
-            case QmlJS::Language::Qml:
-            case QmlJS::Language::QmlQtQuick1:
-            case QmlJS::Language::QmlQtQuick2:
+            switch (dialect.dialect()) {
+            case QmlJS::Dialect::Qml:
+            case QmlJS::Dialect::QmlQtQuick1:
+            case QmlJS::Dialect::QmlQtQuick2:
                 if (!doc->parseQml())
                     checkingError = true;
                 break;
-            case QmlJS::Language::JavaScript:
+            case QmlJS::Dialect::JavaScript:
                 if (!doc->parseJavaScript())
                     checkingError = true;
                 break;

@@ -45,43 +45,6 @@
 
 namespace Freebox {
 
-namespace Internal {
-
-class ProjectKitMatcher : public ProjectExplorer::KitMatcher
-{
-public:
-
-    ProjectKitMatcher() {}
-
-    bool matches(const ProjectExplorer::Kit *k) const
-    {
-        if (!k->isValid())
-            return false;
-
-        ProjectExplorer::IDevice::ConstPtr dev;
-        dev = ProjectExplorer::DeviceKitInformation::device(k);
-        if (dev.isNull())
-            return false;
-
-        if (dev->type() == Constants::FREEBOX_DEVICE_TYPE) {
-            return true;
-        }
-        else if (dev->type() == ProjectExplorer::Constants::DESKTOP_DEVICE_TYPE) {
-            QtSupport::BaseQtVersion *version = QtSupport::QtKitInformation::qtVersion(k);
-            if (!version || version->type() != QLatin1String(QtSupport::Constants::DESKTOPQT))
-                return false;
-
-            if (version->qtVersion() >= QtSupport::QtVersionNumber(5, 0, 0) &&
-                            !version->qmlsceneCommand().isEmpty())
-                return true;
-        }
-
-        return false;
-    }
-};
-
-} // namespace Internal
-
 Project::Project(Internal::Manager *manager, const QString &fileName) :
     m_manager(manager),
     m_fileName(fileName),
@@ -156,17 +119,37 @@ bool Project::updateKit()
     using ProjectExplorer::KitManager;
     using ProjectExplorer::Target;
 
-    // find a kit that matches prerequisites (prefer default one)
-    Internal::ProjectKitMatcher matcher;
-    QList<Kit*> kits;
-
     connect(this, SIGNAL(addedTarget(ProjectExplorer::Target*)),
             SLOT(addedTarget(ProjectExplorer::Target*)));
 
     connect(this, SIGNAL(activeTargetChanged(ProjectExplorer::Target*)),
             SLOT(onActiveTargetChanged(ProjectExplorer::Target*)));
 
-    kits = KitManager::matchingKits(matcher);
+    QList<Kit*> kits = KitManager::matchingKits(
+        std::function<bool(const Kit *)>([this](const Kit *k) -> bool {
+            if (!k->isValid())
+                return false;
+
+            ProjectExplorer::IDevice::ConstPtr dev;
+            dev = ProjectExplorer::DeviceKitInformation::device(k);
+            if (dev.isNull())
+                return false;
+
+            if (dev->type() == Constants::FREEBOX_DEVICE_TYPE) {
+                return true;
+            }
+            else if (dev->type() == ProjectExplorer::Constants::DESKTOP_DEVICE_TYPE) {
+                QtSupport::BaseQtVersion *version = QtSupport::QtKitInformation::qtVersion(k);
+                if (!version || version->type() != QLatin1String(QtSupport::Constants::DESKTOPQT))
+                    return false;
+
+                if (version->qtVersion() >= QtSupport::QtVersionNumber(5, 0, 0) &&
+                                !version->qmlsceneCommand().isEmpty())
+                    return true;
+            }
+
+            return false;
+        }));
 
     foreach(Kit *kit, kits) {
         if (!target(kit)) {
@@ -253,7 +236,7 @@ void Project::parseProject(RefreshOptions options)
         }
 
         m_manifest = Fileformat::Manifest(projectDir().canonicalPath()
-                                          + QString::fromAscii("/manifest.json"));
+                                          + QLatin1String("/manifest.json"));
 
         if (!m_projectItem) {
             QString errorMessage;
@@ -304,8 +287,10 @@ void Project::refresh(RefreshOptions options)
         m_rootNode->refresh();
 
     QmlJS::ModelManagerInterface::ProjectInfo projectInfo =
-            QmlJSTools::defaultProjectInfoForProject(this);
-    projectInfo.importPaths = customImportPaths();
+            m_modelManager->defaultProjectInfoForProject(this);
+    foreach (const QString &searchPath, customImportPaths())
+        projectInfo.importPaths.maybeInsert(Utils::FileName::fromString(searchPath),
+                                            QmlJS::Dialect::Qml);
 
     m_modelManager->updateProjectInfo(projectInfo, this);
 }

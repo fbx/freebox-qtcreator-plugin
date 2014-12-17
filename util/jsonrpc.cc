@@ -41,7 +41,7 @@ JsonRpcRequest::JsonRpcRequest(const QUrl &endpoint,
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
 
     QJsonObject rpc;
-    rpc[QStringLiteral("jsonrpc")] = QString::fromAscii("2.0");
+    rpc[QStringLiteral("jsonrpc")] = QStringLiteral("2.0");
     rpc[QStringLiteral("method")] = method;
     rpc[QStringLiteral("params")] = arg;
     rpc[QStringLiteral("id")] = QString::number(m_id);
@@ -66,14 +66,14 @@ void JsonRpcRequest::replyFinished()
 
     if (root[QStringLiteral("jsonrpc")].toString() != QStringLiteral("2.0")) {
         QJsonObject e;
-        e[QStringLiteral("message")] = QString::fromAscii("Bad JSON RPC version in response");
+        e[QStringLiteral("message")] = QStringLiteral("Bad JSON RPC version in response");
         emit error(e);
         return;
     }
 
     if (root[QStringLiteral("id")] != QString::number(m_id)) {
         QJsonObject e;
-        e[QStringLiteral("message")] = QString::fromAscii("Bad ID in response");
+        e[QStringLiteral("message")] = QStringLiteral("Bad ID in response");
         emit error(e);
         return;
     }

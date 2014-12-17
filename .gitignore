@@ -1,0 +1,7 @@
+Makefile
+*.json
+.moc/
+.obj/
+.pch/
+.rcc/
+.uic/

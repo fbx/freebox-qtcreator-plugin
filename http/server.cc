@@ -89,7 +89,7 @@ void Server::methodGet(Client *client,
 
     qWarning() << "GET" << uri << version;
 
-    if (uri[0] != QChar::fromAscii('/')) {
+    if (uri[0] != QLatin1Char('/')) {
         qWarning("invalid URI");
         return replyError(client, version, Reply::BadRequest());
     }

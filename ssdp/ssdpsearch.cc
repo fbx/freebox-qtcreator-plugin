@@ -57,16 +57,16 @@ void Search::send()
     }
 
     message = QStringLiteral("M-SEARCH * HTTP/1.1\r\n");
-    message += QString::fromAscii("HOST: %1:%2\r\n")
-        .arg(QString::fromAscii(Constants::ADDR4))
+    message += QString::fromLocal8Bit("HOST: %1:%2\r\n")
+        .arg(QLatin1String(Constants::ADDR4))
         .arg(QString::number(Constants::PORT));
     message += QStringLiteral("MAN: \"ssdp:discover\"\r\n");
     message += QStringLiteral("MX: 1\r\n");
-    message += QString::fromAscii("ST: %1\r\n").arg(mSt);
+    message += QString::fromLocal8Bit("ST: %1\r\n").arg(mSt);
     message += QStringLiteral("\r\n");
 
     writeDatagram(message.toLatin1().constData(), message.size(),
-                  QHostAddress(QString::fromAscii(Constants::ADDR4)), Constants::PORT);
+                  QHostAddress(QLatin1String(Constants::ADDR4)), Constants::PORT);
 }
 
 } // namespace Ssdp

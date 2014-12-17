@@ -122,3 +122,5 @@ RESOURCES += freebox.qrc
 include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
 
 OTHER_FILES += Freebox.json
+
+CONFIG += debug

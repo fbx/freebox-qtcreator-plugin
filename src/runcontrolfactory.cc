@@ -20,8 +20,7 @@
 #include <QDebug>
 
 #include <debugger/debuggerstartparameters.h>
-#include <debugger/debuggerrunner.h>
-#include <debugger/debuggerplugin.h>
+#include <debugger/debuggerruncontrol.h>
 #include <debugger/debuggerengine.h>
 #include <analyzerbase/analyzerstartparameters.h>
 #include <analyzerbase/analyzermanager.h>
@@ -98,9 +97,9 @@ RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
         }
 
         Debugger::DebuggerRunControl * const runControl =
-                Debugger::DebuggerPlugin::createDebugger(params,
-                                                         runConfiguration,
-                                                         errorMessage);
+                Debugger::DebuggerRunControlFactory::doCreate(params,
+                                                              runConfiguration,
+                                                              errorMessage);
         if (!runControl)
             return 0;
 

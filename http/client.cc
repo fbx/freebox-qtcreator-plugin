@@ -52,7 +52,7 @@ bool Client::canReadHeader()
 
 void Client::requestHandle(QString request)
 {
-    QStringList headers = request.split(QString::fromAscii(CRLF));
+    QStringList headers = request.split(QString::fromLocal8Bit(CRLF));
     QString line = headers.takeFirst();
 
     mLine.indexIn(line);

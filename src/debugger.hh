@@ -21,7 +21,7 @@
 # define DEBUGGER_HH_
 
 #include <QObject>
-#include <debugger/debuggerrunner.h>
+#include <debugger/debuggerruncontrol.h>
 #include <debugger/debuggerengine.h>
 
 #include "runcontrol.hh"
