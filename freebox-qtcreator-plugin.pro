@@ -5,7 +5,9 @@ QTCREATOR_SOURCES = $$(QTC_SOURCE)
 IDE_BUILD_TREE = $$(QTC_BUILD)
 isEmpty(QTCREATOR_SOURCES):error(QTC_SOURCE env variable not defined)
 isEmpty(IDE_BUILD_TREE):error(QTC_BUILD env variable not defined)
-USE_USER_DESTDIR = yes
+
+# uncomment next line to install in your home dir
+# USE_USER_DESTDIR = yes
 
 # Sources
 
@@ -123,4 +125,4 @@ include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
 
 OTHER_FILES += Freebox.json
 
-CONFIG += debug
+# CONFIG += debug
