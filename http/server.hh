@@ -41,7 +41,7 @@ public:
     explicit Server(QObject *parent = 0);
 
     void incomingConnection(qintptr handle);
-    void setPath(QString path) { mPath.setPath(path); }
+    void setPath(const QString &path) { mPath.setPath(path); }
 
 private slots:
     void readClient();
@@ -51,10 +51,10 @@ private:
     friend class Client;
 
     void methodGet(Client *client,
-                   Method &method,
-                   QString &uri,
-                   Version &version,
-                   QStringList &headers);
+                   const Method &method,
+                   const QString &uri,
+                   const Version &version,
+                   const QStringList &headers);
     void replyError(QTcpSocket *socket,
                     const Version &version,
                     const IResponse &response);
@@ -63,11 +63,11 @@ private:
                const IResponse &response);
 
     void replyHeader(QTcpSocket *socket,
-                     QString name,
+                     const QString &name,
                      unsigned int value);
     void replyHeader(QTcpSocket *socket,
-                     QString name,
-                     QString value);
+                     const QString &name,
+                     const QString &value);
     void replyHeaderEnd(QTcpSocket *socket);
 
     QDir mPath;

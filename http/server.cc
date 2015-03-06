@@ -52,8 +52,8 @@ void Server::reply(QTcpSocket *socket,
 }
 
 void Server::replyHeader(QTcpSocket *socket,
-                         QString name,
-                         QString value)
+                         const QString &name,
+                         const QString &value)
 {
     QTextStream(socket) << name << ": " << value << CRLF;
 }
@@ -73,17 +73,17 @@ void Server::replyError(QTcpSocket *socket,
 }
 
 void Server::replyHeader(QTcpSocket *socket,
-                         QString name,
+                         const QString &name,
                          unsigned int value)
 {
     return replyHeader(socket, name, QString::number(value));
 }
 
 void Server::methodGet(Client *client,
-                       Http::Method &,
-                       QString &uri,
-                       Http::Version &version,
-                       QStringList &headers)
+                       const Http::Method &,
+                       const QString &uri,
+                       const Http::Version &version,
+                       const QStringList &headers)
 {
     Q_UNUSED(headers);
 

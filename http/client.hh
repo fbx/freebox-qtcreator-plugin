@@ -35,13 +35,13 @@ public:
     bool canReadHeader();
 
 signals:
-    void request(QString request);
+    void request(const QString &request);
 
 public slots:
     void bufferedReadAll();
 
 private slots:
-    void requestHandle(QString request);
+    void requestHandle(const QString &request);
 
 private:
     QByteArray mBuffer;

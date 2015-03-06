@@ -28,8 +28,8 @@ Client::Client(QObject *parent) :
     QTcpSocket(parent),
     mLine(QStringLiteral("(\\w+)\\s+(.*)\\s+(HTTP/\\d\\.\\d)\\s*$"))
 {
-    connect(this, SIGNAL(request(QString)),
-            this, SLOT(requestHandle(QString)));
+    connect(this, SIGNAL(request(const QString&)),
+            this, SLOT(requestHandle(const QString&)));
 }
 
 void Client::bufferedReadAll()
@@ -50,7 +50,7 @@ bool Client::canReadHeader()
     return mBuffer.indexOf(CRLFCRLF);
 }
 
-void Client::requestHandle(QString request)
+void Client::requestHandle(const QString &request)
 {
     QStringList headers = request.split(QString::fromLocal8Bit(CRLF));
     QString line = headers.takeFirst();
