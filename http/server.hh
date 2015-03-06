@@ -21,7 +21,6 @@
 # define SERVER_HH_
 
 #include <QTcpServer>
-#include <QFile>
 #include <QDir>
 
 #include "http.hh"

@@ -17,6 +17,8 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
+#include <QFile>
+#include <QUrl>
 #include <utils/qtcassert.h>
 
 #include "http.hh"
@@ -89,25 +91,36 @@ void Server::methodGet(Client *client,
 
     qWarning() << "GET" << uri << version;
 
-    if (uri[0] != QLatin1Char('/')) {
-        qWarning("invalid URI");
-        return replyError(client, version, Reply::BadRequest());
-    }
-    uri.remove(0, 1);
-
-    if (mPath.absolutePath().isNull()) {
-        qWarning("server path is not set.");
+    if (mPath == QDir()) {
+        qWarning() << "server path not set";
         return replyError(client, version, Reply::InternalServerError());
     }
 
-    QFile file(mPath.absoluteFilePath(uri));
-    if (!file.exists()) {
-        qWarning("file %s does not exist", file.fileName().toUtf8().constData());
-        return replyError(client, version, Reply::NotFound());
+    QUrl url(uri, QUrl::StrictMode);
+    if (!url.isValid()) {
+        qWarning() << "invalid URI" << qPrintable(uri);
+        return replyError(client, version, Reply::BadRequest());
     }
 
+    if (!url.isRelative()) {
+        qWarning() << "unsupported URI" << qPrintable(uri);
+        return replyError(client, version, Reply::BadRequest());
+    }
+
+    QString path = QDir::cleanPath(url.path());
+    int slash = 0;
+    while (path[slash] == QLatin1Char('/'))
+        slash++;
+    path.remove(0, slash);
+
+    if (path.isEmpty()) {
+        qWarning() << "cannot resolve path for" << qPrintable(uri);
+        return replyError(client, version, Reply::BadRequest());
+    }
+
+    QFile file(mPath.absoluteFilePath(path));
     if (!file.open(QIODevice::ReadOnly)) {
-        qWarning("fail to open file %s", file.fileName().toUtf8().constData());
+        qWarning() << "failed to open file" << qUtf8Printable(file.fileName());
         return replyError(client, version, Reply::InternalServerError());
     }
 
