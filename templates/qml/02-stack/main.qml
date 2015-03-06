@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.4
 import fbx.application 1.0
 import fbx.ui.page 1.0
 import fbx.ui.layout 1.0

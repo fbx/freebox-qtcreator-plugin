@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template openeditor="main.qml" priority="C"
-    featuresRequired="QtSupport.Wizards.FeatureQtQuickProject, QtSupport.Wizards.FeatureQtQuick.2.2">
+    featuresRequired="QtSupport.Wizards.FeatureQtQuickProject, QtSupport.Wizards.FeatureQtQuick.2.4">
     <displayname>Freebox stacked application example</displayname>
     <description>Creates a standard page-stack application example.</description>
 </template>
