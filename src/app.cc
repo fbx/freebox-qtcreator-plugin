@@ -17,6 +17,9 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
+
+#include "app.hh"
+
 #include <coreplugin/basefilewizardfactory.h>
 #include <coreplugin/icore.h>
 #include <utils/fileutils.h>
@@ -25,8 +28,6 @@
 #include <QDebug>
 #include <QDir>
 #include <QTextStream>
-
-#include "app.hh"
 
 namespace Freebox {
 namespace Internal {

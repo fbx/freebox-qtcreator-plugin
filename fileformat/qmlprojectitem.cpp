@@ -27,11 +27,11 @@
  **
  ****************************************************************************/
 
-#include <QDebug>
-#include <QDir>
-
 #include "qmlprojectitem.hh"
 #include "filefilteritems.hh"
+
+#include <QDebug>
+#include <QDir>
 
 namespace QmlProjectManager {
 
@@ -63,8 +63,8 @@ QList<QmlFileFilterItem*> QmlProjectItemPrivate::qmlFileFilters() const
 }
 
 QmlProjectItem::QmlProjectItem(QObject *parent) :
-    QObject(parent),
-    d_ptr(new QmlProjectItemPrivate)
+        QObject(parent),
+        d_ptr(new QmlProjectItemPrivate)
 {
 //    Q_D(QmlProjectItem);
 //
@@ -154,11 +154,11 @@ QStringList QmlProjectItem::files() const
 }
 
 /**
-   Check whether the project would include a file path
-   - regardless whether the file already exists or not.
+  Check whether the project would include a file path
+  - regardless whether the file already exists or not.
 
-   @param filePath: absolute file path to check
-*/
+  @param filePath: absolute file path to check
+  */
 bool QmlProjectItem::matchesFile(const QString &filePath) const
 {
     Q_D(const QmlProjectItem);

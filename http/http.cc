@@ -17,10 +17,11 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QDebug>
-#include <QRegExp>
 
 #include "http.hh"
+
+#include <QDebug>
+#include <QRegExp>
 
 namespace Freebox {
 namespace Http {

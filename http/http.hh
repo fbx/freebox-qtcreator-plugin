@@ -20,9 +20,10 @@
 #ifndef HTTPD_H
 #define HTTPD_H
 
+#include "constants.hh"
+
 #include <QString>
 #include <QTextStream>
-#include "constants.hh"
 
 namespace Freebox {
 namespace Http {

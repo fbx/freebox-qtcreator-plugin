@@ -26,7 +26,6 @@
 #include <utils/fileutils.h>
 #include <projectexplorer/project.h>
 #include "fileformat/manifest.hh"
-#include <qmljstools/qmljsmodelmanager.h>
 
 namespace ProjectExplorer { class RunConfiguration; }
 namespace QmlProjectManager { class QmlProjectItem; }
@@ -58,10 +57,11 @@ public:
     };
     Q_DECLARE_FLAGS(RefreshOptions,RefreshOption)
 
-    Project(Internal::Manager *manager, const QString &fileName);
+    Project(Internal::Manager *manager, const Utils::FileName &filename);
     ~Project();
 
-    QString filesFileName() const;
+    Utils::FileName filesFileName() const;
+
     QString displayName() const;
     Core::IDocument *document() const;
     ProjectExplorer::IProjectManager *projectManager() const;
@@ -74,6 +74,7 @@ public:
     QDir projectDir() const;
     ProjectExplorer::ProjectNode *rootProjectNode() const;
     void parseProject(RefreshOptions options);
+    QmlJS::ModelManagerInterface *modelManager() const;
     bool addFiles(const QStringList &filePaths);
     void refresh(RefreshOptions options);
     void refreshProjectFile();
@@ -97,12 +98,11 @@ private:
     QPointer<QmlProjectManager::QmlProjectItem> m_projectItem;
     Internal::Node *m_rootNode;
     Internal::Manager *m_manager;
-    QString m_fileName;
+    Utils::FileName m_fileName;
     QString m_packageFileName;
     QString m_projectName;
     Internal::File *m_file;
     QStringList m_files;
-    QmlJS::ModelManagerInterface *m_modelManager;
     ProjectExplorer::Target *m_activeTarget;
     Fileformat::Manifest m_manifest;
     QStringList m_entryPoints;

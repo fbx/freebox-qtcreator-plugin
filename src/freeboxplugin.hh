@@ -20,11 +20,10 @@
 #ifndef FREEBOX_H
 #define FREEBOX_H
 
-#include <QAction>
+#include "freebox_global.hh"
+
 #include <extensionsystem/iplugin.h>
 #include <projectexplorer/projectexplorer.h>
-
-#include "freebox_global.hh"
 
 namespace Freebox {
 namespace Internal {

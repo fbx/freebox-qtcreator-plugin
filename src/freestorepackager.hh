@@ -3,16 +3,15 @@
 
 #include <QMap>
 #include <QString>
+#include <QStringList>
 #include <QFileInfo>
-#include <QRegExp>
 
-#include <projectexplorer/projectexplorer.h>
-#include <coreplugin/idocument.h>
-
-#include "freebox_global.hh"
-#include "project.hh"
+namespace Core { class IDocument; }
 
 namespace Freebox {
+
+class Project;
+
 namespace Internal {
 
 typedef struct {
@@ -28,14 +27,14 @@ class FreeStorePackager : public QObject
     Q_OBJECT
 
 public:
-    FreeStorePackager(Freebox::Project *fbxProject, QString outFileName);
+    FreeStorePackager(Freebox::Project *fbxProject, const QString &outFileName);
     bool operator()();
     QString outFileName() { return m_outFileName; }
 
 private:
     void initRegExp(char *key, char *regExp);
     bool checkSavedFiles(QList<Core::IDocument *> *failedToClose);
-    bool isToCheck(QString filePath);
+    bool isToCheck(const QString &filePath);
     bool preparePackaging();
     bool checkPackage();
     bool checkRequiredProperty(QJsonObject &obj, const char *key, const char *where);

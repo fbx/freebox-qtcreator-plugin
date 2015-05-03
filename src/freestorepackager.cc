@@ -1,21 +1,24 @@
+#include "freestorepackager.hh"
+#include "project.hh"
+#include "tar.hh"
+#include "util/gzipper.hh"
+#include "fileformat/manifest.hh"
+
+#include <coreplugin/icore.h>
+#include <coreplugin/idocument.h>
+#include <coreplugin/documentmanager.h>
+#include <qmljs/qmljsmodelmanagerinterface.h>
+
+#include <QStringList>
 #include <QMessageBox>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include <coreplugin/icore.h>
-#include <coreplugin/documentmanager.h>
-#include <qmljs/qmljsmodelmanagerinterface.h>
-
-#include "util/gzipper.hh"
-#include "tar.hh"
-#include "freestorepackager.hh"
-#include "fileformat/manifest.hh"
-
 namespace Freebox {
 namespace Internal {
 
-FreeStorePackager::FreeStorePackager(Freebox::Project *fbxProject, QString outFileName)
+FreeStorePackager::FreeStorePackager(Freebox::Project *fbxProject, const QString &outFileName)
     : m_project(fbxProject),
       m_outFileName(outFileName),
       m_nbDefaults(0),
@@ -36,10 +39,10 @@ bool FreeStorePackager::checkSavedFiles(QList<Core::IDocument *> *failedToClose)
     return !cancelledSave;
 }
 
-bool FreeStorePackager::isToCheck(QString filePath)
+bool FreeStorePackager::isToCheck(const QString &filePath)
 {
     foreach (Core::IDocument *id, m_failedToClose)
-        if (id->filePath() == filePath) {
+        if (id->filePath() == Utils::FileName::fromString(filePath)) {
             m_failedToClose.removeOne(id);
             return false;
         }

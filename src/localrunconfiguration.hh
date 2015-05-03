@@ -22,9 +22,12 @@
 
 # include <qtsupport/baseqtversion.h>
 # include <projectexplorer/localapplicationrunconfiguration.h>
-# include "runconfigurationfactory.hh"
 
 namespace Freebox {
+
+namespace Internal {
+    class RunConfigurationFactory;
+}
 
 class LocalRunConfiguration : public ProjectExplorer::LocalApplicationRunConfiguration
 {
@@ -36,9 +39,12 @@ class LocalRunConfiguration : public ProjectExplorer::LocalApplicationRunConfigu
 public:
     LocalRunConfiguration(ProjectExplorer::Target *parent, Core::Id id);
 
-    QWidget *createConfigurationWidget();
-    QString workingDirectory() const;
+    QString executable() const;
+    ProjectExplorer::ApplicationLauncher::Mode runMode() const;
     QString commandLineArguments() const;
+
+    QString workingDirectory() const;
+    QtSupport::BaseQtVersion *qtVersion() const;
 
     enum MainScriptSource {
         FileInEditor,
@@ -46,38 +52,38 @@ public:
         FileInSettings
     };
     MainScriptSource mainScriptSource() const;
-    void setScriptSource(MainScriptSource source,
-                         const QString &settingsPath = QString());
+    void setScriptSource(MainScriptSource source, const QString &settingsPath = QString());
     QString mainScript() const;
-    QString executable() const;
-    QtSupport::BaseQtVersion *qtVersion() const;
-    ProjectExplorer::ApplicationLauncher::Mode runMode() const;
+
+    virtual QWidget *createConfigurationWidget();
+    Utils::OutputFormatter *createOutputFormatter() const;
 
 signals:
     void scriptSourceChanged();
 
+private slots:
+    void updateEnabled();
+
 protected:
     LocalRunConfiguration(ProjectExplorer::Target *parent,
                           LocalRunConfiguration *source);
-
     virtual bool fromMap(const QVariantMap &map);
     void setEnabled(bool value);
 
-private slots:
-
-    void updateEnabled();
-
 private:
+    void ctor();
 
-    QString canonicalCapsPath(const QString &fileName) const;
+    static QString canonicalCapsPath(const QString &filePath);
 
+    // absolute path to current file (if being used)
     QString m_currentFileFilename;
+    // absolute path to selected main script (if being used)
     QString m_mainScriptFilename;
+
     QString m_scriptFile;
     QString m_qmlViewerArgs;
-    bool m_isEnabled;
 
-    void ctor();
+    bool m_isEnabled;
 };
 
 } // namespace Freebox

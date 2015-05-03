@@ -17,14 +17,17 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
+
+#include "wizardpages.hh"
+#include "app.hh"
+
+#include <utils/wizard.h>
+
 #include <QComboBox>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QTextEdit>
-
-#include "app.hh"
-#include "wizardpages.hh"
 
 namespace Freebox {
 namespace Internal {
@@ -62,6 +65,8 @@ QmlComponentSetPage::QmlComponentSetPage(QWidget *parent)
 
     mainLayout->addLayout(l);
     mainLayout->addWidget(d->m_detailedDescriptionLabel);
+
+    setProperty(Utils::SHORT_TITLE_PROPERTY, tr("Component Set"));
 }
 
 QmlComponentSetPage::~QmlComponentSetPage()

@@ -17,11 +17,10 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QNetworkInterface>
 
+#include "ssdpsearch.hh"
 #include "ssdpconstants.hh"
 #include "udpsocket.hh"
-#include "ssdpsearch.hh"
 
 namespace Freebox {
 namespace Ssdp {

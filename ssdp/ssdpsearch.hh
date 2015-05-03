@@ -21,6 +21,7 @@
 # define SSDPSEARCH_HH_
 
 #include <QUdpSocket>
+#include <QNetworkInterface>
 
 #include "udpsocket.hh"
 

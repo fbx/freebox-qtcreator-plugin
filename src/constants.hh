@@ -20,8 +20,6 @@
 #ifndef FREEBOXCONSTANTS_H
 #define FREEBOXCONSTANTS_H
 
-#include <qmlprojectmanager/qmlprojectconstants.h>
-
 namespace Freebox {
 namespace Constants {
 

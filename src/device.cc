@@ -17,11 +17,12 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QCoreApplication>
 
-#include "constants.hh"
 #include "device.hh"
+#include "constants.hh"
 #include "processsignaloperation.hh"
+
+#include <QCoreApplication>
 
 namespace Freebox {
 

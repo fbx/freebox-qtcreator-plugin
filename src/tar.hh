@@ -1,8 +1,9 @@
 #ifndef TAR_H
 #define TAR_H
 
-#include <QObject>
 #include "freestorepackager.hh"
+
+#include <QObject>
 
 class QFileInfo;
 class QByteArray;

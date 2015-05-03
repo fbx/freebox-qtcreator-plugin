@@ -17,17 +17,19 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QDebug>
 
-#include <coreplugin/mimedatabase.h>
-#include <coreplugin/editormanager/editormanager.h>
-#include <coreplugin/editormanager/ieditor.h>
-#include <projectexplorer/target.h>
-#include <qmlprojectmanager/qmlprojectmanagerconstants.h>
-
-#include "constants.hh"
 #include "remoterunconfiguration.hh"
 #include "project.hh"
+#include "constants.hh"
+#include <coreplugin/editormanager/editormanager.h>
+#include <coreplugin/editormanager/ieditor.h>
+#include <coreplugin/icore.h>
+#include <coreplugin/idocument.h>
+#include <projectexplorer/target.h>
+#include <qtsupport/qtoutputformatter.h>
+
+#include <utils/fileutils.h>
+#include <utils/mimetypes/mimedatabase.h>
 
 namespace Freebox {
 
@@ -46,28 +48,41 @@ RemoteRunConfiguration::RemoteRunConfiguration(ProjectExplorer::Target *parent,
     ctor();
 }
 
-QWidget *
-RemoteRunConfiguration::createConfigurationWidget()
-{
-    return 0;
-}
-
-QString
-RemoteRunConfiguration::workingDirectory() const
-{
-    return QString();
-}
-
-QString
-RemoteRunConfiguration::commandLineArguments() const
-{
-    return QString();
-}
-
 void
 RemoteRunConfiguration::ctor()
 {
     setDisplayName(QString::fromUtf8(id().name()));
+    updateEnabled();
+}
+
+QString RemoteRunConfiguration::commandLineArguments() const
+{
+    return QString();
+}
+
+QString RemoteRunConfiguration::workingDirectory() const
+{
+    return QString();
+}
+
+QWidget *RemoteRunConfiguration::createConfigurationWidget()
+{
+    return 0;
+}
+
+Utils::OutputFormatter *RemoteRunConfiguration::createOutputFormatter() const
+{
+    return new QtSupport::QtOutputFormatter(target()->project());
+}
+
+RemoteRunConfiguration::MainScriptSource RemoteRunConfiguration::mainScriptSource() const
+{
+    Project *project = static_cast<Project *>(target()->project());
+    if (!project->mainFile().isEmpty())
+        return FileInProjectFile;
+    if (!m_mainScriptFilename.isEmpty())
+        return FileInSettings;
+    return FileInEditor;
 }
 
 /**
@@ -95,10 +110,6 @@ QString RemoteRunConfiguration::mainScript() const
 void RemoteRunConfiguration::setScriptSource(MainScriptSource source,
                                              const QString &settingsPath)
 {
-    Project *project = qobject_cast<Project *>(target()->project());
-
-    QTC_ASSERT(project, return);
-
     if (source == FileInEditor) {
         m_scriptFile = QLatin1String(M_CURRENT_FILE);
         m_mainScriptFilename.clear();
@@ -107,50 +118,12 @@ void RemoteRunConfiguration::setScriptSource(MainScriptSource source,
         m_mainScriptFilename.clear();
     } else { // FileInSettings
         m_scriptFile = settingsPath;
-        m_mainScriptFilename = project->projectDir().canonicalPath()
-                    + QLatin1Char('/') + m_scriptFile;
+        m_mainScriptFilename
+                = target()->project()->projectDirectory().toString() + QLatin1Char('/') + m_scriptFile;
     }
     updateEnabled();
 
     emit scriptSourceChanged();
-}
-
-RemoteRunConfiguration::MainScriptSource RemoteRunConfiguration::mainScriptSource() const
-{
-    Project *project = static_cast<Project *>(target()->project());
-
-    if (!project->mainFile().isEmpty())
-        return FileInProjectFile;
-    if (!m_mainScriptFilename.isEmpty())
-        return FileInSettings;
-    return FileInEditor;
-}
-
-void RemoteRunConfiguration::updateEnabled()
-{
-    if (mainScriptSource() == FileInEditor) {
-        Core::IDocument *document = Core::EditorManager::currentDocument();
-        if (document) {
-            m_currentFileFilename = document->filePath();
-        }
-        if (!document
-            || Core::MimeDatabase::findByFile(mainScript()).type() ==
-                    QLatin1String("application/x-qmlproject")) {
-            // find a qml file with lowercase filename. This is slow, but only done
-            // in initialization/other border cases.
-            foreach (const QString &filename, target()->project()->files(ProjectExplorer::Project::AllFiles)) {
-                const QFileInfo fi(filename);
-
-                if (!filename.isEmpty() && fi.baseName()[0].isLower()
-                    && Core::MimeDatabase::findByFile(fi).type() ==
-                        QLatin1String("application/x-qml"))
-                {
-                    m_currentFileFilename = filename;
-                    break;
-                }
-            }
-        }
-    }
 }
 
 bool RemoteRunConfiguration::fromMap(const QVariantMap &map)
@@ -166,6 +139,32 @@ bool RemoteRunConfiguration::fromMap(const QVariantMap &map)
         setScriptSource(FileInSettings, m_scriptFile);
 
     return ProjectExplorer::RunConfiguration::fromMap(map);
+}
+
+void RemoteRunConfiguration::updateEnabled()
+{
+    Utils::MimeDatabase mdb;
+    if (mainScriptSource() == FileInEditor) {
+        Core::IDocument *document = Core::EditorManager::currentDocument();
+        if (document) {
+            m_currentFileFilename = document->filePath().toString();
+        }
+        if (!document
+                || mdb.mimeTypeForFile(mainScript()).matchesName(QLatin1String("application/x-qmlproject"))) {
+            // find a qml file with lowercase filename. This is slow, but only done
+            // in initialization/other border cases.
+            foreach (const QString &filename, target()->project()->files(ProjectExplorer::Project::AllFiles)) {
+                const QFileInfo fi(filename);
+
+                if (!filename.isEmpty() && fi.baseName()[0].isLower()
+                        && mdb.mimeTypeForFile(fi).matchesName(QLatin1String("text/x-qml")))
+                {
+                    m_currentFileFilename = filename;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 } // namespace Freebox

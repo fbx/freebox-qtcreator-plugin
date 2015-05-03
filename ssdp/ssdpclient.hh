@@ -21,18 +21,13 @@
 #define SSDPCLIENT_HH
 
 #include <QObject>
-#include <QHash>
-#include <QRegExp>
-#include <QStringList>
-#include <QNetworkInterface>
+#include <QList>
 #include <QHostAddress>
 
 namespace Freebox {
-
-class UdpListener;
-
 namespace Ssdp {
 
+class UdpListener;
 class Message;
 class Search;
 

@@ -20,10 +20,10 @@
 #ifndef UDPLISTENER_HH
 #define UDPLISTENER_HH
 
+#include "udpsocket.hh"
+
 #include <QObject>
 #include <QNetworkInterface>
-
-#include "udpsocket.hh"
 
 namespace Freebox {
 namespace Ssdp {

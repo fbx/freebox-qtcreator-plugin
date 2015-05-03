@@ -17,25 +17,26 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QFileInfo>
-#include <QStyle>
+
+#include "node.hh"
+#include "project.hh"
 
 #include <coreplugin/idocument.h>
 #include <coreplugin/fileiconprovider.h>
 #include <projectexplorer/projectexplorer.h>
 
-#include "project.hh"
-#include "node.hh"
+#include <QFileInfo>
+#include <QStyle>
 
 namespace Freebox {
 namespace Internal {
 
 Node::Node(Project *project, Core::IDocument *projectFile)
-    : ProjectExplorer::ProjectNode(QFileInfo(projectFile->filePath()).absoluteFilePath()),
+    : ProjectExplorer::ProjectNode(projectFile->filePath()),
       m_project(project),
       m_projectFile(projectFile)
 {
-    setDisplayName(QFileInfo(projectFile->filePath()).completeBaseName());
+    setDisplayName(projectFile->filePath().toFileInfo().completeBaseName());
     // make overlay
     const QSize desiredSize = QSize(16, 16);
     const QIcon projectBaseIcon(QLatin1String(":/freebox/images/qmlfolder.png"));
@@ -55,7 +56,7 @@ Core::IDocument *Node::projectFile() const
 
 QString Node::projectFilePath() const
 {
-    return m_projectFile->filePath();
+    return m_projectFile->filePath().toString();
 }
 
 void Node::refresh()
@@ -73,7 +74,7 @@ void Node::refresh()
                                               /* generated = */ false);
 
     QStringList files = m_project->files();
-    files.removeAll(m_project->filesFileName());
+    files.removeAll(m_project->filesFileName().toString());
 
     addFileNodes(QList<FileNode *>()
                  << projectFilesNode);
@@ -107,7 +108,8 @@ void Node::refresh()
         QList<FileNode *> fileNodes;
         foreach (const QString &file, it.value()) {
             FileType fileType = SourceType; // ### FIXME
-            FileNode *fileNode = new FileNode(file, fileType, /*generated = */ false);
+            FileNode *fileNode = new FileNode(Utils::FileName::fromString(file),
+                                              fileType, /*generated = */ false);
             fileNodes.append(fileNode);
         }
 
@@ -122,7 +124,7 @@ ProjectExplorer::FolderNode *Node::findOrCreateFolderByName(const QStringList &c
     if (! end)
         return 0;
 
-    QString baseDir = QFileInfo(path()).path();
+    Utils::FileName folderPath = path().parentDir();
 
     QString folderName;
     for (int i = 0; i < end; ++i) {
@@ -138,7 +140,8 @@ ProjectExplorer::FolderNode *Node::findOrCreateFolderByName(const QStringList &c
     else if (FolderNode *folder = m_folderByName.value(folderName))
         return folder;
 
-    FolderNode *folder = new FolderNode(baseDir + QLatin1Char('/') + folderName);
+    folderPath.appendPath(folderName);
+    FolderNode *folder = new FolderNode(folderPath);
     folder->setDisplayName(component);
 
     m_folderByName.insert(folderName, folder);
@@ -213,12 +216,6 @@ bool Node::deleteFiles(const QStringList & /*filePaths*/)
 bool Node::renameFile(const QString & /*filePath*/, const QString & /*newFilePath*/)
 {
     return true;
-}
-
-QList<ProjectExplorer::RunConfiguration *> Node::runConfigurationsFor(ProjectExplorer::Node *node)
-{
-    Q_UNUSED(node)
-    return QList<ProjectExplorer::RunConfiguration *>();
 }
 
 } // namespace Internal

@@ -20,10 +20,10 @@
 #ifndef RUNCONTROL_HH_
 # define RUNCONTROL_HH_
 
-#include <projectexplorer/runconfiguration.h>
-
 #include "http/server.hh"
 #include "remote/remoteqml.hh"
+
+#include <projectexplorer/runconfiguration.h>
 
 namespace Freebox {
 

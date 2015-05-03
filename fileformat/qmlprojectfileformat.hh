@@ -30,6 +30,8 @@
 #ifndef QMLPROJECTFILEFORMAT_H
 #define QMLPROJECTFILEFORMAT_H
 
+#include <utils/fileutils.h>
+
 #include <QCoreApplication>
 #include <QString>
 
@@ -42,7 +44,7 @@ class QmlProjectFileFormat
     Q_DECLARE_TR_FUNCTIONS(QmlProjectManager::QmlProjectFileFormat)
 
 public:
-    static QmlProjectItem *parseProjectFile(const QString &fileName, QString *errorMessage = 0);
+    static QmlProjectItem *parseProjectFile(const Utils::FileName &fileName, QString *errorMessage = 0);
 };
 
 } // namespace QmlProjectManager

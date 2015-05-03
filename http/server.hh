@@ -23,8 +23,6 @@
 #include <QTcpServer>
 #include <QDir>
 
-#include "http.hh"
-
 namespace Freebox {
 namespace Http {
 
@@ -32,6 +30,7 @@ class Method;
 class Version;
 
 class Client;
+class IResponse;
 
 class Server : public QTcpServer
 {

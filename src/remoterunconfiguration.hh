@@ -17,8 +17,8 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef FREEBOXRUNCONFIGURATION_HH_
-# define FREEBOXRUNCONFIGURATION_HH_
+#ifndef FREEBOXREMOTERUNCONFIGURATION_HH_
+# define FREEBOXREMOTERUNCONFIGURATION_HH_
 
 #include <projectexplorer/localapplicationrunconfiguration.h>
 
@@ -38,9 +38,9 @@ class RemoteRunConfiguration : public ProjectExplorer::RunConfiguration
 public:
     RemoteRunConfiguration(ProjectExplorer::Target *parent, Core::Id id);
 
-    QWidget *createConfigurationWidget();
-    QString workingDirectory() const;
     QString commandLineArguments() const;
+
+    QString workingDirectory() const;
 
     enum MainScriptSource {
         FileInEditor,
@@ -48,33 +48,38 @@ public:
         FileInSettings
     };
     MainScriptSource mainScriptSource() const;
-    void setScriptSource(MainScriptSource source,
-                         const QString &settingsPath = QString());
+    void setScriptSource(MainScriptSource source, const QString &settingsPath = QString());
     QString mainScript() const;
+
+    virtual QWidget *createConfigurationWidget();
+    Utils::OutputFormatter *createOutputFormatter() const;
 
 signals:
     void scriptSourceChanged();
 
-protected:
-    RemoteRunConfiguration(ProjectExplorer::Target *parent,
-                           RemoteRunConfiguration *source);
-
-    virtual bool fromMap(const QVariantMap &map);
-    void setEnabled(bool value);
-
 private slots:
     void updateEnabled();
 
+protected:
+    RemoteRunConfiguration(ProjectExplorer::Target *parent,
+                           RemoteRunConfiguration *source);
+    virtual bool fromMap(const QVariantMap &map);
+    void setEnabled(bool value);
+
 private:
+    void ctor();
+
+    // absolute path to current file (if being used)
     QString m_currentFileFilename;
+    // absolute path to selected main script (if being used)
     QString m_mainScriptFilename;
+
     QString m_scriptFile;
     QString m_qmlViewerArgs;
-    bool m_isEnabled;
 
-    void ctor();
+    bool m_isEnabled;
 };
 
-}
+} // namespace Freebox
 
-#endif /* !FREEBOXRUNCONFIGURATION_HH_ */
+#endif // !FREEBOXREMOTERUNCONFIGURATION_HH_

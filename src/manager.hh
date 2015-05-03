@@ -32,13 +32,13 @@ namespace Internal {
 
 class Manager : public ProjectExplorer::IProjectManager
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
+    Manager();
 
     virtual QString mimeType() const;
-    virtual ProjectExplorer::Project *openProject(const QString &filename,
-                                                  QString *errorString);
+    virtual ProjectExplorer::Project *openProject(const QString &filename, QString *errorString);
 
     void notifyChanged(const QString &fileName);
 

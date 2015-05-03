@@ -17,25 +17,23 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QDebug>
 
-#include <utils/fileutils.h>
-#include <utils/qtcprocess.h>
-#include <coreplugin/mimedatabase.h>
+#include "localrunconfiguration.hh"
+#include "project.hh"
+#include "constants.hh"
+#include "environment.hh"
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/editormanager/ieditor.h>
-#include <qtsupport/qtsupportconstants.h>
+#include <coreplugin/icore.h>
+#include <coreplugin/idocument.h>
+#include <projectexplorer/target.h>
 #include <qtsupport/qtkitinformation.h>
 #include <qtsupport/qtoutputformatter.h>
-#include <projectexplorer/target.h>
-#include <projectexplorer/localapplicationrunconfiguration.h>
-#include <qmlprojectmanager/qmlprojectmanagerconstants.h>
-#include <qmlprojectmanager/qmlprojectenvironmentaspect.h>
+#include <qtsupport/qtsupportconstants.h>
 
-#include "constants.hh"
-#include "localrunconfiguration.hh"
-#include "environment.hh"
-#include "project.hh"
+#include <utils/fileutils.h>
+#include <utils/mimetypes/mimedatabase.h>
+#include <utils/qtcprocess.h>
 
 namespace Freebox {
 
@@ -56,25 +54,28 @@ LocalRunConfiguration::LocalRunConfiguration(ProjectExplorer::Target *parent,
     ctor();
 }
 
-QWidget *
-LocalRunConfiguration::createConfigurationWidget()
+void
+LocalRunConfiguration::ctor()
 {
-    return 0;
+    setDisplayName(QString::fromUtf8(id().name()));
+    updateEnabled();
 }
 
-QString
-LocalRunConfiguration::workingDirectory() const
+QString LocalRunConfiguration::executable() const
 {
-    return QString();
+    QtSupport::BaseQtVersion *version = qtVersion();
+    if (!version)
+        return QString();
+
+    return version->qmlsceneCommand();
 }
 
-QString LocalRunConfiguration::canonicalCapsPath(const QString &fileName) const
+ProjectExplorer::ApplicationLauncher::Mode LocalRunConfiguration::runMode() const
 {
-    return Utils::FileUtils::normalizePathName(QFileInfo(fileName).canonicalFilePath());
+    return ProjectExplorer::ApplicationLauncher::Gui;
 }
 
-QString
-LocalRunConfiguration::commandLineArguments() const
+QString LocalRunConfiguration::commandLineArguments() const
 {
     QString args;
 
@@ -84,7 +85,6 @@ LocalRunConfiguration::commandLineArguments() const
     QString file;
 
     file = m.entryPointFile(QString::fromUtf8(id().name()));
-
     if (file.isNull())
         return args;
 
@@ -101,10 +101,16 @@ LocalRunConfiguration::commandLineArguments() const
     return args;
 }
 
-void
-LocalRunConfiguration::ctor()
+QString LocalRunConfiguration::workingDirectory() const
 {
-    setDisplayName(QString::fromUtf8(id().name()));
+    return canonicalCapsPath(target()->project()->projectFilePath().toFileInfo().absolutePath());
+}
+
+/* QtDeclarative checks explicitly that the capitalization for any URL / path
+   is exactly like the capitalization on disk.*/
+QString LocalRunConfiguration::canonicalCapsPath(const QString &fileName)
+{
+    return Utils::FileUtils::normalizePathName(QFileInfo(fileName).canonicalFilePath());
 }
 
 QtSupport::BaseQtVersion *LocalRunConfiguration::qtVersion() const
@@ -112,19 +118,24 @@ QtSupport::BaseQtVersion *LocalRunConfiguration::qtVersion() const
     return QtSupport::QtKitInformation::qtVersion(target()->kit());
 }
 
-QString LocalRunConfiguration::executable() const
+QWidget *LocalRunConfiguration::createConfigurationWidget()
 {
-    QtSupport::BaseQtVersion *version = qtVersion();
-    if (!version)
-        return QString();
-
-    return version->qmlsceneCommand();
+    return 0;
 }
 
-ProjectExplorer::ApplicationLauncher::Mode
-LocalRunConfiguration::runMode() const
+Utils::OutputFormatter *LocalRunConfiguration::createOutputFormatter() const
 {
-    return ProjectExplorer::ApplicationLauncher::Gui;
+    return new QtSupport::QtOutputFormatter(target()->project());
+}
+
+LocalRunConfiguration::MainScriptSource LocalRunConfiguration::mainScriptSource() const
+{
+    Project *project = static_cast<Project *>(target()->project());
+    if (!project->mainFile().isEmpty())
+        return FileInProjectFile;
+    if (!m_mainScriptFilename.isEmpty())
+        return FileInSettings;
+    return FileInEditor;
 }
 
 /**
@@ -152,10 +163,6 @@ QString LocalRunConfiguration::mainScript() const
 void LocalRunConfiguration::setScriptSource(MainScriptSource source,
                                             const QString &settingsPath)
 {
-    Project *project = qobject_cast<Project *>(target()->project());
-
-    QTC_ASSERT(project, return);
-
     if (source == FileInEditor) {
         m_scriptFile = QLatin1String(M_CURRENT_FILE);
         m_mainScriptFilename.clear();
@@ -165,50 +172,11 @@ void LocalRunConfiguration::setScriptSource(MainScriptSource source,
     } else { // FileInSettings
         m_scriptFile = settingsPath;
         m_mainScriptFilename
-                        = project->projectDir().canonicalPath()
-                        + QLatin1Char('/') + m_scriptFile;
+                = target()->project()->projectDirectory().toString() + QLatin1Char('/') + m_scriptFile;
     }
     updateEnabled();
 
     emit scriptSourceChanged();
-}
-
-LocalRunConfiguration::MainScriptSource LocalRunConfiguration::mainScriptSource() const
-{
-    Project *project = static_cast<Project *>(target()->project());
-
-    if (!project->mainFile().isEmpty())
-        return FileInProjectFile;
-    if (!m_mainScriptFilename.isEmpty())
-        return FileInSettings;
-    return FileInEditor;
-}
-
-void LocalRunConfiguration::updateEnabled()
-{
-    if (mainScriptSource() == FileInEditor) {
-        Core::IDocument *document = Core::EditorManager::currentDocument();
-        if (document) {
-            m_currentFileFilename = document->filePath();
-        }
-        if (!document
-                        || Core::MimeDatabase::findByFile(mainScript()).type() ==
-                        QLatin1String("application/x-qmlproject")) {
-            // find a qml file with lowercase filename. This is slow, but only done
-            // in initialization/other border cases.
-            foreach (const QString &filename, target()->project()->files(ProjectExplorer::Project::AllFiles)) {
-                const QFileInfo fi(filename);
-
-                if (!filename.isEmpty() && fi.baseName()[0].isLower()
-                                && Core::MimeDatabase::findByFile(fi).type() ==
-                                QLatin1String("application/x-qml"))
-                {
-                    m_currentFileFilename = filename;
-                    break;
-                }
-            }
-        }
-    }
 }
 
 bool LocalRunConfiguration::fromMap(const QVariantMap &map)
@@ -224,6 +192,32 @@ bool LocalRunConfiguration::fromMap(const QVariantMap &map)
         setScriptSource(FileInSettings, m_scriptFile);
 
     return ProjectExplorer::LocalApplicationRunConfiguration::fromMap(map);
+}
+
+void LocalRunConfiguration::updateEnabled()
+{
+    Utils::MimeDatabase mdb;
+    if (mainScriptSource() == FileInEditor) {
+        Core::IDocument *document = Core::EditorManager::currentDocument();
+        if (document) {
+            m_currentFileFilename = document->filePath().toString();
+        }
+        if (!document
+                || mdb.mimeTypeForFile(mainScript()).matchesName(QLatin1String("application/x-qmlproject"))) {
+            // find a qml file with lowercase filename. This is slow, but only done
+            // in initialization/other border cases.
+            foreach (const QString &filename, target()->project()->files(ProjectExplorer::Project::AllFiles)) {
+                const QFileInfo fi(filename);
+
+                if (!filename.isEmpty() && fi.baseName()[0].isLower()
+                        && mdb.mimeTypeForFile(fi).matchesName(QLatin1String("text/x-qml")))
+                {
+                    m_currentFileFilename = filename;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 } // namespace Freebox

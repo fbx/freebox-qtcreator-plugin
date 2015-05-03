@@ -21,9 +21,10 @@
 #define JSONRPC_HH
 
 #include <QObject>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QNetworkReply>
+
+class QJsonObject;
+class QJsonValue;
+class QNetworkReply;
 
 namespace Freebox {
 namespace Util {

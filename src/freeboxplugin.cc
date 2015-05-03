@@ -17,28 +17,9 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QAction>
-#include <QMessageBox>
-#include <QMainWindow>
-#include <QMenu>
-#include <QResource>
-#include <QDebug>
-#include <QFileDialog>
 
-#include <coreplugin/icore.h>
-#include <coreplugin/icontext.h>
-#include <coreplugin/actionmanager/actionmanager.h>
-#include <coreplugin/actionmanager/command.h>
-#include <coreplugin/actionmanager/actioncontainer.h>
-#include <coreplugin/coreconstants.h>
-#include <coreplugin/mimedatabase.h>
-#include <coreplugin/fileiconprovider.h>
-#include <projectexplorer/devicesupport/devicemanager.h>
-#include <projectexplorer/kitmanager.h>
-#include <projectexplorer/session.h>
-
-#include "constants.hh"
 #include "freeboxplugin.hh"
+#include "constants.hh"
 #include "configuration.hh"
 #include "runconfigurationfactory.hh"
 #include "runcontrolfactory.hh"
@@ -47,6 +28,27 @@
 #include "devicefactory.hh"
 #include "device.hh"
 #include "freestorepackager.hh"
+
+#include <coreplugin/icore.h>
+#include <coreplugin/icontext.h>
+#include <coreplugin/actionmanager/actionmanager.h>
+#include <coreplugin/actionmanager/command.h>
+#include <coreplugin/actionmanager/actioncontainer.h>
+#include <coreplugin/coreconstants.h>
+#include <coreplugin/fileiconprovider.h>
+#include <projectexplorer/devicesupport/devicemanager.h>
+#include <projectexplorer/kitmanager.h>
+#include <projectexplorer/session.h>
+
+#include <utils/mimetypes/mimedatabase.h>
+
+#include <QAction>
+#include <QMessageBox>
+#include <QMainWindow>
+#include <QMenu>
+#include <QResource>
+#include <QDebug>
+#include <QFileDialog>
 
 namespace Freebox {
 namespace Internal {
@@ -74,10 +76,7 @@ bool FreeboxPlugin::initialize(const QStringList &arguments, QString *errorStrin
     Q_UNUSED(arguments);
     Q_UNUSED(errorString);
 
-    const QLatin1String mimetypesXml(":/freebox/FbxProjectManager.mimetypes.xml");
-
-    if (!Core::MimeDatabase::addMimeTypes(mimetypesXml, errorString))
-        return false;
+    Utils::MimeDatabase::addMimeTypes(QLatin1String(":/freebox/FbxProjectManager.mimetypes.xml"));
 
     FreeboxConfiguration *configuration = new FreeboxConfiguration(this);
 

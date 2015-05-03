@@ -17,13 +17,15 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QFile>
-#include <QUrl>
-#include <utils/qtcassert.h>
 
-#include "http.hh"
 #include "server.hh"
 #include "client.hh"
+#include "http.hh"
+
+#include <utils/qtcassert.h>
+
+#include <QFile>
+#include <QUrl>
 
 namespace Freebox {
 namespace Http {

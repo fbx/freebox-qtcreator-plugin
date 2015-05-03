@@ -25,8 +25,6 @@
 #include <QNetworkInterface>
 #include <QHostAddress>
 
-#include <coreplugin/id.h>
-
 namespace Freebox {
 
 namespace Ssdp {

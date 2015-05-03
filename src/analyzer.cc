@@ -17,12 +17,13 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
+
+#include "analyzer.hh"
+#include "project.hh"
+#include "configuration.hh"
+
 #include <projectexplorer/project.h>
 #include <projectexplorer/target.h>
-
-#include "configuration.hh"
-#include "project.hh"
-#include "analyzer.hh"
 
 namespace Freebox {
 

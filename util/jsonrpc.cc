@@ -64,6 +64,14 @@ void JsonRpcRequest::replyFinished()
     QJsonDocument doc = QJsonDocument::fromJson(m_reply->readAll());
     QJsonObject root = doc.object();
 
+    if (m_reply->error() != QNetworkReply::NoError) {
+        QJsonObject e;
+        e[QStringLiteral("code")] = -32000;
+        e[QStringLiteral("message")] = QString(QLatin1String("Network error: ") + m_reply->errorString());
+        emit error(e);
+        return;
+    }
+
     if (root[QStringLiteral("jsonrpc")].toString() != QStringLiteral("2.0")) {
         QJsonObject e;
         e[QStringLiteral("message")] = QStringLiteral("Bad JSON RPC version in response");

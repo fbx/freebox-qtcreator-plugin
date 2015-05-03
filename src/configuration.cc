@@ -17,19 +17,21 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <utils/qtcassert.h>
-#include <qtsupport/qtkitinformation.h>
+
+#include "configuration.hh"
+#include "constants.hh"
+#include "device.hh"
+#include "ssdp/ssdpclient.hh"
+#include "ssdp/ssdpmessage.hh"
+
 #include <projectexplorer/devicesupport/idevice.h>
 #include <projectexplorer/devicesupport/devicemanager.h>
 #include <projectexplorer/kitmanager.h>
 #include <projectexplorer/kit.h>
 #include <projectexplorer/kitinformation.h>
+#include <qtsupport/qtkitinformation.h>
 
-#include "constants.hh"
-#include "device.hh"
-#include "configuration.hh"
-#include "ssdp/ssdpclient.hh"
-#include "ssdp/ssdpmessage.hh"
+#include <utils/qtcassert.h>
 
 namespace Freebox {
 namespace Internal {

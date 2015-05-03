@@ -17,21 +17,23 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <utils/qtcassert.h>
 
-#include "constants.hh"
-#include "project.hh"
 #include "file.hh"
+#include "project.hh"
+#include "constants.hh"
+#include <utils/qtcassert.h>
 
 namespace Freebox {
 namespace Internal {
 
-File::File(Project *parent, QString fileName) :
-    Core::IDocument(parent),
-    m_project(parent)
+File::File(Project *parent, const Utils::FileName &fileName)
+    : Core::IDocument(parent),
+      m_project(parent)
 {
     QTC_CHECK(m_project);
     QTC_CHECK(!fileName.isEmpty());
+    setId("Qml.ProjectFile");
+    setMimeType(QLatin1String(Constants::FBXPROJECT_MIMETYPE));
     setFilePath(fileName);
 }
 
@@ -54,11 +56,6 @@ QString File::suggestedFileName() const
     return QString();
 }
 
-QString File::mimeType() const
-{
-    return QLatin1String(Constants::FBXPROJECT_MIMETYPE);
-}
-
 bool File::isModified() const
 {
     return false;
@@ -71,15 +68,15 @@ bool File::isSaveAsAllowed() const
 
 Core::IDocument::ReloadBehavior File::reloadBehavior(ChangeTrigger state, ChangeType type) const
 {
-    Q_UNUSED(state);
-    Q_UNUSED(type);
+    Q_UNUSED(state)
+    Q_UNUSED(type)
     return BehaviorSilent;
 }
 
 bool File::reload(QString *errorString, ReloadFlag flag, ChangeType type)
 {
-    Q_UNUSED(errorString);
-    Q_UNUSED(flag);
+    Q_UNUSED(errorString)
+    Q_UNUSED(flag)
 
     if (type == TypeContents)
         m_project->refreshProjectFile();

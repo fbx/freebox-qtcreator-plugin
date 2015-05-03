@@ -17,10 +17,10 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QNetworkInterface>
-#include <QNetworkProxy>
 
 #include "udpsocket.hh"
+
+#include <QNetworkProxy>
 
 namespace Freebox {
 namespace Ssdp {

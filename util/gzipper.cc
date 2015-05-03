@@ -1,7 +1,7 @@
+#include "gzipper.hh"
+
 #include <QByteArray>
 #include <QDataStream>
-
-#include "gzipper.hh"
 
 extern "C" {
 # include "crc32.h"

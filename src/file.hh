@@ -34,14 +34,13 @@ class File : public Core::IDocument
 
 public:
 
-    File(Project *parent, QString fileName);
+    File(Project *parent, const Utils::FileName &fileName);
     virtual ~File();
 
     virtual bool save(QString *errorString, const QString &fileName, bool autoSave);
 
     virtual QString defaultPath() const;
     virtual QString suggestedFileName() const;
-    virtual QString mimeType() const;
 
     virtual bool isModified() const;
     virtual bool isSaveAsAllowed() const;
@@ -50,7 +49,6 @@ public:
     bool reload(QString *errorString, ReloadFlag flag, ChangeType type);
 
 private:
-
     Project *m_project;
 };
 

@@ -17,17 +17,18 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
+
+#include "remoteconstants.hh"
+#include "remoteqml.hh"
+
+#include "../util/jsonrpc.hh"
+
 #include <QUrl>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QNetworkInterface>
 #include <QNetworkAddressEntry>
 #include <QHostAddress>
-
-#include "../util/jsonrpc.hh"
-
-#include "remoteconstants.hh"
-#include "remoteqml.hh"
 
 namespace Freebox {
 namespace Remote {

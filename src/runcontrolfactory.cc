@@ -81,6 +81,7 @@ RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
         Debugger::DebuggerStartParameters params;
 
         params.masterEngineType = Debugger::QmlEngineType;
+        params.runConfiguration = runConfiguration;
         params.startMode = Debugger::AttachToRemoteServer;
         params.languages = Debugger::QmlLanguage;
         params.qmlServerAddress = fbxDevice->address().toString();
@@ -97,9 +98,7 @@ RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
         }
 
         Debugger::DebuggerRunControl * const runControl =
-                Debugger::DebuggerRunControlFactory::doCreate(params,
-                                                              runConfiguration,
-                                                              errorMessage);
+                Debugger::DebuggerRunControlFactory::doCreate(params, errorMessage);
         if (!runControl)
             return 0;
 

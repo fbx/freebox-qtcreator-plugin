@@ -17,64 +17,57 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <projectexplorer/target.h>
-#include <projectexplorer/kitinformation.h>
-#include <qmlprojectmanager/qmlproject.h>
-#include <qmlprojectmanager/qmlprojectmanagerconstants.h>
-#include <qtsupport/qtkitinformation.h>
 
-#include "constants.hh"
 #include "runconfigurationfactory.hh"
+#include "constants.hh"
+#include "project.hh"
 #include "remoterunconfiguration.hh"
 #include "localrunconfiguration.hh"
-#include "project.hh"
+
+#include <projectexplorer/kitinformation.h>
+#include <projectexplorer/runconfiguration.h>
+#include <projectexplorer/target.h>
+#include <qtsupport/qtkitinformation.h>
 
 namespace Freebox {
 namespace Internal {
 
-bool
-RunConfigurationFactory::canHandle(ProjectExplorer::Target *parent) const
+RunConfigurationFactory::RunConfigurationFactory(QObject *parent) :
+    ProjectExplorer::IRunConfigurationFactory(parent)
 {
-    if (!parent->project()->supportsKit(parent->kit()))
-        return false;
-    if (!qobject_cast<Project *>(parent->project()))
-        return false;
-
-    return true;
+    setObjectName(QLatin1String("FreeboxProjectRunConfigurationFactory"));
 }
 
-QList<Core::Id>
-RunConfigurationFactory::availableCreationIds(ProjectExplorer::Target *parent,
-                                              ProjectExplorer::IRunConfigurationFactory::CreationMode mode) const
+RunConfigurationFactory::~RunConfigurationFactory()
 {
-    Q_UNUSED(mode);
+}
 
+QList<Core::Id> RunConfigurationFactory::availableCreationIds(ProjectExplorer::Target *parent, CreationMode mode) const
+{
+    Q_UNUSED(mode)
     if (!canHandle(parent))
         return QList<Core::Id>();
 
     Project *p = qobject_cast<Project *>(parent->project());
 
     QList<Core::Id> list;
-    if (!p)
-        return list;
-
-    foreach (QString ep, p->manifest().entryPoints())
-        list << Core::Id(ep.toUtf8().constData());
+    if (p) {
+        foreach (QString ep, p->manifest().entryPoints())
+            list << Core::Id(ep.toUtf8().constData());
+    }
 
     return list;
 }
 
-QString
-RunConfigurationFactory::displayNameForId(Core::Id id) const
+QString RunConfigurationFactory::displayNameForId(Core::Id id) const
 {
     return QString::fromUtf8(id.name());
 }
 
-bool
-RunConfigurationFactory::canCreate(ProjectExplorer::Target *parent,
-                                   Core::Id id) const
+bool RunConfigurationFactory::canCreate(ProjectExplorer::Target *parent,
+                                        const Core::Id id) const
 {
-    Q_UNUSED(id);
+    Q_UNUSED(id)
 
     if (!canHandle(parent))
         return false;
@@ -82,36 +75,52 @@ RunConfigurationFactory::canCreate(ProjectExplorer::Target *parent,
     Core::Id deviceTypeId =
             ProjectExplorer::DeviceTypeKitInformation::deviceTypeId(parent->kit());
 
-    if (deviceTypeId == Freebox::Constants::FREEBOX_DEVICE_TYPE) {
+    if (deviceTypeId == Freebox::Constants::FREEBOX_DEVICE_TYPE)
         return true;
-    }
-    else if (deviceTypeId == ProjectExplorer::Constants::DESKTOP_DEVICE_TYPE) {
-        QtSupport::BaseQtVersion *version = QtSupport::QtKitInformation::qtVersion(parent->kit());
 
-        if (version && version->qtVersion() >= QtSupport::QtVersionNumber(5, 0, 0))
-            return true;
+    if (deviceTypeId == ProjectExplorer::Constants::DESKTOP_DEVICE_TYPE) {
+        QtSupport::BaseQtVersion *version
+                = QtSupport::QtKitInformation::qtVersion(parent->kit());
+        return version && version->qtVersion() >= QtSupport::QtVersionNumber(5, 0, 0);
     }
 
     return false;
 }
 
-bool
-RunConfigurationFactory::canRestore(ProjectExplorer::Target *parent,
-                                    const QVariantMap &map) const
+ProjectExplorer::RunConfiguration *RunConfigurationFactory::doCreate(ProjectExplorer::Target *parent, Core::Id id)
+{
+    Core::Id deviceTypeId =
+            ProjectExplorer::DeviceTypeKitInformation::deviceTypeId(parent->kit());
+
+    if (deviceTypeId == Freebox::Constants::FREEBOX_DEVICE_TYPE)
+        return new RemoteRunConfiguration(parent, id);
+
+    if (deviceTypeId == ProjectExplorer::Constants::DESKTOP_DEVICE_TYPE)
+        return new LocalRunConfiguration(parent, id);
+
+    QTC_ASSERT(false, return 0);
+
+    return 0;
+}
+
+bool RunConfigurationFactory::canRestore(ProjectExplorer::Target *parent, const QVariantMap &map) const
 {
     return parent && canCreate(parent, ProjectExplorer::idFromMap(map));
 }
 
-bool
-RunConfigurationFactory::canClone(ProjectExplorer::Target *parent,
-                                  ProjectExplorer::RunConfiguration *source) const
+ProjectExplorer::RunConfiguration *RunConfigurationFactory::doRestore(ProjectExplorer::Target *parent,
+                                                                      const QVariantMap &map)
 {
-    return parent && canCreate(parent, source->id());
+    return doCreate(parent, ProjectExplorer::idFromMap(map));
 }
 
-ProjectExplorer::RunConfiguration *
-RunConfigurationFactory::clone(ProjectExplorer::Target *parent,
-                               ProjectExplorer::RunConfiguration *source)
+bool RunConfigurationFactory::canClone(ProjectExplorer::Target *parent, ProjectExplorer::RunConfiguration *source) const
+{
+    return canCreate(parent, source->id());
+}
+
+ProjectExplorer::RunConfiguration *RunConfigurationFactory::clone(ProjectExplorer::Target *parent,
+                                                                  ProjectExplorer::RunConfiguration *source)
 {
     if (!canClone(parent, source))
         return 0;
@@ -128,31 +137,14 @@ RunConfigurationFactory::clone(ProjectExplorer::Target *parent,
     return 0;
 }
 
-ProjectExplorer::RunConfiguration *
-RunConfigurationFactory::doCreate(ProjectExplorer::Target *parent,
-                                  Core::Id id)
+bool RunConfigurationFactory::canHandle(ProjectExplorer::Target *parent) const
 {
-    Core::Id deviceTypeId =
-            ProjectExplorer::DeviceTypeKitInformation::deviceTypeId(parent->kit());
+    if (!parent->project()->supportsKit(parent->kit()))
+        return false;
+    if (!qobject_cast<Project *>(parent->project()))
+        return false;
 
-    if (deviceTypeId == Freebox::Constants::FREEBOX_DEVICE_TYPE)
-        return new RemoteRunConfiguration(parent, id);
-
-    else if (deviceTypeId == ProjectExplorer::Constants::DESKTOP_DEVICE_TYPE)
-        return new LocalRunConfiguration(parent, id);
-
-    QTC_ASSERT(false, return 0);
-
-    return 0;
-}
-
-ProjectExplorer::RunConfiguration *
-RunConfigurationFactory::doRestore(ProjectExplorer::Target *parent,
-                                   const QVariantMap &map)
-{
-    const Core::Id id = ProjectExplorer::idFromMap(map);
-
-    return doCreate(parent, id);
+    return true;
 }
 
 } // namespace Internal

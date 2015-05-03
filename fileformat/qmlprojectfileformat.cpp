@@ -41,8 +41,7 @@ enum {
 
 namespace {
 
-void setupFileFilterItem(QmlProjectManager::FileFilterBaseItem *fileFilterItem,
-                         const QmlJS::SimpleReaderNode::Ptr &node)
+void setupFileFilterItem(QmlProjectManager::FileFilterBaseItem *fileFilterItem, const QmlJS::SimpleReaderNode::Ptr &node)
 {
     const QVariant directoryProperty = node->property(QLatin1String("directory"));
     if (directoryProperty.isValid())
@@ -68,11 +67,11 @@ void setupFileFilterItem(QmlProjectManager::FileFilterBaseItem *fileFilterItem,
 
 namespace QmlProjectManager {
 
-QmlProjectItem *QmlProjectFileFormat::parseProjectFile(const QString &fileName, QString *errorMessage)
+QmlProjectItem *QmlProjectFileFormat::parseProjectFile(const Utils::FileName &fileName, QString *errorMessage)
 {
     QmlJS::SimpleReader simpleQmlJSReader;
 
-    const QmlJS::SimpleReaderNode::Ptr rootNode = simpleQmlJSReader.readFile(fileName);
+    const QmlJS::SimpleReaderNode::Ptr rootNode = simpleQmlJSReader.readFile(fileName.toString());
 
     if (!simpleQmlJSReader.errors().isEmpty() || !rootNode->isValid()) {
         qWarning() << "unable to parse:" << fileName;

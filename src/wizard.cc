@@ -17,6 +17,11 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
+
+#include "wizard.hh"
+#include "wizardpages.hh"
+#include "app.hh"
+
 #include <extensionsystem/pluginmanager.h>
 #include <projectexplorer/customwizard/customwizard.h>
 #include <projectexplorer/kitmanager.h>
@@ -27,10 +32,6 @@
 #include <qtsupport/qtsupportconstants.h>
 
 #include <QIcon>
-
-#include "app.hh"
-#include "wizard.hh"
-#include "wizardpages.hh"
 
 using namespace Core;
 using namespace ExtensionSystem;
@@ -81,8 +82,8 @@ Core::BaseFileWizard *Wizard::create(QWidget *parent, const WizardDialogParamete
 {
     WizardDialog *wizardDialog = new WizardDialog(parent, parameters);
 
-    connect(wizardDialog, SIGNAL(projectParametersChanged(QString,QString)), m_App,
-            SLOT(setProjectNameAndBaseDirectory(QString,QString)));
+    connect(wizardDialog, &WizardDialog::projectParametersChanged,
+            m_App, &App::setProjectNameAndBaseDirectory);
 
     wizardDialog->setPath(parameters.defaultPath());
 

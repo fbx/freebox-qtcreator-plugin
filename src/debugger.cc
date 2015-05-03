@@ -17,12 +17,15 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <projectexplorer/runconfiguration.h>
-#include <projectexplorer/target.h>
-#include <debugger/qml/qmlengine.h>
 
 #include "debugger.hh"
 #include "project.hh"
+
+#include <projectexplorer/runconfiguration.h>
+#include <projectexplorer/target.h>
+
+#include <debugger/debuggerstartparameters.h>
+#include <debugger/debuggerstartparameters.h>
 
 namespace Freebox {
 
@@ -51,7 +54,7 @@ void DebuggerRunControl::redirectMessage(ProjectExplorer::RunControl *rc,
 {
     Q_UNUSED(rc);
     Q_UNUSED(format);
-    mRunControl->engine()->showMessage(msg, Debugger::AppOutput);
+    mRunControl->showMessage(msg, Debugger::AppOutput);
 }
 
 void DebuggerRunControl::remoteStart()
@@ -70,7 +73,7 @@ void DebuggerRunControl::remoteSetupDone(quint16 port)
     result.success = true;
     result.gdbServerPort = -1;
     result.qmlServerPort = port;
-    mRunControl->engine()->notifyEngineRemoteSetupFinished(result);
+    mRunControl->notifyEngineRemoteSetupFinished(result);
 }
 
 } // namespace Freebox

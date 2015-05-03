@@ -25,6 +25,8 @@
 #include <QStringList>
 #include <QHash>
 
+namespace Core { class IDocument; }
+
 namespace Freebox {
 
 class Project;
@@ -33,9 +35,7 @@ namespace Internal {
 
 class Node : public ProjectExplorer::ProjectNode
 {
-
 public:
-
     Node(Project *project, Core::IDocument *projectFile);
     virtual ~Node();
 
@@ -44,8 +44,7 @@ public:
 
     virtual bool showInSimpleTree() const;
 
-    virtual QList<ProjectExplorer::ProjectAction>
-        supportedActions(ProjectExplorer::Node *node) const;
+    virtual QList<ProjectExplorer::ProjectAction> supportedActions(ProjectExplorer::Node *node) const;
 
     virtual bool canAddSubProject(const QString &proFilePath) const;
 
@@ -56,8 +55,6 @@ public:
     virtual bool removeFiles(const QStringList &filePaths, QStringList *notRemoved = 0);
     virtual bool deleteFiles(const QStringList &filePaths);
     virtual bool renameFile(const QString &filePath, const QString &newFilePath);
-    virtual QList<ProjectExplorer::RunConfiguration *>
-        runConfigurationsFor(ProjectExplorer::Node *node);
 
     void refresh();
 

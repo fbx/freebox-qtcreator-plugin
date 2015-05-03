@@ -17,9 +17,10 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QStringList>
 
 #include "ssdpmessage.hh"
+
+#include <QStringList>
 
 namespace Freebox {
 namespace Ssdp {

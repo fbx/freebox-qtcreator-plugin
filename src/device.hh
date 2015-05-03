@@ -20,10 +20,10 @@
 #ifndef DEVICE_HH_
 # define DEVICE_HH_
 
+#include <projectexplorer/devicesupport/idevice.h>
+
 #include <QNetworkInterface>
 #include <QHostAddress>
-
-#include <projectexplorer/devicesupport/idevice.h>
 
 namespace Freebox {
 

@@ -20,11 +20,9 @@
 #ifndef DEBUGGER_HH_
 # define DEBUGGER_HH_
 
-#include <QObject>
-#include <debugger/debuggerruncontrol.h>
-#include <debugger/debuggerengine.h>
-
 #include "runcontrol.hh"
+
+#include <debugger/debuggerruncontrol.h>
 
 namespace Freebox {
 

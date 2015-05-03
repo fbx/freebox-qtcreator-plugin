@@ -30,11 +30,11 @@
 #ifndef FILEFILTERITEMS_H
 #define FILEFILTERITEMS_H
 
+#include "qmlprojectitem.hh"
+
 #include <QObject>
 #include <QSet>
 #include <QTimer>
-
-#include "qmlprojectitem.hh"
 
 QT_FORWARD_DECLARE_CLASS(QDir)
 

@@ -17,19 +17,19 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QDebug>
-#include <QIcon>
+
+#include "runcontrol.hh"
+#include "project.hh"
+#include "device.hh"
+#include "constants.hh"
+#include "configuration.hh"
+#include "remoterunconfiguration.hh"
 
 #include <projectexplorer/target.h>
 #include <projectexplorer/kitinformation.h>
 #include <projectexplorer/devicesupport/idevice.h>
 
-#include "constants.hh"
-#include "configuration.hh"
-#include "runcontrol.hh"
-#include "remoterunconfiguration.hh"
-#include "project.hh"
-#include "device.hh"
+#include <QIcon>
 
 namespace Freebox {
 

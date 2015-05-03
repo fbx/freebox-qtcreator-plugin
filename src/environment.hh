@@ -35,6 +35,11 @@ public:
     QList<int> possibleBaseEnvironments() const;
     QString baseEnvironmentDisplayName(int base) const;
     Utils::Environment baseEnvironment() const;
+
+private:
+    enum BaseEnvironmentBase {
+        SystemEnvironmentBase = 0
+    };
 };
 
 } // namespace Freebox

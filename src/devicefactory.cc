@@ -17,11 +17,10 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <utils/qtcassert.h>
 
-#include "constants.hh"
 #include "devicefactory.hh"
 #include "device.hh"
+#include "constants.hh"
 
 namespace Freebox {
 namespace Internal {

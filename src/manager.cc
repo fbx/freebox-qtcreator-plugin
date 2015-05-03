@@ -17,7 +17,6 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#include <QDebug>
 
 #include "constants.hh"
 #include "manager.hh"
@@ -26,22 +25,25 @@
 namespace Freebox {
 namespace Internal {
 
+Manager::Manager()
+{
+}
+
 QString Manager::mimeType() const
 {
     return QLatin1String(Constants::FBXPROJECT_MIMETYPE);
 }
 
-ProjectExplorer::Project *Manager::openProject(const QString &fileName,
-                                               QString *errorString)
+ProjectExplorer::Project *Manager::openProject(const QString &fileName, QString *errorString)
 {
     if (!QFileInfo(fileName).isFile()) {
         if (errorString)
-            *errorString = tr("Failed opening project '%1': Project is not a file")
+            *errorString = tr("Failed opening project \"%1\": Project is not a file")
                 .arg(fileName);
         return 0;
     }
 
-    return new Project(this, fileName);
+    return new Project(this, Utils::FileName::fromString(fileName));
 }
 
 void Manager::registerProject(Project *project)
@@ -56,8 +58,9 @@ void Manager::unregisterProject(Project *project)
 
 void Manager::notifyChanged(const QString &fileName)
 {
+    const Utils::FileName file = Utils::FileName::fromString(fileName);
     foreach (Project *project, m_projects) {
-        if (fileName == project->filesFileName())
+        if (file == project->filesFileName())
             project->refresh(Project::RefreshFiles);
     }
 }

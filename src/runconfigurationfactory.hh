@@ -30,23 +30,21 @@ class RunConfigurationFactory : public ProjectExplorer::IRunConfigurationFactory
     Q_OBJECT
 
 public:
+    explicit RunConfigurationFactory(QObject *parent = 0);
+    ~RunConfigurationFactory();
 
-    QList<Core::Id> availableCreationIds(ProjectExplorer::Target *parent,
-            ProjectExplorer::IRunConfigurationFactory::CreationMode mode = UserCreate) const;
+    QList<Core::Id> availableCreationIds(ProjectExplorer::Target *parent, CreationMode mode = UserCreate) const;
     QString displayNameForId(Core::Id id) const;
 
-    bool canHandle(ProjectExplorer::Target *parent) const;
-    bool canCreate(ProjectExplorer::Target *parent, Core::Id id) const;
+    bool canCreate(ProjectExplorer::Target *parent, const Core::Id id) const;
     bool canRestore(ProjectExplorer::Target *parent, const QVariantMap &map) const;
-    bool canClone(ProjectExplorer::Target *parent,
-                  ProjectExplorer::RunConfiguration *source) const;
-    ProjectExplorer::RunConfiguration *clone(ProjectExplorer::Target *parent,
-                                             ProjectExplorer::RunConfiguration *source);
+    bool canClone(ProjectExplorer::Target *parent, ProjectExplorer::RunConfiguration *source) const;
+    ProjectExplorer::RunConfiguration *clone(ProjectExplorer::Target *parent, ProjectExplorer::RunConfiguration *source);
 
 private:
+    bool canHandle(ProjectExplorer::Target *parent) const;
 
-    ProjectExplorer::RunConfiguration *doCreate(ProjectExplorer::Target *parent,
-                                                Core::Id id);
+    ProjectExplorer::RunConfiguration *doCreate(ProjectExplorer::Target *parent, Core::Id id);
     ProjectExplorer::RunConfiguration *doRestore(ProjectExplorer::Target *parent,
                                                  const QVariantMap &map);
 };

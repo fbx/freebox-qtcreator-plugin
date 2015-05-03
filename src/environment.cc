@@ -23,12 +23,12 @@ namespace Freebox {
 
 QList<int> EnvironmentAspect::possibleBaseEnvironments() const
 {
-    return QList<int>() << 0;
+    return QList<int>() << static_cast<int>(SystemEnvironmentBase);
 }
 
 QString EnvironmentAspect::baseEnvironmentDisplayName(int base) const
 {
-    if (base == 0)
+    if (base == static_cast<int>(SystemEnvironmentBase))
         return tr("System Environment");
     return QString();
 }
