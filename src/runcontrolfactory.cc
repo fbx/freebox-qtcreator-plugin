@@ -48,7 +48,7 @@ RunControlFactory::RunControlFactory(QObject *parent) :
 }
 
 bool RunControlFactory::canRun(ProjectExplorer::RunConfiguration *rc,
-                               ProjectExplorer::RunMode mode) const
+                               Core::Id mode) const
 {
     Q_UNUSED(mode);
 
@@ -61,7 +61,7 @@ bool RunControlFactory::canRun(ProjectExplorer::RunConfiguration *rc,
 
 ProjectExplorer::RunControl *
 RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
-                          ProjectExplorer::RunMode mode,
+                          Core::Id mode,
                           QString *errorMessage)
 {
     Q_UNUSED(errorMessage);
@@ -73,43 +73,29 @@ RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
 
     QTC_ASSERT(fbxDevice, return 0);
 
-    switch (mode) {
-    case ProjectExplorer::NormalRunMode:
+    if (mode == ProjectExplorer::Constants::NORMAL_RUN_MODE) {
         return new RunControl(runConfiguration, mode);
 
-    case ProjectExplorer::DebugRunMode: {
+    } else if (mode == ProjectExplorer::Constants::DEBUG_RUN_MODE) {
         Debugger::DebuggerStartParameters params;
 
-        params.masterEngineType = Debugger::QmlEngineType;
-        params.runConfiguration = runConfiguration;
         params.startMode = Debugger::AttachToRemoteServer;
-        params.languages = Debugger::QmlLanguage;
         params.qmlServerAddress = fbxDevice->address().toString();
         params.qmlServerPort = 0;
-        params.remoteSetupNeeded = true;
 
         const Project *project = qobject_cast<Project *>(runConfiguration->target()->project());
         QTC_ASSERT(project, return 0);
 
-        if (project) {
-            params.projectSourceDirectory = project->projectDir().canonicalPath();
-            params.projectSourceFiles =
-                    project->files(ProjectExplorer::Project::ExcludeGeneratedFiles);
-        }
-
-        Debugger::DebuggerRunControl * const runControl =
-                Debugger::DebuggerRunControlFactory::doCreate(params, errorMessage);
+        Debugger::DebuggerRunControl * const runControl = createDebuggerRunControl(params, runConfiguration, errorMessage);
         if (!runControl)
             return 0;
 
         DebuggerRunControl *debugger = new DebuggerRunControl(runControl);
         return debugger->runControl();
-    }
 
-    case ProjectExplorer::QmlProfilerRunMode: {
+    } else if (mode == ProjectExplorer::Constants::QML_PROFILER_RUN_MODE) {
         Analyzer::AnalyzerStartParameters params;
 
-        params.startMode = Analyzer::StartLocal;
         params.runMode = mode;
         params.analyzerHost = fbxDevice->address().toString();
         params.analyzerPort = 0;
@@ -122,9 +108,8 @@ RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
 
         AnalyzerRunControl *analyzer = new AnalyzerRunControl(runControl);
         return analyzer->runControl();
-    }
 
-    default:
+    } else {
         qWarning("Unsupported run mode");
     }
 

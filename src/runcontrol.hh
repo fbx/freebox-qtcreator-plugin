@@ -33,7 +33,7 @@ class RunControl : public ProjectExplorer::RunControl
 
 public:
     RunControl(ProjectExplorer::RunConfiguration *rc,
-               ProjectExplorer::RunMode mode);
+               Core::Id mode);
 
     virtual void start();
     virtual bool isRunning() const;

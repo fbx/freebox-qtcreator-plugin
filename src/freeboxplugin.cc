@@ -24,7 +24,6 @@
 #include "runconfigurationfactory.hh"
 #include "runcontrolfactory.hh"
 #include "manager.hh"
-#include "wizard.hh"
 #include "devicefactory.hh"
 #include "device.hh"
 #include "freestorepackager.hh"
@@ -84,7 +83,6 @@ bool FreeboxPlugin::initialize(const QStringList &arguments, QString *errorStrin
     addAutoReleasedObject(new RunControlFactory);
     addAutoReleasedObject(new Internal::Manager);
     addAutoReleasedObject(new RunConfigurationFactory);
-    addAutoReleasedObject(new Internal::Wizard);
 
     connect(ProjectExplorer::KitManager::instance(), SIGNAL(kitsLoaded()),
             configuration, SLOT(updateKits()));

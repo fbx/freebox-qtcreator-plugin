@@ -31,11 +31,11 @@ public:
     RunControlFactory(QObject *parent = 0);
 
     virtual bool canRun(ProjectExplorer::RunConfiguration *runConfiguration,
-                        ProjectExplorer::RunMode mode) const;
+                        Core::Id mode) const;
 
     virtual ProjectExplorer::RunControl *
         create(ProjectExplorer::RunConfiguration *runConfiguration,
-           ProjectExplorer::RunMode mode,
+           Core::Id mode,
            QString *errorMessage);
 };
 

@@ -34,7 +34,7 @@
 namespace Freebox {
 
 RunControl::RunControl(ProjectExplorer::RunConfiguration *rc,
-                       ProjectExplorer::RunMode mode) :
+                       Core::Id mode) :
     ProjectExplorer::RunControl(rc, mode),
     mDebug(false),
     mRunning(false)

@@ -37,10 +37,6 @@ File::File(Project *parent, const Utils::FileName &fileName)
     setFilePath(fileName);
 }
 
-File::~File()
-{
-}
-
 bool File::save(QString *, const QString &, bool)
 {
     return false;

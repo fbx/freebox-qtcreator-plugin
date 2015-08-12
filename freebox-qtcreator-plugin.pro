@@ -15,7 +15,6 @@ INCLUDEPATH += src .
 
 SOURCES += \
     src/analyzer.cc \
-    src/app.cc \
     src/configuration.cc \
     src/debugger.cc \
     src/device.cc \
@@ -35,8 +34,6 @@ SOURCES += \
     src/runcontrol.cc \
     src/runcontrolfactory.cc \
     src/tar.cc \
-    src/wizard.cc \
-    src/wizardpages.cc \
     ssdp/ssdpclient.cc \
     ssdp/ssdpmessage.cc \
     ssdp/ssdpsearch.cc \
@@ -56,7 +53,6 @@ SOURCES += \
 
 HEADERS += \
     src/analyzer.hh \
-    src/app.hh \
     src/configuration.hh \
     src/constants.hh \
     src/debugger.hh \
@@ -78,8 +74,6 @@ HEADERS += \
     src/runcontrol.hh \
     src/runcontrolfactory.hh \
     src/tar.hh \
-    src/wizard.hh \
-    src/wizardpages.hh \
     ssdp/ssdpclient.hh \
     ssdp/ssdpconstants.hh \
     ssdp/ssdpmessage.hh \
