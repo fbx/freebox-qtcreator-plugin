@@ -1,0 +1,101 @@
+{
+    "version": 1,
+    "kind": "project",
+    "id": "FreeboxA.QtQuickUi",
+    "category": "Z.Freebox",
+    "trDescription": "Creates a Qt Quick 2 project designed for the Freebox Player device.",
+    "trDisplayName": "Freebox Qt Quick UI",
+    "trDisplayCategory": "Freebox",
+    "icon": "qml_wizard.png",
+
+    "options":
+    [
+        { "key": "QmlProjectFileName", "value": "%{JS: Util.fileName('%{ProjectName}', 'fbxproject')}" },
+        { "key": "MainQmlFileName", "value": "%{JS: Util.fileName('%{ProjectName}', 'qml')}" },
+        { "key": "QtQuickVersion", "value": "2.5" }
+    ],
+
+    "pages":
+    [
+        {
+            "trDisplayName": "Project Location",
+            "trShortTitle": "Location",
+            "typeId": "Project"
+        },
+        {
+            "trDisplayName": "Define Application Details",
+            "trShortTitle": "Application",
+            "typeId": "Fields",
+            "data":
+            [
+                {
+                    "name": "AppIdentifier",
+                    "trDisplayName": "Unique identifier:",
+                    "type": "LineEdit",
+                    "mandatory": true,
+                    "data": {
+                        "validator": "^(?:[a-zA-Z]{2,63}(?:\\.(?<!-)[a-zA-Z0-9][a-zA-Z0-9-]{0,62}(?<!-)){2,})$",
+                        "trText": "%{JS: 'org.example.%{ProjectName}'.toLowerCase() }",
+                        "trPlaceholder": "org.example.myapp"
+                    }
+                },
+                {
+                    "name": "AppName",
+                    "trDisplayName": "Pretty name:",
+                    "type": "LineEdit",
+                    "mandatory": true,
+                    "data": {
+                        "trText": "%{JS: '%{ProjectName}'.charAt(0).toUpperCase() + '%{ProjectName}'.slice(1).replace(/_/g, ' ').trim() }"
+                    }
+                },
+                {
+                    "name": "AppDescription",
+                    "trDisplayName": "Application short description:",
+                    "type": "LineEdit",
+                    "mandatory": true,
+                    "data": {
+                        "trPlaceholder": "My awesome application"
+                    }
+                },
+                {
+                    "name": "Sp1",
+                    "type": "Spacer",
+                    "data": { "factor": 2 }
+                }
+            ]
+        },
+        {
+            "trDisplayName": "Project Management",
+            "trShortTitle": "Summary",
+            "typeId": "Summary"
+        }
+    ],
+    "generators":
+    [
+        {
+            "typeId": "File",
+            "data":
+            [
+                {
+                    "source": "app.fbxproject",
+                    "target": "%{ProjectDirectory}/%{QmlProjectFileName}",
+                    "openAsProject": true
+                },
+                {
+                    "source": "main.qml",
+                    "target": "%{ProjectDirectory}/%{MainQmlFileName}",
+                    "openInEditor": true
+                },
+                {
+                    "source": "manifest.json",
+                    "target": "%{ProjectDirectory}/manifest.json"
+                },
+                {
+                    "source": "../../git.ignore",
+                    "target": "%{ProjectDirectory}/.gitignore",
+                    "condition": "%{JS: !%{IsSubproject} && '%{VersionControl}' === 'G.Git'}"
+                }
+            ]
+        }
+    ]
+}

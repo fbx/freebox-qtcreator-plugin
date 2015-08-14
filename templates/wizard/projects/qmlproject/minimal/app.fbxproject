@@ -1,0 +1,27 @@
+import QmlProject 1.1
+
+Project {
+    mainFile: "%{MainQmlFileName}"
+
+    /* Include QML, JS, images, fonts from current directory and subdirectories */
+    QmlFiles {
+        directory: "."
+    }
+    JavaScriptFiles {
+        directory: "."
+    }
+    ImageFiles {
+        directory: "."
+    }
+    Files {
+        filter: "qmldir;*.ttf;*.otf;*.woff"
+        directory: "."
+        recursive: true
+    }
+    Files {
+        filter: "manifest.json"
+    }
+
+    /* List of plugin directories passed to QML runtime */
+    // importPaths: [ "../libfbxqml" ]
+}

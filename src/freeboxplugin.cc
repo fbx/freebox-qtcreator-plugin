@@ -36,6 +36,7 @@
 #include <coreplugin/coreconstants.h>
 #include <coreplugin/fileiconprovider.h>
 #include <projectexplorer/devicesupport/devicemanager.h>
+#include <projectexplorer/jsonwizard/jsonwizardfactory.h>
 #include <projectexplorer/kitmanager.h>
 #include <projectexplorer/session.h>
 
@@ -76,6 +77,7 @@ bool FreeboxPlugin::initialize(const QStringList &arguments, QString *errorStrin
     Q_UNUSED(errorString);
 
     Utils::MimeDatabase::addMimeTypes(QLatin1String(":/freebox/FbxProjectManager.mimetypes.xml"));
+    ProjectExplorer::JsonWizardFactory::addWizardPath(Utils::FileName::fromString(QStringLiteral(":/freebox/templates/wizard")));
 
     FreeboxConfiguration *configuration = new FreeboxConfiguration(this);
 
