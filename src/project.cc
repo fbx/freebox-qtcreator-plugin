@@ -321,15 +321,18 @@ QStringList Project::files(ProjectExplorer::Project::FilesMode) const
     return files();
 }
 
-bool Project::fromMap(const QVariantMap &map)
+Project::RestoreResult Project::fromMap(const QVariantMap &map, QString *errorMessage)
 {
-    if (!ProjectExplorer::Project::fromMap(map))
-        return false;
+    RestoreResult result = ProjectExplorer::Project::fromMap(map, errorMessage);
+    if (result != RestoreResult::Ok)
+        return result;
 
     // refresh first - project information is used e.g. to decide the default RC's
     refresh(RefreshEverything);
 
-    return updateKit();
+    updateKit();
+
+    return RestoreResult::Ok;
 }
 
 bool Project::updateKit()
@@ -337,10 +340,6 @@ bool Project::updateKit()
     using ProjectExplorer::Kit;
     using ProjectExplorer::KitManager;
     using ProjectExplorer::Target;
-
-    connect(this, &ProjectExplorer::Project::addedTarget, this, &Project::addedTarget);
-    connect(this, &ProjectExplorer::Project::activeTargetChanged,
-            this, &Project::onActiveTargetChanged);
 
     QList<Kit*> kits = KitManager::matchingKits(
         std::function<bool(const Kit *)>([this](const Kit *k) -> bool {
@@ -369,11 +368,13 @@ bool Project::updateKit()
         }));
 
     foreach(Kit *kit, kits) {
-        if (!target(kit)) {
-            Target *t = createTarget(kit);
-            addTarget(t);
-        }
+        if (!target(kit))
+            addTarget(createTarget(kit));
     }
+
+    connect(this, &ProjectExplorer::Project::addedTarget, this, &Project::addedTarget);
+    connect(this, &ProjectExplorer::Project::activeTargetChanged,
+            this, &Project::onActiveTargetChanged);
 
     onActiveTargetChanged(activeTarget());
 

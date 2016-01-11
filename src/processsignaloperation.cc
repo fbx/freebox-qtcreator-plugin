@@ -21,7 +21,7 @@
 
 namespace Freebox {
 
-void FreeboxProcessSignalOperation::killProcess(int pid)
+void FreeboxProcessSignalOperation::killProcess(qint64 pid)
 {
     Q_UNUSED(pid);
 }
@@ -31,7 +31,7 @@ void FreeboxProcessSignalOperation::killProcess(const QString &filePath)
     Q_UNUSED(filePath);
 }
 
-void FreeboxProcessSignalOperation::interruptProcess(int pid)
+void FreeboxProcessSignalOperation::interruptProcess(qint64 pid)
 {
     Q_UNUSED(pid);
 }

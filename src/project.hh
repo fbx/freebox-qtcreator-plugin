@@ -67,7 +67,7 @@ public:
     ProjectExplorer::IProjectManager *projectManager() const;
     QStringList files(ProjectExplorer::Project::FilesMode mode) const;
     QStringList files() const;
-    bool fromMap(const QVariantMap &map);
+    RestoreResult fromMap(const QVariantMap &map, QString *errorMessage);
     QString mainFile() const;
     bool validProjectFile() const;
     QStringList customImportPaths() const;

@@ -27,6 +27,7 @@ namespace Internal {
 
 DeviceFactory::DeviceFactory()
 {
+    setObjectName(QStringLiteral("FreeboxDeviceFactory"));
 }
 
 QString DeviceFactory::displayNameForId(Core::Id type) const

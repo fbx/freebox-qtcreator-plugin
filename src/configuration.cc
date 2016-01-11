@@ -81,7 +81,7 @@ void FreeboxConfiguration::updateKits()
     }
 
     foreach(QString usn, ids) {
-        Core::Id deviceId = Core::Id(mFreebox[usn]->toLocal8Bit().constData());
+        Core::Id deviceId = Core::Id::fromString(usn);
 
         ProjectExplorer::IDevice::ConstPtr device =
                 DeviceManager::instance()->find(deviceId);
@@ -92,12 +92,13 @@ void FreeboxConfiguration::updateKits()
         QTC_ASSERT(freebox, continue);
 
         Kit *kit = new Kit();
+        kit->blockNotification();
         kit->setUnexpandedDisplayName(tr("Freebox (%1)").arg(freebox->address().toString()));
         kit->setAutoDetected(true);
         QtSupport::QtKitInformation::setQtVersion(kit, 0);
         DeviceTypeKitInformation::setDeviceTypeId(kit, Core::Id(Constants::FREEBOX_DEVICE_TYPE));
         DeviceKitInformation::setDeviceId(kit, deviceId);
-        kit->makeSticky();
+        kit->unblockNotification();
         KitManager::registerKit(kit);
     }
 }

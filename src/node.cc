@@ -94,9 +94,10 @@ void Node::refresh()
         } else {
             absoluteFilePath = m_project->projectDir().absoluteFilePath(fileInfo.filePath());
             relativeDirectory = fileInfo.path();
-            if (relativeDirectory == QLatin1String("."))
-                relativeDirectory.clear();
         }
+
+        if (relativeDirectory == QLatin1String("."))
+            relativeDirectory.clear();
 
         filesInDirectory[relativeDirectory].append(absoluteFilePath);
     }
@@ -180,32 +181,9 @@ QList<ProjectExplorer::ProjectAction> Node::supportedActions(ProjectExplorer::No
     return actions;
 }
 
-bool Node::canAddSubProject(const QString &proFilePath) const
-{
-    Q_UNUSED(proFilePath)
-    return false;
-}
-
-bool Node::addSubProjects(const QStringList &proFilePaths)
-{
-    Q_UNUSED(proFilePaths)
-    return false;
-}
-
-bool Node::removeSubProjects(const QStringList &proFilePaths)
-{
-    Q_UNUSED(proFilePaths)
-    return false;
-}
-
 bool Node::addFiles(const QStringList &filePaths, QStringList * /*notAdded*/)
 {
     return m_project->addFiles(filePaths);
-}
-
-bool Node::removeFiles(const QStringList & /*filePaths*/, QStringList * /*notRemoved*/)
-{
-    return false;
 }
 
 bool Node::deleteFiles(const QStringList & /*filePaths*/)

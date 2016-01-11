@@ -143,21 +143,22 @@ bool RemoteRunConfiguration::fromMap(const QVariantMap &map)
 
 void RemoteRunConfiguration::updateEnabled()
 {
-    Utils::MimeDatabase mdb;
     if (mainScriptSource() == FileInEditor) {
+        Utils::MimeDatabase mimeDataBase;
         Core::IDocument *document = Core::EditorManager::currentDocument();
+        Utils::MimeType mainScriptMimeType = mimeDataBase.mimeTypeForFile(mainScript());
         if (document) {
             m_currentFileFilename = document->filePath().toString();
         }
         if (!document
-                || mdb.mimeTypeForFile(mainScript()).matchesName(QLatin1String("application/x-qmlproject"))) {
+                || mainScriptMimeType.matchesName(QLatin1String(Constants::FBXPROJECT_MIMETYPE))) {
             // find a qml file with lowercase filename. This is slow, but only done
             // in initialization/other border cases.
             foreach (const QString &filename, target()->project()->files(ProjectExplorer::Project::AllFiles)) {
                 const QFileInfo fi(filename);
 
                 if (!filename.isEmpty() && fi.baseName()[0].isLower()
-                        && mdb.mimeTypeForFile(fi).matchesName(QLatin1String("text/x-qml")))
+                        && mimeDataBase.mimeTypeForFile(fi).matchesName(QLatin1String(ProjectExplorer::Constants::QML_MIMETYPE)))
                 {
                     m_currentFileFilename = filename;
                     break;
