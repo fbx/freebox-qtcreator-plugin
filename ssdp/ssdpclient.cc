@@ -49,9 +49,20 @@ void Client::start(const QString &nt)
 
 
     foreach(QNetworkInterface iface, QNetworkInterface::allInterfaces()) {
+        QNetworkInterface::InterfaceFlags flags = iface.flags();
+        if (!(flags & QNetworkInterface::IsUp) ||
+            !(flags & QNetworkInterface::IsRunning) ||
+             (flags & QNetworkInterface::IsLoopBack) ||
+             (flags & QNetworkInterface::IsPointToPoint) ||
+            !(flags & QNetworkInterface::CanMulticast))
+            continue;
+
         mListeners << new UdpListener(iface);
-        foreach(QHostAddress addr, iface.allAddresses()) {
-            mSearches << new Search(iface, addr, nt);
+
+        foreach(const QNetworkAddressEntry addr, iface.addressEntries()) {
+            const QHostAddress ip = addr.ip();
+            if (ip.protocol() == QAbstractSocket::IPv4Protocol)
+                mSearches << new Search(iface, ip, nt);
         }
     }
 
