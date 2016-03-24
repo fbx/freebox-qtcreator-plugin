@@ -21,7 +21,7 @@
 # define LOCALRUNCONFIGURATION_HH_
 
 # include <qtsupport/baseqtversion.h>
-# include <projectexplorer/localapplicationrunconfiguration.h>
+# include <projectexplorer/runnables.h>
 
 namespace Freebox {
 
@@ -29,7 +29,7 @@ namespace Internal {
     class RunConfigurationFactory;
 }
 
-class LocalRunConfiguration : public ProjectExplorer::LocalApplicationRunConfiguration
+class LocalRunConfiguration : public ProjectExplorer::RunConfiguration
 {
     Q_OBJECT
 
@@ -39,11 +39,8 @@ class LocalRunConfiguration : public ProjectExplorer::LocalApplicationRunConfigu
 public:
     LocalRunConfiguration(ProjectExplorer::Target *parent, Core::Id id);
 
-    QString executable() const;
-    ProjectExplorer::ApplicationLauncher::Mode runMode() const;
-    QString commandLineArguments() const;
+    ProjectExplorer::Runnable runnable() const override;
 
-    QString workingDirectory() const;
     QtSupport::BaseQtVersion *qtVersion() const;
 
     enum MainScriptSource {
@@ -72,6 +69,9 @@ protected:
 
 private:
     void ctor();
+
+    QString executable() const;
+    QString commandLineArguments() const;
 
     static QString canonicalCapsPath(const QString &filePath);
 

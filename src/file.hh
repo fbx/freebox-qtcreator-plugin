@@ -36,14 +36,6 @@ public:
 
     File(Project *parent, const Utils::FileName &fileName);
 
-    virtual bool save(QString *errorString, const QString &fileName, bool autoSave) override;
-
-    virtual QString defaultPath() const override;
-    virtual QString suggestedFileName() const override;
-
-    virtual bool isModified() const override;
-    virtual bool isSaveAsAllowed() const override;
-
     ReloadBehavior reloadBehavior(ChangeTrigger state, ChangeType type) const override;
     bool reload(QString *errorString, ReloadFlag flag, ChangeType type) override;
 

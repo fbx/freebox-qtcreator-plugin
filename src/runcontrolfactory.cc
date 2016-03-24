@@ -22,9 +22,9 @@
 #include <debugger/debuggerstartparameters.h>
 #include <debugger/debuggerruncontrol.h>
 #include <debugger/debuggerengine.h>
-#include <analyzerbase/analyzerstartparameters.h>
-#include <analyzerbase/analyzermanager.h>
-#include <analyzerbase/analyzerruncontrol.h>
+#include <debugger/analyzer/analyzerstartparameters.h>
+#include <debugger/analyzer/analyzermanager.h>
+#include <debugger/analyzer/analyzerruncontrol.h>
 #include <projectexplorer/project.h>
 #include <projectexplorer/projectexplorerconstants.h>
 #include <projectexplorer/target.h>
@@ -94,15 +94,8 @@ RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
         return debugger->runControl();
 
     } else if (mode == ProjectExplorer::Constants::QML_PROFILER_RUN_MODE) {
-        Analyzer::AnalyzerStartParameters params;
-
-        params.runMode = mode;
-        params.analyzerHost = fbxDevice->address().toString();
-        params.analyzerPort = 0;
-
-        Analyzer::AnalyzerRunControl * const runControl =
-                Analyzer::AnalyzerManager::createRunControl(params,
-                                                            runConfiguration);
+        Debugger::AnalyzerRunControl * const runControl =
+                Debugger::createAnalyzerRunControl(runConfiguration, mode);
         if (!runControl)
             return 0;
 

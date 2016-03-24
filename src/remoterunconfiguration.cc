@@ -60,11 +60,6 @@ QString RemoteRunConfiguration::commandLineArguments() const
     return QString();
 }
 
-QString RemoteRunConfiguration::workingDirectory() const
-{
-    return QString();
-}
-
 QWidget *RemoteRunConfiguration::createConfigurationWidget()
 {
     return 0;

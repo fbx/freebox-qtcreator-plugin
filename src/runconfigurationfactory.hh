@@ -31,7 +31,6 @@ class RunConfigurationFactory : public ProjectExplorer::IRunConfigurationFactory
 
 public:
     explicit RunConfigurationFactory(QObject *parent = 0);
-    ~RunConfigurationFactory();
 
     QList<Core::Id> availableCreationIds(ProjectExplorer::Target *parent, CreationMode mode = UserCreate) const;
     QString displayNameForId(Core::Id id) const;

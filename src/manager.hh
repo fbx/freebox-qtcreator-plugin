@@ -22,8 +22,6 @@
 
 #include <projectexplorer/iprojectmanager.h>
 
-#include "project.hh"
-
 namespace Freebox {
 
 class Project;

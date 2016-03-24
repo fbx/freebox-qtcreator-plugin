@@ -31,12 +31,11 @@
 namespace Freebox {
 namespace Internal {
 
-Node::Node(Project *project, Core::IDocument *projectFile)
-    : ProjectExplorer::ProjectNode(projectFile->filePath()),
-      m_project(project),
-      m_projectFile(projectFile)
+Node::Node(Project *project)
+    : ProjectExplorer::ProjectNode(project->projectFilePath()),
+      m_project(project)
 {
-    setDisplayName(projectFile->filePath().toFileInfo().completeBaseName());
+    setDisplayName(project->projectFilePath().toFileInfo().completeBaseName());
     // make overlay
     const QSize desiredSize = QSize(16, 16);
     const QIcon projectBaseIcon(QLatin1String(":/freebox/images/qmlfolder.png"));
@@ -48,16 +47,6 @@ Node::Node(Project *project, Core::IDocument *projectFile)
 
 Node::~Node()
 { }
-
-Core::IDocument *Node::projectFile() const
-{
-    return m_projectFile;
-}
-
-QString Node::projectFilePath() const
-{
-    return m_projectFile->filePath().toString();
-}
 
 void Node::refresh()
 {
@@ -125,7 +114,7 @@ ProjectExplorer::FolderNode *Node::findOrCreateFolderByName(const QStringList &c
     if (! end)
         return 0;
 
-    Utils::FileName folderPath = path().parentDir();
+    Utils::FileName folderPath = filePath().parentDir();
 
     QString folderName;
     for (int i = 0; i < end; ++i) {

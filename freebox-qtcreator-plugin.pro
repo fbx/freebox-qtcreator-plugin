@@ -108,8 +108,7 @@ QTC_PLUGIN_DEPENDS += \
     coreplugin \
     cpptools \
     qmakeprojectmanager \
-    debugger \
-    analyzerbase
+    debugger
 
 QT += network
 

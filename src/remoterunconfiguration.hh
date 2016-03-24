@@ -20,7 +20,7 @@
 #ifndef FREEBOXREMOTERUNCONFIGURATION_HH_
 # define FREEBOXREMOTERUNCONFIGURATION_HH_
 
-#include <projectexplorer/localapplicationrunconfiguration.h>
+#include <projectexplorer/runnables.h>
 
 namespace Freebox {
 
@@ -37,10 +37,6 @@ class RemoteRunConfiguration : public ProjectExplorer::RunConfiguration
 
 public:
     RemoteRunConfiguration(ProjectExplorer::Target *parent, Core::Id id);
-
-    QString commandLineArguments() const;
-
-    QString workingDirectory() const;
 
     enum MainScriptSource {
         FileInEditor,
@@ -68,6 +64,8 @@ protected:
 
 private:
     void ctor();
+
+    QString commandLineArguments() const;
 
     // absolute path to current file (if being used)
     QString m_currentFileFilename;

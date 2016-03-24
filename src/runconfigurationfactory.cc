@@ -38,10 +38,6 @@ RunConfigurationFactory::RunConfigurationFactory(QObject *parent) :
     setObjectName(QLatin1String("FreeboxProjectRunConfigurationFactory"));
 }
 
-RunConfigurationFactory::~RunConfigurationFactory()
-{
-}
-
 QList<Core::Id> RunConfigurationFactory::availableCreationIds(ProjectExplorer::Target *parent, CreationMode mode) const
 {
     Q_UNUSED(mode)

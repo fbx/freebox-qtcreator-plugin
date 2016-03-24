@@ -40,16 +40,28 @@ namespace Freebox {
 const char M_CURRENT_FILE[] = "CurrentFile";
 
 LocalRunConfiguration::LocalRunConfiguration(ProjectExplorer::Target *parent, Core::Id id) :
-    ProjectExplorer::LocalApplicationRunConfiguration(parent, id)
+    ProjectExplorer::RunConfiguration(parent, id)
 {
     addExtraAspect(new EnvironmentAspect(this));
 
     ctor();
 }
 
+ProjectExplorer::Runnable LocalRunConfiguration::runnable() const
+{
+    ProjectExplorer::StandardRunnable r;
+    r.executable = executable();
+    r.commandLineArguments = commandLineArguments();
+    r.runMode = ProjectExplorer::ApplicationLauncher::Gui;
+    r.environment = extraAspect<EnvironmentAspect>()->environment();
+    r.workingDirectory = canonicalCapsPath(target()->project()->projectFilePath()
+                                           .toFileInfo().absolutePath());
+    return r;
+}
+
 LocalRunConfiguration::LocalRunConfiguration(ProjectExplorer::Target *parent,
                                              LocalRunConfiguration *source) :
-    ProjectExplorer::LocalApplicationRunConfiguration(parent, source)
+    ProjectExplorer::RunConfiguration(parent, source)
 {
     ctor();
 }
@@ -68,11 +80,6 @@ QString LocalRunConfiguration::executable() const
         return QString();
 
     return version->qmlsceneCommand();
-}
-
-ProjectExplorer::ApplicationLauncher::Mode LocalRunConfiguration::runMode() const
-{
-    return ProjectExplorer::ApplicationLauncher::Gui;
 }
 
 QString LocalRunConfiguration::commandLineArguments() const
@@ -99,11 +106,6 @@ QString LocalRunConfiguration::commandLineArguments() const
         Utils::QtcProcess::addArg(&args, s);
     }
     return args;
-}
-
-QString LocalRunConfiguration::workingDirectory() const
-{
-    return canonicalCapsPath(target()->project()->projectFilePath().toFileInfo().absolutePath());
 }
 
 /* QtDeclarative checks explicitly that the capitalization for any URL / path
@@ -191,7 +193,7 @@ bool LocalRunConfiguration::fromMap(const QVariantMap &map)
     else
         setScriptSource(FileInSettings, m_scriptFile);
 
-    return ProjectExplorer::LocalApplicationRunConfiguration::fromMap(map);
+    return ProjectExplorer::RunConfiguration::fromMap(map);
 }
 
 void LocalRunConfiguration::updateEnabled()

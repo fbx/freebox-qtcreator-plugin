@@ -103,6 +103,11 @@ ProjectExplorer::IDevice::Ptr FreeboxDevice::clone() const
     return Ptr(new FreeboxDevice(*this));
 }
 
+QString FreeboxDevice::qmlProfilerHost() const
+{
+    return mAddress.toString();
+}
+
 const QHostAddress &FreeboxDevice::address() const
 {
     return mAddress;

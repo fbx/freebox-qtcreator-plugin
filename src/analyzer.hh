@@ -20,7 +20,7 @@
 #ifndef ANALYZER_HH_
 # define ANALYZER_HH_
 
-#include <analyzerbase/analyzerruncontrol.h>
+#include <debugger/analyzer/analyzerruncontrol.h>
 
 #include "runcontrol.hh"
 
@@ -31,8 +31,8 @@ class AnalyzerRunControl : public RunControl
     Q_OBJECT
 
 public:
-    AnalyzerRunControl(Analyzer::AnalyzerRunControl *rc);
-    Analyzer::AnalyzerRunControl *runControl() const;
+    AnalyzerRunControl(Debugger::AnalyzerRunControl *rc);
+    Debugger::AnalyzerRunControl *runControl() const;
 
 private slots:
     void remoteSetup();
@@ -42,7 +42,7 @@ private slots:
                          Utils::OutputFormat format);
 
 private:
-    Analyzer::AnalyzerRunControl *mRunControl;
+    Debugger::AnalyzerRunControl *mRunControl;
 };
 
 } // namespace Freebox

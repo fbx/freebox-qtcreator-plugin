@@ -46,23 +46,19 @@
 namespace Freebox {
 
 Project::Project(Internal::Manager *manager, const Utils::FileName &fileName)
-    : m_manager(manager),
-      m_fileName(fileName),
-      m_activeTarget(0)
 {
     setId("FbxProjectManager.FbxProject");
+    setProjectManager(manager);
+    setDocument(new Internal::File(this, fileName));
+    Core::DocumentManager::addDocument(document(), true);
+    setRootProjectNode(new Internal::Node(this));
+
     setProjectContext(Core::Context(Constants::PROJECTCONTEXT));
     setProjectLanguages(Core::Context(ProjectExplorer::Constants::LANG_QMLJS));
 
-    QFileInfo fileInfo = m_fileName.toFileInfo();
-    m_projectName = fileInfo.completeBaseName();
+    m_projectName = projectFilePath().toFileInfo().completeBaseName();
 
-    m_file = new Internal::File(this, fileName);
-    m_rootNode = new Internal::Node(this, m_file);
-
-    Core::DocumentManager::addDocument(m_file, true);
-
-    m_manager->registerProject(this);
+    projectManager()->registerProject(this);
 
     connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitsChanged,
             this, &Project::updateKit);
@@ -70,12 +66,9 @@ Project::Project(Internal::Manager *manager, const Utils::FileName &fileName)
 
 Project::~Project()
 {
-    m_manager->unregisterProject(this);
-
-    Core::DocumentManager::removeDocument(m_file);
+    projectManager()->unregisterProject(this);
 
     delete m_projectItem.data();
-    delete m_rootNode;
 }
 
 void Project::addedTarget(ProjectExplorer::Target *target)
@@ -123,12 +116,12 @@ void Project::addedRunConfiguration(ProjectExplorer::RunConfiguration *rc)
 
 QDir Project::projectDir() const
 {
-    return projectFilePath().toFileInfo().dir();
+    return QDir(projectDirectory().toString());
 }
 
 Utils::FileName Project::filesFileName() const
 {
-    return m_fileName;
+    return projectFilePath();
 }
 
 void Project::parseProject(RefreshOptions options)
@@ -144,7 +137,7 @@ void Project::parseProject(RefreshOptions options)
         if (!m_projectItem) {
             QString errorMessage;
             m_projectItem =
-                    QmlProjectManager::QmlProjectFileFormat::parseProjectFile(m_fileName,
+                    QmlProjectManager::QmlProjectFileFormat::parseProjectFile(projectFilePath(),
                                                                               &errorMessage);
             if (m_projectItem) {
                 connect(m_projectItem, SIGNAL(qmlFilesChanged(QSet<QString>,QSet<QString>)),
@@ -152,7 +145,7 @@ void Project::parseProject(RefreshOptions options)
 
             } else {
                 Core::MessageManager::write(tr("Error while loading project file %1.")
-                                            .arg(m_fileName.toUserOutput()),
+                                            .arg(projectFilePath().toUserOutput()),
                                             Core::MessageManager::NoModeSwitch);
                 Core::MessageManager::write(errorMessage);
             }
@@ -170,12 +163,12 @@ void Project::parseProject(RefreshOptions options)
                 QString errorMessage;
                 if (!reader.fetch(mainFilePath, &errorMessage)) {
                     Core::MessageManager::write(tr("Warning while loading project file %1.")
-                                                .arg(m_fileName.toUserOutput()));
+                                                .arg(projectFilePath().toUserOutput()));
                     Core::MessageManager::write(errorMessage);
                 }
             }
         }
-        m_rootNode->refresh();
+        rootProjectNode()->refresh();
     }
 
     if (options & RefreshConfiguration) {
@@ -191,7 +184,7 @@ void Project::refresh(RefreshOptions options)
     parseProject(options);
 
     if (options & RefreshFiles)
-        m_rootNode->refresh();
+        rootProjectNode()->refresh();
 
     if (!modelManager())
         return;
@@ -269,14 +262,9 @@ QString Project::displayName() const
     return m_projectName;
 }
 
-Core::IDocument *Project::document() const
+Internal::Manager *Project::projectManager() const
 {
-    return m_file;
-}
-
-ProjectExplorer::IProjectManager *Project::projectManager() const
-{
-    return m_manager;
+    return static_cast<Internal::Manager *>(ProjectExplorer::Project::projectManager());
 }
 
 bool Project::supportsKit(ProjectExplorer::Kit *k, QString *errorMessage) const
@@ -311,9 +299,9 @@ bool Project::supportsKit(ProjectExplorer::Kit *k, QString *errorMessage) const
     return true;
 }
 
-ProjectExplorer::ProjectNode *Project::rootProjectNode() const
+Internal::Node *Project::rootProjectNode() const
 {
-    return m_rootNode;
+    return static_cast<Internal::Node *>(ProjectExplorer::Project::rootProjectNode());
 }
 
 QStringList Project::files(ProjectExplorer::Project::FilesMode) const
@@ -342,7 +330,7 @@ bool Project::updateKit()
     using ProjectExplorer::Target;
 
     QList<Kit*> kits = KitManager::matchingKits(
-        std::function<bool(const Kit *)>([this](const Kit *k) -> bool {
+        ProjectExplorer::KitMatcher(std::function<bool(const Kit *)>([this](const Kit *k) -> bool {
             if (!k->isValid())
                 return false;
 
@@ -365,7 +353,7 @@ bool Project::updateKit()
             }
 
             return false;
-        }));
+        })));
 
     foreach(Kit *kit, kits) {
         if (!target(kit))

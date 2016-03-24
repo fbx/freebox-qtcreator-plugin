@@ -26,40 +26,14 @@
 namespace Freebox {
 namespace Internal {
 
-File::File(Project *parent, const Utils::FileName &fileName)
-    : Core::IDocument(parent),
-      m_project(parent)
+File::File(Project *parent, const Utils::FileName &fileName) :
+    m_project(parent)
 {
     QTC_CHECK(m_project);
     QTC_CHECK(!fileName.isEmpty());
     setId("Qml.ProjectFile");
     setMimeType(QLatin1String(Constants::FBXPROJECT_MIMETYPE));
     setFilePath(fileName);
-}
-
-bool File::save(QString *, const QString &, bool)
-{
-    return false;
-}
-
-QString File::defaultPath() const
-{
-    return QString();
-}
-
-QString File::suggestedFileName() const
-{
-    return QString();
-}
-
-bool File::isModified() const
-{
-    return false;
-}
-
-bool File::isSaveAsAllowed() const
-{
-    return false;
 }
 
 Core::IDocument::ReloadBehavior File::reloadBehavior(ChangeTrigger state, ChangeType type) const

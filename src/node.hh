@@ -36,11 +36,8 @@ namespace Internal {
 class Node : public ProjectExplorer::ProjectNode
 {
 public:
-    Node(Project *project, Core::IDocument *projectFile);
+    Node(Project *project);
     virtual ~Node();
-
-    Core::IDocument *projectFile() const;
-    QString projectFilePath() const;
 
     virtual bool showInSimpleTree() const;
 
@@ -57,7 +54,6 @@ private:
     FolderNode *findOrCreateFolderByName(const QStringList &components, int end);
 
     Project *m_project;
-    Core::IDocument *m_projectFile;
     QHash<QString, FolderNode *> m_folderByName;
 };
 

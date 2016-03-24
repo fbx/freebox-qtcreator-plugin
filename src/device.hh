@@ -52,6 +52,8 @@ public:
 
     IDevice::Ptr clone() const;
 
+    QString qmlProfilerHost() const override;
+
     const QHostAddress &address() const;
 
 protected:

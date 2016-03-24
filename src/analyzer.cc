@@ -27,13 +27,13 @@
 
 namespace Freebox {
 
-AnalyzerRunControl::AnalyzerRunControl(Analyzer::AnalyzerRunControl *runControl) :
+AnalyzerRunControl::AnalyzerRunControl(Debugger::AnalyzerRunControl *runControl) :
     RunControl(runControl->runConfiguration(), runControl->runMode()),
     mRunControl(runControl)
 {
     mDebug = true;
 
-    connect(mRunControl, SIGNAL(starting(const Analyzer::AnalyzerRunControl*)),
+    connect(mRunControl, SIGNAL(starting(const Debugger::AnalyzerRunControl*)),
             SLOT(remoteSetup()));
     connect(mRunControl, SIGNAL(finished()), SLOT(stop()));
     connect(this, SIGNAL(remoteStopped()), SLOT(remoteIsStopped()));
@@ -53,7 +53,7 @@ void AnalyzerRunControl::redirectMessage(ProjectExplorer::RunControl *rc,
     mRunControl->logApplicationMessage(msg, format);
 }
 
-Analyzer::AnalyzerRunControl *AnalyzerRunControl::runControl() const
+Debugger::AnalyzerRunControl *AnalyzerRunControl::runControl() const
 {
     return mRunControl;
 }

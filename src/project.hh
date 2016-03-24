@@ -20,26 +20,22 @@
 #ifndef PROJECT_HH_
 # define PROJECT_HH_
 
+#include "fileformat/manifest.hh"
+#include "manager.hh"
+#include "node.hh"
+
+#include <utils/fileutils.h>
+#include <projectexplorer/project.h>
+
 #include <QFlag>
 #include <QPointer>
 #include <qglobal.h>
-#include <utils/fileutils.h>
-#include <projectexplorer/project.h>
-#include "fileformat/manifest.hh"
 
 namespace ProjectExplorer { class RunConfiguration; }
 namespace QmlProjectManager { class QmlProjectItem; }
 namespace QmlJS { class ModelManagerInterface; }
 
 namespace Freebox {
-
-class Item;
-
-namespace Internal {
-class Manager;
-class File;
-class Node;
-}
 
 class Project : public ProjectExplorer::Project
 {
@@ -63,8 +59,7 @@ public:
     Utils::FileName filesFileName() const;
 
     QString displayName() const;
-    Core::IDocument *document() const;
-    ProjectExplorer::IProjectManager *projectManager() const;
+    Internal::Manager *projectManager() const;
     QStringList files(ProjectExplorer::Project::FilesMode mode) const;
     QStringList files() const;
     RestoreResult fromMap(const QVariantMap &map, QString *errorMessage);
@@ -72,7 +67,7 @@ public:
     bool validProjectFile() const;
     QStringList customImportPaths() const;
     QDir projectDir() const;
-    ProjectExplorer::ProjectNode *rootProjectNode() const;
+    Internal::Node *rootProjectNode() const;
     void parseProject(RefreshOptions options);
     QmlJS::ModelManagerInterface *modelManager() const;
     bool addFiles(const QStringList &filePaths);
@@ -96,14 +91,10 @@ private:
     QString projectFilePathString(const Utils::FileName &filename) const;
 
     QPointer<QmlProjectManager::QmlProjectItem> m_projectItem;
-    Internal::Node *m_rootNode;
-    Internal::Manager *m_manager;
-    Utils::FileName m_fileName;
     QString m_packageFileName;
     QString m_projectName;
-    Internal::File *m_file;
     QStringList m_files;
-    ProjectExplorer::Target *m_activeTarget;
+    ProjectExplorer::Target *m_activeTarget = 0;
     Fileformat::Manifest m_manifest;
     QStringList m_entryPoints;
 };

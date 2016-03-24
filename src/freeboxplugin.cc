@@ -24,6 +24,7 @@
 #include "runconfigurationfactory.hh"
 #include "runcontrolfactory.hh"
 #include "manager.hh"
+#include "project.hh"
 #include "devicefactory.hh"
 #include "device.hh"
 #include "freestorepackager.hh"
