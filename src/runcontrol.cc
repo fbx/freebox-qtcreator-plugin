@@ -29,8 +29,6 @@
 #include <projectexplorer/kitinformation.h>
 #include <projectexplorer/devicesupport/idevice.h>
 
-#include <QIcon>
-
 namespace Freebox {
 
 RunControl::RunControl(ProjectExplorer::RunConfiguration *rc,
@@ -98,11 +96,6 @@ ProjectExplorer::RunControl::StopResult RunControl::stop()
 bool RunControl::isRunning() const
 {
     return mRunning;
-}
-
-QIcon RunControl::icon() const
-{
-    return QIcon();
 }
 
 void RunControl::emitRemoteStarted(quint16 port,

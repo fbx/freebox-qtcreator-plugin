@@ -34,11 +34,9 @@ class FreeboxRunConfigurationWidget : public QWidget
     Q_OBJECT
 
 public:
-
     explicit FreeboxRunConfigurationWidget(FreeboxRunConfiguration *rc);
 
 private:
-
     QComboBox *m_fileListCombo;
     QStandardItemModel *m_fileListModel;
 

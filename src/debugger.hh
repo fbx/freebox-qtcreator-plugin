@@ -35,8 +35,6 @@ public:
 
     ProjectExplorer::RunControl *runControl() { return mRunControl; }
 
-public slots:
-
 private slots:
     void redirectMessage(ProjectExplorer::RunControl *rc,
                          const QString &msg,

@@ -30,11 +30,10 @@ class FreeboxProcessSignalOperation :
     Q_OBJECT
 
 public:
-    ~FreeboxProcessSignalOperation() {}
-    void killProcess(qint64 pid);
-    void killProcess(const QString &filePath);
-    void interruptProcess(qint64 pid);
-    void interruptProcess(const QString &filePath);
+    void killProcess(qint64 pid) override;
+    void killProcess(const QString &filePath) override;
+    void interruptProcess(qint64 pid) override;
+    void interruptProcess(const QString &filePath) override;
 };
 
 } // namespace Freebox

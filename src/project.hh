@@ -24,12 +24,9 @@
 #include "manager.hh"
 #include "node.hh"
 
-#include <utils/fileutils.h>
 #include <projectexplorer/project.h>
 
-#include <QFlag>
 #include <QPointer>
-#include <qglobal.h>
 
 namespace ProjectExplorer { class RunConfiguration; }
 namespace QmlProjectManager { class QmlProjectItem; }
@@ -42,6 +39,20 @@ class Project : public ProjectExplorer::Project
     Q_OBJECT
 
 public:
+    Project(Internal::Manager *manager, const Utils::FileName &filename);
+    ~Project() override;
+
+    Utils::FileName filesFileName() const;
+
+    QString displayName() const override;
+    Internal::Manager *projectManager() const override;
+
+    bool supportsKit(ProjectExplorer::Kit *k, QString *errorMessage) const override;
+
+    Internal::Node *rootProjectNode() const override;
+    QStringList files(ProjectExplorer::Project::FilesMode mode) const override;
+
+    bool validProjectFile() const;
 
     enum RefreshOption {
         RefreshProjectFile   = 0x01,
@@ -53,27 +64,17 @@ public:
     };
     Q_DECLARE_FLAGS(RefreshOptions,RefreshOption)
 
-    Project(Internal::Manager *manager, const Utils::FileName &filename);
-    ~Project();
-
-    Utils::FileName filesFileName() const;
-
-    QString displayName() const;
-    Internal::Manager *projectManager() const;
-    QStringList files(ProjectExplorer::Project::FilesMode mode) const;
-    QStringList files() const;
-    RestoreResult fromMap(const QVariantMap &map, QString *errorMessage);
-    QString mainFile() const;
-    bool validProjectFile() const;
-    QStringList customImportPaths() const;
-    QDir projectDir() const;
-    Internal::Node *rootProjectNode() const;
-    void parseProject(RefreshOptions options);
-    QmlJS::ModelManagerInterface *modelManager() const;
-    bool addFiles(const QStringList &filePaths);
     void refresh(RefreshOptions options);
+
+    QDir projectDir() const;
+    QStringList files() const;
+    QString mainFile() const;
+    QStringList customImportPaths() const;
+
+    bool addFiles(const QStringList &filePaths);
+
     void refreshProjectFile();
-    bool supportsKit(ProjectExplorer::Kit *k, QString *errorMessage) const;
+
     Fileformat::Manifest &manifest() { return m_manifest; }
     QString packageFileName() { return m_packageFileName; }
     void setPackageFileName(QString fn) { m_packageFileName = fn; }
@@ -86,17 +87,20 @@ private slots:
     void addedRunConfiguration(ProjectExplorer::RunConfiguration *);
     bool updateKit();
 
-private:
-    QString projectFilePathString(const QString &str) const;
-    QString projectFilePathString(const Utils::FileName &filename) const;
+protected:
+    RestoreResult fromMap(const QVariantMap &map, QString *errorMessage) override;
 
-    QPointer<QmlProjectManager::QmlProjectItem> m_projectItem;
+private:
+    void parseProject(RefreshOptions options);
+    QmlJS::ModelManagerInterface *modelManager() const;
+
     QString m_packageFileName;
     QString m_projectName;
-    QStringList m_files;
     ProjectExplorer::Target *m_activeTarget = 0;
     Fileformat::Manifest m_manifest;
     QStringList m_entryPoints;
+    QStringList m_files;
+    QPointer<QmlProjectManager::QmlProjectItem> m_projectItem;
 };
 
 }

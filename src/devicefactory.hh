@@ -32,12 +32,12 @@ class DeviceFactory : public ProjectExplorer::IDeviceFactory
 public:
     DeviceFactory();
 
-    QString displayNameForId(Core::Id type) const;
-    virtual QList<Core::Id> availableCreationIds() const;
-    virtual ProjectExplorer::IDevice::Ptr create(Core::Id id) const;
-    virtual bool canCreate() const;
-    virtual bool canRestore(const QVariantMap &map) const;
-    virtual ProjectExplorer::IDevice::Ptr restore(const QVariantMap &map) const;
+    QString displayNameForId(Core::Id type) const override;
+    QList<Core::Id> availableCreationIds() const override;
+    ProjectExplorer::IDevice::Ptr create(Core::Id id) const override;
+    bool canCreate() const override;
+    bool canRestore(const QVariantMap &map) const override;
+    ProjectExplorer::IDevice::Ptr restore(const QVariantMap &map) const override;
 };
 
 } // namespace Internal

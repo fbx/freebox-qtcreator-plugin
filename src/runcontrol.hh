@@ -35,12 +35,11 @@ public:
     RunControl(ProjectExplorer::RunConfiguration *rc,
                Core::Id mode);
 
-    virtual void start();
-    virtual bool isRunning() const;
-    virtual QIcon icon() const;
+    void start() override;
+    bool isRunning() const override;
 
 public slots:
-    virtual StopResult stop();
+    StopResult stop() override;
 
 signals:
     void remoteStarted(quint16 port);

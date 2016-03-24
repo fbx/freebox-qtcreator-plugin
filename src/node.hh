@@ -37,15 +37,15 @@ class Node : public ProjectExplorer::ProjectNode
 {
 public:
     Node(Project *project);
-    virtual ~Node();
+    ~Node() override;
 
-    virtual bool showInSimpleTree() const;
+    bool showInSimpleTree() const override;
 
-    virtual QList<ProjectExplorer::ProjectAction> supportedActions(ProjectExplorer::Node *node) const;
+    QList<ProjectExplorer::ProjectAction> supportedActions(ProjectExplorer::Node *node) const override;
 
-    virtual bool addFiles(const QStringList &filePaths, QStringList *notAdded = 0);
-    virtual bool deleteFiles(const QStringList &filePaths);
-    virtual bool renameFile(const QString &filePath, const QString &newFilePath);
+    bool addFiles(const QStringList &filePaths, QStringList *notAdded = 0) override;
+    bool deleteFiles(const QStringList &filePaths) override;
+    bool renameFile(const QString &filePath, const QString &newFilePath) override;
 
     void refresh();
 

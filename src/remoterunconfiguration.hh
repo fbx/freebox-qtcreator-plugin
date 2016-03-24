@@ -47,8 +47,8 @@ public:
     void setScriptSource(MainScriptSource source, const QString &settingsPath = QString());
     QString mainScript() const;
 
-    virtual QWidget *createConfigurationWidget();
-    Utils::OutputFormatter *createOutputFormatter() const;
+    QWidget *createConfigurationWidget() override;
+    Utils::OutputFormatter *createOutputFormatter() const override;
 
 signals:
     void scriptSourceChanged();
@@ -59,7 +59,7 @@ private slots:
 protected:
     RemoteRunConfiguration(ProjectExplorer::Target *parent,
                            RemoteRunConfiguration *source);
-    virtual bool fromMap(const QVariantMap &map);
+    virtual bool fromMap(const QVariantMap &map) override;
     void setEnabled(bool value);
 
 private:

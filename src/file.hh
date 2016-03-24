@@ -33,7 +33,6 @@ class File : public Core::IDocument
     Q_OBJECT
 
 public:
-
     File(Project *parent, const Utils::FileName &fileName);
 
     ReloadBehavior reloadBehavior(ChangeTrigger state, ChangeType type) const override;

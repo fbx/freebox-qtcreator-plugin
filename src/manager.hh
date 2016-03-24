@@ -35,8 +35,8 @@ class Manager : public ProjectExplorer::IProjectManager
 public:
     Manager();
 
-    virtual QString mimeType() const;
-    virtual ProjectExplorer::Project *openProject(const QString &filename, QString *errorString);
+    QString mimeType() const override;
+    ProjectExplorer::Project *openProject(const QString &filename, QString *errorString) override;
 
     void notifyChanged(const QString &fileName);
 

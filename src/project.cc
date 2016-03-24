@@ -206,7 +206,6 @@ QmlJS::ModelManagerInterface *Project::modelManager() const
 QStringList Project::files() const
 {
     QStringList files;
-
     if (m_projectItem)
         files = m_projectItem->files();
     else
@@ -367,16 +366,6 @@ bool Project::updateKit()
     onActiveTargetChanged(activeTarget());
 
     return true;
-}
-
-QString Project::projectFilePathString(const QString &str) const
-{
-    return str;
-}
-
-QString Project::projectFilePathString(const Utils::FileName &filename) const
-{
-    return filename.toString();
 }
 
 } // namespace Freebox

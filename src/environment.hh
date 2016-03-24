@@ -33,8 +33,9 @@ public:
     EnvironmentAspect *create(ProjectExplorer::RunConfiguration *parent) const;
 
     QList<int> possibleBaseEnvironments() const;
-    QString baseEnvironmentDisplayName(int base) const;
-    Utils::Environment baseEnvironment() const;
+    QString baseEnvironmentDisplayName(int base) const override;
+
+    Utils::Environment baseEnvironment() const override;
 
 private:
     enum BaseEnvironmentBase {

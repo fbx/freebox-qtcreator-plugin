@@ -52,8 +52,8 @@ public:
     void setScriptSource(MainScriptSource source, const QString &settingsPath = QString());
     QString mainScript() const;
 
-    virtual QWidget *createConfigurationWidget();
-    Utils::OutputFormatter *createOutputFormatter() const;
+    QWidget *createConfigurationWidget() override;
+    Utils::OutputFormatter *createOutputFormatter() const override;
 
 signals:
     void scriptSourceChanged();
@@ -64,7 +64,7 @@ private slots:
 protected:
     LocalRunConfiguration(ProjectExplorer::Target *parent,
                           LocalRunConfiguration *source);
-    virtual bool fromMap(const QVariantMap &map);
+    bool fromMap(const QVariantMap &map) override;
     void setEnabled(bool value);
 
 private:
