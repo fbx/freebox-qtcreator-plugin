@@ -25,6 +25,10 @@
 #include <projectexplorer/project.h>
 #include <projectexplorer/target.h>
 
+#include <debugger/analyzer/analyzerruncontrol.h>
+
+#include <utils/port.h>
+
 namespace Freebox {
 
 AnalyzerRunControl::AnalyzerRunControl(Debugger::AnalyzerRunControl *runControl) :
@@ -33,39 +37,25 @@ AnalyzerRunControl::AnalyzerRunControl(Debugger::AnalyzerRunControl *runControl)
 {
     mDebug = true;
 
-    connect(mRunControl, SIGNAL(starting(const Debugger::AnalyzerRunControl*)),
-            SLOT(remoteSetup()));
-    connect(mRunControl, SIGNAL(finished()), SLOT(stop()));
-    connect(this, SIGNAL(remoteStopped()), SLOT(remoteIsStopped()));
-    connect(this, SIGNAL(appendMessage(ProjectExplorer::RunControl *,
-                                       const QString &,
-                                       Utils::OutputFormat)),
-            SLOT(redirectMessage(ProjectExplorer::RunControl *,
-                                 const QString &,
-                                 Utils::OutputFormat)));
+    connect(mRunControl, &Debugger::AnalyzerRunControl::starting,
+            this, &AnalyzerRunControl::start);
+    connect(mRunControl, &Debugger::AnalyzerRunControl::finished,
+            this, &AnalyzerRunControl::stop);
+
+    connect(this, &AnalyzerRunControl::remoteStarted,
+        [this](quint16 port) {
+            mRunControl->notifyRemoteSetupDone(Utils::Port(port));
+        });
+
+    connect(this, &AnalyzerRunControl::remoteStopped,
+        [this]() {
+            mRunControl->notifyRemoteFinished();
+        });
 }
 
-void AnalyzerRunControl::redirectMessage(ProjectExplorer::RunControl *rc,
-                                         const QString &msg,
-                                         Utils::OutputFormat format)
+void AnalyzerRunControl::appendMessage(const QString &msg, Utils::OutputFormat format)
 {
-    Q_UNUSED(rc);
-    mRunControl->logApplicationMessage(msg, format);
-}
-
-Debugger::AnalyzerRunControl *AnalyzerRunControl::runControl() const
-{
-    return mRunControl;
-}
-
-void AnalyzerRunControl::remoteSetup()
-{
-    start();
-}
-
-void AnalyzerRunControl::remoteIsStopped()
-{
-    mRunControl->notifyRemoteFinished();
+    mRunControl->appendMessage(msg, format);
 }
 
 } // namespace Freebox

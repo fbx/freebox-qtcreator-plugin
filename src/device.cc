@@ -22,6 +22,9 @@
 #include "constants.hh"
 #include "processsignaloperation.hh"
 
+#include <projectexplorer/runconfiguration.h>
+#include <projectexplorer/runnables.h>
+
 #include <QCoreApplication>
 
 namespace Freebox {
@@ -103,9 +106,9 @@ ProjectExplorer::IDevice::Ptr FreeboxDevice::clone() const
     return Ptr(new FreeboxDevice(*this));
 }
 
-QString FreeboxDevice::qmlProfilerHost() const
+ProjectExplorer::Connection FreeboxDevice::toolControlChannel(const ControlChannelHint &) const
 {
-    return mAddress.toString();
+    return ProjectExplorer::HostName(mAddress.toString());
 }
 
 const QHostAddress &FreeboxDevice::address() const

@@ -50,13 +50,13 @@ RunControlFactory::RunControlFactory(QObject *parent) :
 bool RunControlFactory::canRun(ProjectExplorer::RunConfiguration *rc,
                                Core::Id mode) const
 {
-    Q_UNUSED(mode);
+    if (mode != ProjectExplorer::Constants::NORMAL_RUN_MODE
+            && mode != ProjectExplorer::Constants::DEBUG_RUN_MODE
+            && mode != ProjectExplorer::Constants::QML_PROFILER_RUN_MODE) {
+        return false;
+    }
 
-    RemoteRunConfiguration *remote = qobject_cast<RemoteRunConfiguration *>(rc);
-    if (remote)
-        return true;
-
-    return false;
+    return qobject_cast<RemoteRunConfiguration *>(rc);
 }
 
 ProjectExplorer::RunControl *
@@ -79,9 +79,9 @@ RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
     } else if (mode == ProjectExplorer::Constants::DEBUG_RUN_MODE) {
         Debugger::DebuggerStartParameters params;
 
-        params.startMode = Debugger::AttachToRemoteServer;
-        params.qmlServerAddress = fbxDevice->address().toString();
-        params.qmlServerPort = 0;
+        params.startMode = Debugger::AttachToRemoteProcess;
+        params.qmlServer.host = fbxDevice->address().toString();
+        params.remoteSetupNeeded = true;
 
         const Project *project = qobject_cast<Project *>(runConfiguration->target()->project());
         QTC_ASSERT(project, return 0);
@@ -94,10 +94,15 @@ RunControlFactory::create(ProjectExplorer::RunConfiguration *runConfiguration,
         return debugger->runControl();
 
     } else if (mode == ProjectExplorer::Constants::QML_PROFILER_RUN_MODE) {
+        Debugger::AnalyzerConnection connection;
+        connection.analyzerHost = fbxDevice->address().toString();
+
         Debugger::AnalyzerRunControl * const runControl =
                 Debugger::createAnalyzerRunControl(runConfiguration, mode);
         if (!runControl)
             return 0;
+
+        runControl->setConnection(connection);
 
         AnalyzerRunControl *analyzer = new AnalyzerRunControl(runControl);
         return analyzer->runControl();

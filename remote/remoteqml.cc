@@ -23,12 +23,7 @@
 
 #include "../util/jsonrpc.hh"
 
-#include <QUrl>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QNetworkInterface>
-#include <QNetworkAddressEntry>
-#include <QHostAddress>
+#include <QTcpSocket>
 
 namespace Freebox {
 namespace Remote {

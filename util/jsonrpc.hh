@@ -21,6 +21,7 @@
 #define JSONRPC_HH
 
 #include <QObject>
+#include <QUrl>
 
 class QJsonObject;
 class QJsonValue;

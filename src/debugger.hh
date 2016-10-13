@@ -22,7 +22,9 @@
 
 #include "runcontrol.hh"
 
-#include <debugger/debuggerruncontrol.h>
+namespace Debugger {
+    class DebuggerRunControl;
+};
 
 namespace Freebox {
 
@@ -32,16 +34,9 @@ class DebuggerRunControl : public RunControl
 
 public:
     DebuggerRunControl(Debugger::DebuggerRunControl *runControl);
+    Debugger::DebuggerRunControl *runControl() const { return mRunControl; }
 
-    ProjectExplorer::RunControl *runControl() { return mRunControl; }
-
-private slots:
-    void redirectMessage(ProjectExplorer::RunControl *rc,
-                         const QString &msg,
-                         Utils::OutputFormat format);
-    void remoteSetupDone(quint16 port);
-    void remoteStart();
-    void remoteStop();
+    void appendMessage(const QString &msg, Utils::OutputFormat format);
 
 private:
     Debugger::DebuggerRunControl *mRunControl;

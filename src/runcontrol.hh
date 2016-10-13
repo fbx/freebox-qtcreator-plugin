@@ -25,6 +25,10 @@
 
 #include <projectexplorer/runconfiguration.h>
 
+#include <QNetworkInterface>
+#include <QHostAddress>
+#include <QTcpSocket>
+
 namespace Freebox {
 
 class RunControl : public ProjectExplorer::RunControl

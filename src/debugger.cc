@@ -24,8 +24,10 @@
 #include <projectexplorer/runconfiguration.h>
 #include <projectexplorer/target.h>
 
+#include <debugger/debuggerruncontrol.h>
 #include <debugger/debuggerstartparameters.h>
-#include <debugger/debuggerstartparameters.h>
+
+#include <utils/port.h>
 
 namespace Freebox {
 
@@ -35,45 +37,29 @@ DebuggerRunControl::DebuggerRunControl(Debugger::DebuggerRunControl *runControl)
 {
     mDebug = true;
 
-    connect(mRunControl, SIGNAL(finished()), SLOT(remoteStop()));
-    connect(mRunControl, SIGNAL(started()), SLOT(remoteStart()));
-    connect(this,
-            SIGNAL(remoteStarted(quint16)),
-            SLOT(remoteSetupDone(quint16)));
-    connect(this, SIGNAL(appendMessage(ProjectExplorer::RunControl *,
-                                       const QString &,
-                                       Utils::OutputFormat)),
-            SLOT(redirectMessage(ProjectExplorer::RunControl *,
-                                 const QString &,
-                                 Utils::OutputFormat)));
+    connect(mRunControl, &Debugger::DebuggerRunControl::finished,
+            this, &DebuggerRunControl::stop);
+
+    connect(mRunControl, &Debugger::DebuggerRunControl::requestRemoteSetup,
+            this, &DebuggerRunControl::start);
+
+    connect(this, &DebuggerRunControl::remoteStarted,
+        [this](quint16 port) {
+            Debugger::RemoteSetupResult result;
+            result.success = true;
+            result.qmlServerPort = Utils::Port(port);
+            mRunControl->notifyEngineRemoteSetupFinished(result);
+        });
+
+    connect(this, &DebuggerRunControl::remoteStopped,
+        [this]() {
+            mRunControl->notifyInferiorExited();
+        });
 }
 
-void DebuggerRunControl::redirectMessage(ProjectExplorer::RunControl *rc,
-                                         const QString &msg,
-                                         Utils::OutputFormat format)
+void DebuggerRunControl::appendMessage(const QString &msg, Utils::OutputFormat format)
 {
-    Q_UNUSED(rc);
-    Q_UNUSED(format);
-    mRunControl->showMessage(msg, Debugger::AppOutput);
-}
-
-void DebuggerRunControl::remoteStart()
-{
-    start();
-}
-
-void DebuggerRunControl::remoteStop()
-{
-    stop();
-}
-
-void DebuggerRunControl::remoteSetupDone(quint16 port)
-{
-    Debugger::RemoteSetupResult result;
-    result.success = true;
-    result.gdbServerPort = -1;
-    result.qmlServerPort = port;
-    mRunControl->notifyEngineRemoteSetupFinished(result);
+    mRunControl->appendMessage(msg, format);
 }
 
 } // namespace Freebox

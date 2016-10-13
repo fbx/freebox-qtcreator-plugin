@@ -53,7 +53,7 @@ public:
 
     IDevice::Ptr clone() const override;
 
-    QString qmlProfilerHost() const override;
+    ProjectExplorer::Connection toolControlChannel(const ControlChannelHint &) const override;
 
     const QHostAddress &address() const;
 

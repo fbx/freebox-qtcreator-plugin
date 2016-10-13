@@ -21,8 +21,6 @@
 #define REMOTEQML_HH_
 
 #include <QObject>
-#include <QNetworkAccessManager>
-#include <QNetworkInterface>
 #include <QHostAddress>
 #include <QJsonObject>
 #include <QJsonValue>
