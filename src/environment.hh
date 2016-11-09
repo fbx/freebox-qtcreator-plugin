@@ -30,9 +30,9 @@ class EnvironmentAspect : public ProjectExplorer::EnvironmentAspect
 
 public:
     EnvironmentAspect(ProjectExplorer::RunConfiguration *rc);
-    EnvironmentAspect *create(ProjectExplorer::RunConfiguration *parent) const;
+    EnvironmentAspect *create(ProjectExplorer::RunConfiguration *parent) const override;
 
-    QList<int> possibleBaseEnvironments() const;
+    QList<int> possibleBaseEnvironments() const override;
     QString baseEnvironmentDisplayName(int base) const override;
 
     Utils::Environment baseEnvironment() const override;
