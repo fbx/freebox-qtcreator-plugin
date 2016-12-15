@@ -30,8 +30,6 @@ namespace Internal {
 
 class File : public Core::IDocument
 {
-    Q_OBJECT
-
 public:
     File(Project *parent, const Utils::FileName &fileName);
 

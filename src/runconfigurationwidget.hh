@@ -37,13 +37,12 @@ public:
     explicit FreeboxRunConfigurationWidget(FreeboxRunConfiguration *rc);
 
 private:
-    QComboBox *m_fileListCombo;
-    QStandardItemModel *m_fileListModel;
-
-private slots:
     void updateFileComboBox();
     void setMainScript(int index);
     void onViewerArgsChanged();
+
+    QComboBox *m_fileListCombo;
+    QStandardItemModel *m_fileListModel;
 };
 
 }

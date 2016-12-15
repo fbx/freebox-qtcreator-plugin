@@ -73,8 +73,8 @@ Project::~Project()
 
 void Project::addedTarget(ProjectExplorer::Target *target)
 {
-    connect(target, SIGNAL(addedRunConfiguration(ProjectExplorer::RunConfiguration*)),
-            this, SLOT(addedRunConfiguration(ProjectExplorer::RunConfiguration*)));
+    connect(target, &ProjectExplorer::Target::addedRunConfiguration,
+            this, &Project::addedRunConfiguration);
     foreach (ProjectExplorer::RunConfiguration *rc, target->runConfigurations())
         addedRunConfiguration(rc);
 }
@@ -140,8 +140,8 @@ void Project::parseProject(RefreshOptions options)
                     QmlProjectManager::QmlProjectFileFormat::parseProjectFile(projectFilePath(),
                                                                               &errorMessage);
             if (m_projectItem) {
-                connect(m_projectItem, SIGNAL(qmlFilesChanged(QSet<QString>,QSet<QString>)),
-                        this, SLOT(refreshFiles(QSet<QString>,QSet<QString>)));
+                connect(m_projectItem.data(), &QmlProjectManager::QmlProjectItem::qmlFilesChanged,
+                        this, &Project::refreshFiles);
 
             } else {
                 Core::MessageManager::write(tr("Error while loading project file %1.")
@@ -196,6 +196,8 @@ void Project::refresh(RefreshOptions options)
                                             QmlJS::Dialect::Qml);
 
     modelManager()->updateProjectInfo(projectInfo, this);
+
+    emit parsingFinished();
 }
 
 QmlJS::ModelManagerInterface *Project::modelManager() const

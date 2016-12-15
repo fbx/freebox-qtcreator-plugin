@@ -50,11 +50,7 @@ public:
     void refresh();
 
 private:
-    FolderNode *findOrCreateFolderByName(const QString &filePath);
-    FolderNode *findOrCreateFolderByName(const QStringList &components, int end);
-
     Project *m_project;
-    QHash<QString, FolderNode *> m_folderByName;
 };
 
 } // namespace Internal

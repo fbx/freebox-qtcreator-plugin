@@ -56,8 +56,8 @@ FreeboxRunConfigurationWidget::FreeboxRunConfigurationWidget(FreeboxRunConfigura
 
     connect(m_fileListCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated),
             this, &FreeboxRunConfigurationWidget::setMainScript);
-    connect(ProjectExplorer::ProjectExplorerPlugin::instance(), SIGNAL(fileListChanged()),
-            SLOT(updateFileComboBox()));
+    connect(ProjectExplorer::ProjectExplorerPlugin::instance(), &ProjectExplorer::ProjectExplorerPlugin::fileListChanged,
+            this, &FreeboxRunConfigurationWidget::updateFileComboBox);
 
     QLineEdit *qmlViewerArgs = new QLineEdit;
     //qmlViewerArgs->setText(rc->m_qmlViewerArgs);
@@ -71,8 +71,8 @@ FreeboxRunConfigurationWidget::FreeboxRunConfigurationWidget(FreeboxRunConfigura
 
     //updateFileComboBox();
 
-//    connect(rc, SIGNAL(scriptSourceChanged()),
-//            this, SLOT(updateFileComboBox()));
+//    connect(rc, &FreeboxRunConfigurationWidget::scriptSourceChanged,
+//            this, &FreeboxRunConfigurationWidget::updateFileComboBox);
 }
 
 void FreeboxRunConfigurationWidget::updateFileComboBox()

@@ -79,7 +79,10 @@ public:
     QString packageFileName() { return m_packageFileName; }
     void setPackageFileName(QString fn) { m_packageFileName = fn; }
 
-private slots:
+protected:
+    RestoreResult fromMap(const QVariantMap &map, QString *errorMessage) override;
+
+private:
     void refreshFiles(const QSet<QString> &added, const QSet<QString> &removed);
     void addedTarget(ProjectExplorer::Target *target);
     void onActiveTargetChanged(ProjectExplorer::Target *target);
@@ -87,10 +90,6 @@ private slots:
     void addedRunConfiguration(ProjectExplorer::RunConfiguration *);
     bool updateKit();
 
-protected:
-    RestoreResult fromMap(const QVariantMap &map, QString *errorMessage) override;
-
-private:
     void parseProject(RefreshOptions options);
     QmlJS::ModelManagerInterface *modelManager() const;
 
