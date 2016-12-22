@@ -27,8 +27,7 @@
 **
 ****************************************************************************/
 
-#ifndef FILEFILTERITEMS_H
-#define FILEFILTERITEMS_H
+#pragma once
 
 #include "qmlprojectitem.hh"
 
@@ -176,4 +175,3 @@ public:
 
 } // namespace QmlProjectManager
 
-#endif // FILEFILTERITEMS_HPROJECTITEM_H

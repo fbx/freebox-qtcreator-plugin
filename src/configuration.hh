@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef CONGIGURATION_HH_
-# define CONGIGURATION_HH_
+#pragma once
 
 #include <QObject>
 #include <QHash>
@@ -68,4 +67,3 @@ private:
 } // namespace Internal
 } // namespace Freebox
 
-#endif /* !CONGIGURATION_HH_ */

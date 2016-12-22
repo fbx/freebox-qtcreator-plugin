@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef UDPSOCKET_HH_
-# define UDPSOCKET_HH_
+#pragma once
 
 #include <QUdpSocket>
 
@@ -43,4 +42,3 @@ private slots:
 } // namespace Ssdp
 } // namespace Freebox
 
-#endif /* !UDPSOCKET_HH_ */

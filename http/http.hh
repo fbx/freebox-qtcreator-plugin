@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef HTTPD_H
-#define HTTPD_H
+#pragma once
 
 #include "constants.hh"
 
@@ -116,4 +115,3 @@ private:
 } // namespace Http
 } // namespace Freebox
 
-#endif // HTTPD_H

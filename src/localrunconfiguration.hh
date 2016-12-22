@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef LOCALRUNCONFIGURATION_HH_
-# define LOCALRUNCONFIGURATION_HH_
+#pragma once
 
 # include <qtsupport/baseqtversion.h>
 # include <projectexplorer/runnables.h>
@@ -88,4 +87,3 @@ private:
 
 } // namespace Freebox
 
-#endif // !LOCALRUNCONFIGURATION_HH_

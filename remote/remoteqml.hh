@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef REMOTEQML_HH_
-#define REMOTEQML_HH_
+#pragma once
 
 #include <QObject>
 #include <QHostAddress>
@@ -63,4 +62,3 @@ private:
 } // namespace Remote
 } // namespace Freebox
 
-#endif // REMOTEQML_HH_

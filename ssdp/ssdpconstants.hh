@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef SSDPCONSTANTS_HH_
-# define SSDPCONSTANTS_HH_
+#pragma once
 
 #include <stdint.h>
 
@@ -33,4 +32,3 @@ const quint16 PORT = 1900;
 } // namespace SSDP
 } // namespace Freebox
 
-#endif /* !SSDPCONSTANTS_HH_ */

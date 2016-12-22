@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef RUNCONTROLFACTORY_HH_
-# define RUNCONTROLFACTORY_HH_
+#pragma once
 
 #include <projectexplorer/runconfiguration.h>
 
@@ -41,4 +40,3 @@ public:
 
 } // namespace Freebox
 
-#endif /* !RUNCONTROLFACTORY_HH_ */

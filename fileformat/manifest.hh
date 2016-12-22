@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef MANIFEST_HH_
-# define MANIFEST_HH_
+#pragma once
 
 # include <QObject>
 # include <QJsonDocument>
@@ -99,4 +98,3 @@ private:
 } // namespace Fileformat
 } // namespace Freebox
 
-#endif // !MANIFEST_HH_

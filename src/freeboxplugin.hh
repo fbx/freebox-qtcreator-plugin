@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef FREEBOX_H
-#define FREEBOX_H
+#pragma once
 
 #include "freebox_global.hh"
 
@@ -57,4 +56,3 @@ private:
 } // namespace Internal
 } // namespace Freebox
 
-#endif // FREEBOX_H

@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef DEVICEFACTORY_HH_
-# define DEVICEFACTORY_HH_
+#pragma once
 
 #include <projectexplorer/devicesupport/idevicefactory.h>
 
@@ -43,4 +42,3 @@ public:
 } // namespace Internal
 } // namespace Freebox
 
-#endif /* !DEVICEFACTORY_HH_ */

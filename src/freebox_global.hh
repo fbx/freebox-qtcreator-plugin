@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef FREEBOX_GLOBAL_H
-#define FREEBOX_GLOBAL_H
+#pragma once
 
 #include <QtGlobal>
 
@@ -28,5 +27,4 @@
 # define FREEBOXSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#endif // FREEBOX_GLOBAL_H
 

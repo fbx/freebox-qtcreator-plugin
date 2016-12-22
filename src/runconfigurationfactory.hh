@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef FREEBOXRUNCONFIGURATIONFACTORY_HH_
-# define FREEBOXRUNCONFIGURATIONFACTORY_HH_
+#pragma once
 
 #include <projectexplorer/runconfiguration.h>
 
@@ -51,4 +50,3 @@ private:
 } // namespace Internal
 } // namespace Freebox
 
-#endif /* !FREEBOXRUNCONFIGURATIONFACTORY_HH_ */

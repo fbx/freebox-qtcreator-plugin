@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef PROJECTFILE_HH_
-# define PROJECTFILE_HH_
+#pragma once
 
 #include <coreplugin/idocument.h>
 
@@ -43,4 +42,3 @@ private:
 } // namespace Internal
 } // namespace Freebox
 
-#endif /* !PROJECTFILE_HH_ */

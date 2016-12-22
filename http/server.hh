@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef SERVER_HH_
-# define SERVER_HH_
+#pragma once
 
 #include <QTcpServer>
 #include <QDir>
@@ -75,4 +74,3 @@ private:
 } // namespace Freebox
 
 
-#endif /* !SERVER_HH_ */

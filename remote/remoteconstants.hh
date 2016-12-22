@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef REMOTECONSTANTS_HH_
-# define REMOTECONSTANTS_HH_
+#pragma once
 
 namespace Freebox {
 namespace Remote {
@@ -31,4 +30,3 @@ const char MANIFEST_URL[] = "http://%1:%2/manifest.json";
 } // namespace Remote
 } // namespace Freebox
 
-#endif // !REMOTECONSTANTS_HH_

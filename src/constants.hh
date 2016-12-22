@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef FREEBOXCONSTANTS_H
-#define FREEBOXCONSTANTS_H
+#pragma once
 
 namespace Freebox {
 namespace Constants {
@@ -41,5 +40,4 @@ const char MENU_ID[] = "Freebox.Menu";
 } // namespace Freebox
 } // namespace Constants
 
-#endif // FREEBOXCONSTANTS_H
 

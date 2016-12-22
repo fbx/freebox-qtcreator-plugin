@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef DEBUGGER_HH_
-# define DEBUGGER_HH_
+#pragma once
 
 #include "runcontrol.hh"
 
@@ -44,4 +43,3 @@ private:
 
 } // namespace Freebox
 
-#endif /* !DEBUGGER_HH_ */

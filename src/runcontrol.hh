@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef RUNCONTROL_HH_
-# define RUNCONTROL_HH_
+#pragma once
 
 #include "http/server.hh"
 #include "remote/remoteqml.hh"
@@ -76,4 +75,3 @@ private:
 
 } // namespace Freebox
 
-#endif /* !RUNCONTROL_HH_ */

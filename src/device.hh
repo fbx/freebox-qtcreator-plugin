@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef DEVICE_HH_
-# define DEVICE_HH_
+#pragma once
 
 #include <projectexplorer/devicesupport/idevice.h>
 
@@ -70,4 +69,3 @@ private:
 
 } // namespace Freebox
 
-#endif /* !DEVICE_HH_ */

@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef MANAGER_HH_
-# define MANAGER_HH_
+#pragma once
 
 #include <projectexplorer/iprojectmanager.h>
 
@@ -50,4 +49,3 @@ private:
 } // namespace Internal
 } // namespace Freebox
 
-#endif /* !MANAGER_HH_ */

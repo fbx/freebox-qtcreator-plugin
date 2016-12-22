@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef SSDPMESSAGE_HH_
-# define SSDPMESSAGE_HH_
+#pragma once
 
 # include <QString>
 # include <QRegExp>
@@ -60,4 +59,3 @@ private:
 } // namespace Ssdp
 } // namespace Freebox
 
-#endif // !SSDPMESSAGE_HH_

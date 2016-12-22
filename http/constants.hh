@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef CONSTANTS_HH_
-# define CONSTANTS_HH_
+#pragma once
 
 #ifdef __GNUC__
 
@@ -44,4 +43,3 @@ constexpr const char INTERNAL_SERVER_ERROR[] = "Internal server error";
 
 #endif // __GNUC__
 
-#endif // !CONSTANTS_HH_

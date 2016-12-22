@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef JSONRPC_HH
-#define JSONRPC_HH
+#pragma once
 
 #include <QObject>
 #include <QUrl>
@@ -60,4 +59,3 @@ private:
 } // namespace Util
 } // namespace Freebox
 
-#endif

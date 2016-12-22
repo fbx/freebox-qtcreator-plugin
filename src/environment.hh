@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef ENVIRONMENT_HH_
-# define ENVIRONMENT_HH_
+#pragma once
 
 #include <projectexplorer/environmentaspect.h>
 
@@ -45,4 +44,3 @@ private:
 
 } // namespace Freebox
 
-#endif // !ENVIRONMENT_HH_

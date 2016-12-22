@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef PROCESSSIGNALOPERATION_HH_
-# define PROCESSSIGNALOPERATION_HH_
+#pragma once
 
 #include <projectexplorer/devicesupport/idevice.h>
 
@@ -38,4 +37,3 @@ public:
 
 } // namespace Freebox
 
-#endif /* !PROCESSSIGNALOPERATION_HH_ */

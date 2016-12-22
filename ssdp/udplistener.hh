@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef UDPLISTENER_HH
-#define UDPLISTENER_HH
+#pragma once
 
 #include "udpsocket.hh"
 
@@ -49,4 +48,3 @@ private:
 } // namespace Ssdp
 } // namespace Freebox
 
-#endif // UDPLISTENER_HH

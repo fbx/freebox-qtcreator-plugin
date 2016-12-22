@@ -1,5 +1,4 @@
-#ifndef GZIPPER_H
-#define GZIPPER_H
+#pragma once
 
 #include <QObject>
 
@@ -24,4 +23,3 @@ private:
 
 } // namespace Freebox
 
-#endif // GZIPPER_H

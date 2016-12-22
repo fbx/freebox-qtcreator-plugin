@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef PROJECT_HH_
-# define PROJECT_HH_
+#pragma once
 
 #include "fileformat/manifest.hh"
 #include "manager.hh"
@@ -106,4 +105,3 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Freebox::Project::RefreshOptions)
 
-#endif /* !PROJECT_HH_ */

@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef FREEBOXRUNCONFIGURATIONWIDGET_HH_
-# define FREEBOXRUNCONFIGURATIONWIDGET_HH_
+#pragma once
 
 #include <QWidget>
 
@@ -47,4 +46,3 @@ private:
 
 }
 
-#endif /* !FREEBOXRUNCONFIGURATIONWIDGET_HH_ */

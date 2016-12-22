@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef SSDPCLIENT_HH
-#define SSDPCLIENT_HH
+#pragma once
 
 #include <QObject>
 #include <QList>
@@ -65,4 +64,3 @@ private:
 } // namespace Ssdp
 } // namespace Freebox
 
-#endif /* SSDPCLIENT_HH */

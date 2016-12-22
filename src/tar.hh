@@ -1,5 +1,4 @@
-#ifndef TAR_H
-#define TAR_H
+#pragma once
 
 #include "freestorepackager.hh"
 
@@ -27,4 +26,3 @@ private:
 } // namespace Internal
 } // namespace Freebox
 
-#endif // TAR_H

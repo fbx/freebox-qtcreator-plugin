@@ -27,8 +27,7 @@
 **
 ****************************************************************************/
 
-#ifndef QMLPROJECTFILEFORMAT_H
-#define QMLPROJECTFILEFORMAT_H
+#pragma once
 
 #include <utils/fileutils.h>
 
@@ -49,4 +48,3 @@ public:
 
 } // namespace QmlProjectManager
 
-#endif // QMLPROJECTFILEFORMAT_H

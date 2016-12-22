@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef NODE_HH_
-# define NODE_HH_
+#pragma once
 
 #include <projectexplorer/projectnodes.h>
 
@@ -57,4 +56,3 @@ private:
 } // namespace Freebox
 
 
-#endif /* !NODE_HH_ */

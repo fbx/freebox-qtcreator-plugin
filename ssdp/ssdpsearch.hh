@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef SSDPSEARCH_HH_
-# define SSDPSEARCH_HH_
+#pragma once
 
 #include <QUdpSocket>
 #include <QNetworkInterface>
@@ -46,4 +45,3 @@ private:
 } // namespace Ssdp
 } // namespace Freebox
 
-#endif /* !SSDPSEARCH_HH_ */

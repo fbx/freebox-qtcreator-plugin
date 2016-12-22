@@ -1,5 +1,4 @@
-#ifndef FREESTORE_PACKAGER_H
-#define FREESTORE_PACKAGER_H
+#pragma once
 
 #include <QMap>
 #include <QString>
@@ -60,4 +59,3 @@ private:
 } // namespace Internal
 } // namespace Freebox
 
-#endif // FREESTORE_PACKAGER

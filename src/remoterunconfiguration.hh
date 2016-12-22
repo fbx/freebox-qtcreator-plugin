@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef FREEBOXREMOTERUNCONFIGURATION_HH_
-# define FREEBOXREMOTERUNCONFIGURATION_HH_
+#pragma once
 
 #include <projectexplorer/runnables.h>
 
@@ -80,4 +79,3 @@ private:
 
 } // namespace Freebox
 
-#endif // !FREEBOXREMOTERUNCONFIGURATION_HH_

@@ -17,8 +17,7 @@
 
   Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
 */
-#ifndef CLIENT_HH_
-# define CLIENT_HH_
+#pragma once
 
 #include <QTcpSocket>
 
@@ -51,4 +50,3 @@ private:
 } // namespace Http
 } // namespace Freebox
 
-#endif /* !CLIENT_HH_ */
