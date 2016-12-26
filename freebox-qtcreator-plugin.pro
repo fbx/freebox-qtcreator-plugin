@@ -102,13 +102,15 @@ DEFINES += FREEBOX_LIBRARY
 QTC_PLUGIN_NAME = Freebox
 
 QTC_LIB_DEPENDS += \
+    extensionsystem \
+    qmljs \
     utils
 
 QTC_PLUGIN_DEPENDS += \
     coreplugin \
-    cpptools \
-    qmakeprojectmanager \
-    debugger
+    debugger \
+    projectexplorer \
+    qtsupport
 
 QT += network
 
