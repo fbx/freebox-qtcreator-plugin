@@ -167,14 +167,14 @@ void FreeboxPlugin::makeFreeStorePackage(bool saveAs)
     QString packageFileName = fbxProject->packageFileName();
 
     if (packageFileName.isEmpty())
-        fbxProject->setPackageFileName(packageFileName = fbxProject->projectDir().canonicalPath() + QString::fromLocal8Bit(".tgz"));
+        fbxProject->setPackageFileName(packageFileName = fbxProject->projectDir().canonicalPath() + QString::fromLocal8Bit(".fbxqml"));
 
     if (saveAs) {
         QString outFileName =
             QFileDialog::getSaveFileName(Core::ICore::mainWindow(),
                                          tr("Make FreeStore Package"),
                                          packageFileName,
-                                         tr("Gzip compressed tar files (*.tgz *.tar.gz)"));
+                                         tr("Freebox QML package (*.fbxqml)"));
         if (outFileName.isEmpty())
             return;
 
