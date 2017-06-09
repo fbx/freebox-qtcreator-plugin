@@ -114,6 +114,12 @@ QTC_PLUGIN_DEPENDS += \
 
 QT += network
 
+linux-* {
+    IDE_LIBRARY_BASENAME=usr/lib/x86_64-linux-gnu
+    LIBS += -L/usr/lib/x86_64-linux-gnu/qtcreator \
+            -L/usr/lib/x86_64-linux-gnu/qtcreator/plugins
+}
+
 RESOURCES += freebox.qrc
 
 include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
