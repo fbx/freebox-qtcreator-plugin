@@ -27,7 +27,6 @@
 
 #include <utils/algorithm.h>
 
-#include <QFileInfo>
 #include <QStyle>
 
 namespace Freebox {
@@ -47,46 +46,24 @@ Node::Node(Project *project)
     setIcon(QIcon(projectPixmap));
 }
 
-Node::~Node()
-{ }
-
-void Node::refresh()
-{
-    using namespace ProjectExplorer;
-
-    FileNode *projectFilesNode = new FileNode(m_project->filesFileName(),
-                                              ProjectFileType,
-                                              /* generated = */ false);
-
-    QStringList files = m_project->files();
-    files.removeAll(m_project->filesFileName().toString());
-
-    QList<FileNode *> fileNodes = Utils::transform(files, [](const QString &f) {
-        FileType fileType = SourceType; // ### FIXME
-        return new FileNode(Utils::FileName::fromString(f), fileType, false);
-    });
-    fileNodes.append(projectFilesNode);
-
-    buildTree(fileNodes);
-}
-
 bool Node::showInSimpleTree() const
 {
     return true;
 }
 
-QList<ProjectExplorer::ProjectAction> Node::supportedActions(ProjectExplorer::Node *node) const
+bool Node::supportsAction(ProjectExplorer::ProjectAction action, ProjectExplorer::Node *node) const
 {
-    Q_UNUSED(node);
-    QList<ProjectExplorer::ProjectAction> actions;
-    actions.append(ProjectExplorer::AddNewFile);
-    actions.append(ProjectExplorer::EraseFile);
-    if (node->nodeType() == ProjectExplorer::FileNodeType) {
-        ProjectExplorer::FileNode *fileNode = static_cast<ProjectExplorer::FileNode *>(node);
-        if (fileNode->fileType() != ProjectExplorer::ProjectFileType)
-            actions.append(ProjectExplorer::Rename);
+    using namespace ProjectExplorer;
+
+    if (action == AddNewFile || action == EraseFile)
+        return true;
+
+    if (action == Rename && node->nodeType() == NodeType::File) {
+        FileNode *fileNode = static_cast<FileNode *>(node);
+        return fileNode->fileType() != FileType::Project;
     }
-    return actions;
+
+    return false;
 }
 
 bool Node::addFiles(const QStringList &filePaths, QStringList * /*notAdded*/)

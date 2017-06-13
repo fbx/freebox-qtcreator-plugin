@@ -19,7 +19,6 @@
 */
 
 #include "project.hh"
-#include "file.hh"
 #include "fileformat/qmlprojectfileformat.hh"
 #include "fileformat/qmlprojectitem.hh"
 #include "fileformat/manifest.hh"
@@ -27,38 +26,36 @@
 #include "localrunconfiguration.hh"
 #include "constants.hh"
 #include "node.hh"
-#include "manager.hh"
 
 #include <coreplugin/icontext.h>
 #include <coreplugin/icore.h>
 #include <coreplugin/messagemanager.h>
 #include <coreplugin/documentmanager.h>
-#include <qtsupport/baseqtversion.h>
-#include <qtsupport/qtkitinformation.h>
-#include <qmljs/qmljsmodelmanagerinterface.h>
+
 #include <projectexplorer/kitinformation.h>
 #include <projectexplorer/kitmanager.h>
 #include <projectexplorer/target.h>
 #include <projectexplorer/projectexplorerconstants.h>
 #include <projectexplorer/buildtargetinfo.h>
+
+#include <qtsupport/baseqtversion.h>
+#include <qtsupport/qtkitinformation.h>
 #include <qtsupport/qtsupportconstants.h>
+#include <qmljs/qmljsmodelmanagerinterface.h>
+
+#include <utils/algorithm.h>
+
+#include <QRegExp>
 
 namespace Freebox {
 
-Project::Project(Internal::Manager *manager, const Utils::FileName &fileName)
+Project::Project(const Utils::FileName &fileName) :
+    ProjectExplorer::Project(QString::fromLatin1(Constants::FBXPROJECT_MIMETYPE), fileName, [this]() { refreshProjectFile(); })
 {
     setId("FbxProjectManager.FbxProject");
-    setProjectManager(manager);
-    setDocument(new Internal::File(this, fileName));
-    Core::DocumentManager::addDocument(document(), true);
-    setRootProjectNode(new Internal::Node(this));
-
     setProjectContext(Core::Context(Constants::PROJECTCONTEXT));
-    setProjectLanguages(Core::Context(ProjectExplorer::Constants::LANG_QMLJS));
-
-    m_projectName = projectFilePath().toFileInfo().completeBaseName();
-
-    projectManager()->registerProject(this);
+    setProjectLanguages(Core::Context(ProjectExplorer::Constants::QMLJS_LANGUAGE_ID));
+    setDisplayName(fileName.toFileInfo().completeBaseName());
 
     connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitsChanged,
             this, &Project::updateKit);
@@ -66,8 +63,6 @@ Project::Project(Internal::Manager *manager, const Utils::FileName &fileName)
 
 Project::~Project()
 {
-    projectManager()->unregisterProject(this);
-
     delete m_projectItem.data();
 }
 
@@ -119,11 +114,6 @@ QDir Project::projectDir() const
     return QDir(projectDirectory().toString());
 }
 
-Utils::FileName Project::filesFileName() const
-{
-    return projectFilePath();
-}
-
 void Project::parseProject(RefreshOptions options)
 {
     if (options & RefreshFiles) {
@@ -153,8 +143,8 @@ void Project::parseProject(RefreshOptions options)
 
         if (m_projectItem) {
             m_projectItem->setSourceDirectory(projectDir().path());
-            if (modelManager())
-                modelManager()->updateSourceFiles(m_projectItem->files(), true);
+            if (auto modelManager = QmlJS::ModelManagerInterface::instance())
+                modelManager->updateSourceFiles(m_projectItem->files(), true);
 
             QString mainFilePath = m_projectItem->mainFile();
             if (!mainFilePath.isEmpty()) {
@@ -168,15 +158,12 @@ void Project::parseProject(RefreshOptions options)
                 }
             }
         }
-        rootProjectNode()->refresh();
+        generateProjectTree();
     }
 
     if (options & RefreshConfiguration) {
         // update configuration
     }
-
-    if (options & RefreshFiles)
-        emit fileListChanged();
 }
 
 void Project::refresh(RefreshOptions options)
@@ -184,35 +171,21 @@ void Project::refresh(RefreshOptions options)
     parseProject(options);
 
     if (options & RefreshFiles)
-        rootProjectNode()->refresh();
+        generateProjectTree();
 
-    if (!modelManager())
+    auto modelManager = QmlJS::ModelManagerInterface::instance();
+    if (!modelManager)
         return;
 
     QmlJS::ModelManagerInterface::ProjectInfo projectInfo =
-            modelManager()->defaultProjectInfoForProject(this);
+            modelManager->defaultProjectInfoForProject(this);
     foreach (const QString &searchPath, customImportPaths())
         projectInfo.importPaths.maybeInsert(Utils::FileName::fromString(searchPath),
                                             QmlJS::Dialect::Qml);
 
-    modelManager()->updateProjectInfo(projectInfo, this);
+    modelManager->updateProjectInfo(projectInfo, this);
 
     emit parsingFinished();
-}
-
-QmlJS::ModelManagerInterface *Project::modelManager() const
-{
-    return QmlJS::ModelManagerInterface::instance();
-}
-
-QStringList Project::files() const
-{
-    QStringList files;
-    if (m_projectItem)
-        files = m_projectItem->files();
-    else
-        files = m_files;
-    return files;
 }
 
 QString Project::mainFile() const
@@ -254,18 +227,10 @@ void Project::refreshProjectFile()
 void Project::refreshFiles(const QSet<QString> &/*added*/, const QSet<QString> &removed)
 {
     refresh(RefreshFiles);
-    if (!removed.isEmpty() && modelManager())
-        modelManager()->removeFiles(removed.toList());
-}
-
-QString Project::displayName() const
-{
-    return m_projectName;
-}
-
-Internal::Manager *Project::projectManager() const
-{
-    return static_cast<Internal::Manager *>(ProjectExplorer::Project::projectManager());
+    if (!removed.isEmpty()) {
+        if (auto modelManager = QmlJS::ModelManagerInterface::instance())
+            modelManager->removeFiles(removed.toList());
+    }
 }
 
 bool Project::supportsKit(ProjectExplorer::Kit *k, QString *errorMessage) const
@@ -305,11 +270,6 @@ Internal::Node *Project::rootProjectNode() const
     return static_cast<Internal::Node *>(ProjectExplorer::Project::rootProjectNode());
 }
 
-QStringList Project::files(ProjectExplorer::Project::FilesMode) const
-{
-    return files();
-}
-
 Project::RestoreResult Project::fromMap(const QVariantMap &map, QString *errorMessage)
 {
     RestoreResult result = ProjectExplorer::Project::fromMap(map, errorMessage);
@@ -324,14 +284,34 @@ Project::RestoreResult Project::fromMap(const QVariantMap &map, QString *errorMe
     return RestoreResult::Ok;
 }
 
+void Project::generateProjectTree()
+{
+    using namespace ProjectExplorer;
+
+    if (!m_projectItem)
+        return;
+
+    auto newRoot = new Internal::Node(this);
+
+    for (const QString &f : m_projectItem.data()->files()) {
+        FileType fileType = FileType::Source; // ### FIXME
+        if (f == projectFilePath().toString())
+            fileType = FileType::Project;
+        newRoot->addNestedNode(new FileNode(Utils::FileName::fromString(f), fileType, false));
+    }
+    newRoot->addNestedNode(new FileNode(projectFilePath(), FileType::Project, false));
+
+    setRootProjectNode(newRoot);
+}
+
 bool Project::updateKit()
 {
     using ProjectExplorer::Kit;
     using ProjectExplorer::KitManager;
     using ProjectExplorer::Target;
 
-    QList<Kit*> kits = KitManager::matchingKits(
-        ProjectExplorer::KitMatcher(std::function<bool(const Kit *)>([this](const Kit *k) -> bool {
+    QList<Kit*> kits = KitManager::kits(
+        std::function<bool(const Kit *)>([this](const Kit *k) -> bool {
             if (!k->isValid())
                 return false;
 
@@ -354,7 +334,7 @@ bool Project::updateKit()
             }
 
             return false;
-        })));
+        }));
 
     foreach(Kit *kit, kits) {
         if (!target(kit))

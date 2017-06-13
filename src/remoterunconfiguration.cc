@@ -30,6 +30,7 @@
 
 #include <utils/fileutils.h>
 #include <utils/mimetypes/mimedatabase.h>
+#include <qmljstools/qmljstoolsconstants.h>
 
 namespace Freebox {
 
@@ -139,9 +140,8 @@ bool RemoteRunConfiguration::fromMap(const QVariantMap &map)
 void RemoteRunConfiguration::updateEnabled()
 {
     if (mainScriptSource() == FileInEditor) {
-        Utils::MimeDatabase mimeDataBase;
         Core::IDocument *document = Core::EditorManager::currentDocument();
-        Utils::MimeType mainScriptMimeType = mimeDataBase.mimeTypeForFile(mainScript());
+        Utils::MimeType mainScriptMimeType = Utils::mimeTypeForFile(mainScript());
         if (document) {
             m_currentFileFilename = document->filePath().toString();
         }
@@ -153,7 +153,7 @@ void RemoteRunConfiguration::updateEnabled()
                 const QFileInfo fi(filename);
 
                 if (!filename.isEmpty() && fi.baseName()[0].isLower()
-                        && mimeDataBase.mimeTypeForFile(fi).matchesName(QLatin1String(ProjectExplorer::Constants::QML_MIMETYPE)))
+                        && Utils::mimeTypeForFile(fi).matchesName(QLatin1String(QmlJSTools::Constants::QML_MIMETYPE)))
                 {
                     m_currentFileFilename = filename;
                     break;

@@ -53,7 +53,7 @@ bool FreeStorePackager::isToCheck(const QString &filePath)
 bool FreeStorePackager::preparePackaging()
 {
     m_projectDirPath = m_project->projectDir().canonicalPath();
-    QStringList paths = m_project->files();
+    QStringList paths = m_project->files(ProjectExplorer::Project::AllFiles);
 
     // Store file data and create virtual directories
     QMap<QString, bool> seenDirs;

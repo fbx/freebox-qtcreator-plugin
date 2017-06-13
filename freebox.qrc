@@ -1,7 +1,9 @@
 <RCC>
     <qresource prefix="/freebox">
-        <file>FbxProjectManager.mimetypes.xml</file>
         <file>images/qmlfolder.png</file>
+        <file>images/qmlproject.png</file>
+        <file>images/tvdevice.png</file>
+        <file>images/tvdevicesmall.png</file>
         <file>templates/wizard/projects/git.ignore</file>
         <file>templates/wizard/projects/qmlproject/minimal/wizard.json</file>
         <file>templates/wizard/projects/qmlproject/minimal/qml_wizard.png</file>

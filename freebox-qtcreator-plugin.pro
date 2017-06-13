@@ -7,7 +7,7 @@ isEmpty(QTCREATOR_SOURCES):error(QTC_SOURCE env variable not defined)
 isEmpty(IDE_BUILD_TREE):error(QTC_BUILD env variable not defined)
 
 # uncomment next line to install in your home dir
-# USE_USER_DESTDIR = yes
+USE_USER_DESTDIR = yes
 
 # Sources
 
@@ -20,11 +20,9 @@ SOURCES += \
     src/device.cc \
     src/devicefactory.cc \
     src/environment.cc \
-    src/file.cc \
     src/freeboxplugin.cc \
     src/freestorepackager.cc \
     src/localrunconfiguration.cc \
-    src/manager.cc \
     src/node.cc \
     src/processsignaloperation.cc \
     src/project.cc \
@@ -59,12 +57,10 @@ HEADERS += \
     src/device.hh \
     src/devicefactory.hh \
     src/environment.hh \
-    src/file.hh \
     src/freebox_global.hh \
     src/freeboxplugin.hh \
     src/freestorepackager.hh \
     src/localrunconfiguration.hh \
-    src/manager.hh \
     src/node.hh \
     src/processsignaloperation.hh \
     src/project.hh \

@@ -22,6 +22,10 @@
 #include "device.hh"
 #include "constants.hh"
 
+#include <utils/icon.h>
+
+#include <QIcon>
+
 namespace Freebox {
 namespace Internal {
 
@@ -40,6 +44,18 @@ QString DeviceFactory::displayNameForId(Core::Id type) const
 QList<Core::Id> DeviceFactory::availableCreationIds() const
 {
     return QList<Core::Id>() << Core::Id(Constants::FREEBOX_DEVICE_TYPE);
+}
+
+QIcon DeviceFactory::iconForId(Core::Id type) const
+{
+    Q_UNUSED(type)
+    using namespace Utils;
+    static const QIcon icon =
+            Icon::combinedIcon({Icon({{":/freebox/images/tvdevicesmall.png",
+                                       Theme::PanelTextColorDark}}, Icon::Tint),
+                                Icon({{":/freebox/images/tvdevice.png",
+                                       Theme::IconsBaseColor}})});
+    return icon;
 }
 
 bool DeviceFactory::canCreate() const

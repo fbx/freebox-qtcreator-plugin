@@ -39,7 +39,6 @@ public:
                Core::Id mode);
 
     void start() override;
-    bool isRunning() const override;
 
 public slots:
     StopResult stop() override;
@@ -63,7 +62,6 @@ protected:
     bool mDebug;
 
 private:
-    bool mRunning;
     QNetworkInterface mIface;
     QHostAddress mAddress;
     Http::Server mServer;

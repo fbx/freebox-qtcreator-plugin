@@ -32,6 +32,7 @@
 #include "qmlprojectitem.hh"
 
 #include <QObject>
+#include <QRegExp>
 #include <QSet>
 #include <QTimer>
 

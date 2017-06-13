@@ -9,5 +9,17 @@
     \"Category\" : \"Device Support\",
     \"Description\" : \"Support plugin for Freebox Player QML Application development\",
     \"Url\" : \"http://dev.freebox.fr/sdk/\",
-    $$dependencyList
+    $$dependencyList,
+
+    \"Mimetypes\" : \"
+    <?xml version=\'1.0\'?>
+
+    <mime-info xmlns=\'http://www.freedesktop.org/standards/shared-mime-info\'>
+      <mime-type type=\'application/vnd.fbx-qmlproject\'>
+        <sub-class-of type=\'application/x-qmlproject\'/>
+        <comment>Freebox QML Project file</comment>
+        <glob pattern=\'*.fbxproject\'/>
+      </mime-type>
+    </mime-info>
+    \"
 }

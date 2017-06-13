@@ -34,8 +34,7 @@ namespace Freebox {
 RunControl::RunControl(ProjectExplorer::RunConfiguration *rc,
                        Core::Id mode) :
     ProjectExplorer::RunControl(rc, mode),
-    mDebug(false),
-    mRunning(false)
+    mDebug(false)
 {
     if (!rc || !rc->target())
         return;
@@ -65,8 +64,7 @@ RunControl::RunControl(ProjectExplorer::RunConfiguration *rc,
 
 void RunControl::start()
 {
-    if (mRunning)
-        return;
+    reportApplicationStart();
 
     RemoteRunConfiguration *fbxrc = qobject_cast<RemoteRunConfiguration *>(runConfiguration());
     ProjectExplorer::Kit *kit = fbxrc->target()->kit();
@@ -78,24 +76,14 @@ void RunControl::start()
 
     mServer.listen();
     mQmlRemote.start(QString::fromUtf8(fbxrc->id().name()), mServer.serverPort(), mDebug);
-    mRunning = true;
-    emit started();
 }
 
 ProjectExplorer::RunControl::StopResult RunControl::stop()
 {
-    if (mRunning) {
-        unlinkOutput();
-        mRunning = false;
-        mServer.close();
-        emit finished();
-    }
+    unlinkOutput();
+    mServer.close();
+    reportApplicationStop();
     return ProjectExplorer::RunControl::StoppedSynchronously;
-}
-
-bool RunControl::isRunning() const
-{
-    return mRunning;
 }
 
 void RunControl::emitRemoteStarted(quint16 port,

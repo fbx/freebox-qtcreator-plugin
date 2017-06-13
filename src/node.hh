@@ -21,11 +21,6 @@
 
 #include <projectexplorer/projectnodes.h>
 
-#include <QStringList>
-#include <QHash>
-
-namespace Core { class IDocument; }
-
 namespace Freebox {
 
 class Project;
@@ -36,17 +31,12 @@ class Node : public ProjectExplorer::ProjectNode
 {
 public:
     Node(Project *project);
-    ~Node() override;
 
     bool showInSimpleTree() const override;
-
-    QList<ProjectExplorer::ProjectAction> supportedActions(ProjectExplorer::Node *node) const override;
-
+    bool supportsAction(ProjectExplorer::ProjectAction action, ProjectExplorer::Node *node) const override;
     bool addFiles(const QStringList &filePaths, QStringList *notAdded = 0) override;
     bool deleteFiles(const QStringList &filePaths) override;
     bool renameFile(const QString &filePath, const QString &newFilePath) override;
-
-    void refresh();
 
 private:
     Project *m_project;

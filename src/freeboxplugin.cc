@@ -23,7 +23,6 @@
 #include "configuration.hh"
 #include "runconfigurationfactory.hh"
 #include "runcontrolfactory.hh"
-#include "manager.hh"
 #include "project.hh"
 #include "devicefactory.hh"
 #include "device.hh"
@@ -36,12 +35,12 @@
 #include <coreplugin/actionmanager/actioncontainer.h>
 #include <coreplugin/coreconstants.h>
 #include <coreplugin/fileiconprovider.h>
+
 #include <projectexplorer/devicesupport/devicemanager.h>
 #include <projectexplorer/jsonwizard/jsonwizardfactory.h>
 #include <projectexplorer/kitmanager.h>
 #include <projectexplorer/session.h>
-
-#include <utils/mimetypes/mimedatabase.h>
+#include <projectexplorer/projectmanager.h>
 
 #include <QAction>
 #include <QMessageBox>
@@ -77,14 +76,12 @@ bool FreeboxPlugin::initialize(const QStringList &arguments, QString *errorStrin
     Q_UNUSED(arguments);
     Q_UNUSED(errorString);
 
-    Utils::MimeDatabase::addMimeTypes(QLatin1String(":/freebox/FbxProjectManager.mimetypes.xml"));
     ProjectExplorer::JsonWizardFactory::addWizardPath(Utils::FileName::fromString(QStringLiteral(":/freebox/templates/wizard")));
 
     FreeboxConfiguration *configuration = new FreeboxConfiguration(this);
 
     addAutoReleasedObject(new DeviceFactory);
     addAutoReleasedObject(new RunControlFactory);
-    addAutoReleasedObject(new Internal::Manager);
     addAutoReleasedObject(new RunConfigurationFactory);
 
     connect(ProjectExplorer::KitManager::instance(), SIGNAL(kitsLoaded()),
@@ -92,6 +89,7 @@ bool FreeboxPlugin::initialize(const QStringList &arguments, QString *errorStrin
     connect(ProjectExplorer::DeviceManager::instance(), SIGNAL(devicesLoaded()),
             configuration, SLOT(updateDevices()));
 
+    ProjectExplorer::ProjectManager::registerProjectType<Project>(Constants::FBXPROJECT_MIMETYPE);
     Core::FileIconProvider::registerIconOverlayForSuffix(":/freebox/images/qmlproject.png",
                                                          "fbxproject");
 

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
-  <mime-type type="application/vnd.fbx-qmlproject">
-    <sub-class-of type="text/x-qml"/>
-    <comment>Freebox QML Project file</comment>
-    <glob pattern="*.fbxproject"/>
-  </mime-type>
-</mime-info>

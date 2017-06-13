@@ -20,7 +20,6 @@
 #pragma once
 
 #include "fileformat/manifest.hh"
-#include "manager.hh"
 #include "node.hh"
 
 #include <projectexplorer/project.h>
@@ -29,7 +28,6 @@
 
 namespace ProjectExplorer { class RunConfiguration; }
 namespace QmlProjectManager { class QmlProjectItem; }
-namespace QmlJS { class ModelManagerInterface; }
 
 namespace Freebox {
 
@@ -38,18 +36,12 @@ class Project : public ProjectExplorer::Project
     Q_OBJECT
 
 public:
-    Project(Internal::Manager *manager, const Utils::FileName &filename);
+    explicit Project(const Utils::FileName &filename);
     ~Project() override;
-
-    Utils::FileName filesFileName() const;
-
-    QString displayName() const override;
-    Internal::Manager *projectManager() const override;
 
     bool supportsKit(ProjectExplorer::Kit *k, QString *errorMessage) const override;
 
     Internal::Node *rootProjectNode() const override;
-    QStringList files(ProjectExplorer::Project::FilesMode mode) const override;
 
     bool validProjectFile() const;
 
@@ -66,7 +58,6 @@ public:
     void refresh(RefreshOptions options);
 
     QDir projectDir() const;
-    QStringList files() const;
     QString mainFile() const;
     QStringList customImportPaths() const;
 
@@ -82,6 +73,7 @@ protected:
     RestoreResult fromMap(const QVariantMap &map, QString *errorMessage) override;
 
 private:
+    void generateProjectTree();
     void refreshFiles(const QSet<QString> &added, const QSet<QString> &removed);
     void addedTarget(ProjectExplorer::Target *target);
     void onActiveTargetChanged(ProjectExplorer::Target *target);
@@ -90,14 +82,11 @@ private:
     bool updateKit();
 
     void parseProject(RefreshOptions options);
-    QmlJS::ModelManagerInterface *modelManager() const;
 
     QString m_packageFileName;
-    QString m_projectName;
-    ProjectExplorer::Target *m_activeTarget = 0;
+    ProjectExplorer::Target *m_activeTarget = nullptr;
     Fileformat::Manifest m_manifest;
     QStringList m_entryPoints;
-    QStringList m_files;
     QPointer<QmlProjectManager::QmlProjectItem> m_projectItem;
 };
 

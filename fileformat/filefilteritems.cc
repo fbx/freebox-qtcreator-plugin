@@ -36,6 +36,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QImageReader>
+#include <QRegExp>
 
 namespace QmlProjectManager {
 
