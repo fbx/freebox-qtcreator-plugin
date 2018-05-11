@@ -16,9 +16,9 @@ This plugin helps QML application development for Freebox:
 Qt-5.8 is required (binary distribution for developer is enough).
 
 You'll need a QtCreator source tree, version **v4.3.0**, and
-corresponding build tree.  Clone from [QtCreator's
-Git](https://qt.gitorious.org/qt-creator/) and checkout the
-tag v4.3.0..
+corresponding build tree.  Clone from QtCreator's Git
+following [Qt's instructions](https://wiki.qt.io/Building_Qt_Creator_from_Git)
+and checkout the tag **v4.3.0** before to build.
 
 After build of QtCreator v4.3.0, prepare your environment to actually
 point to source and build directories:
