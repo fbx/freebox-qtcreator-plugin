@@ -1,0 +1,11 @@
+{
+    \"Name\" : \"Freebox\",
+    \"Version\" : \"0.0.1\",
+    \"CompatVersion\" : \"0.0.1\",
+    \"Vendor\" : \"Freebox\",
+    \"Copyright\" : \"(C) Freebox\",
+    \"License\" : \"MIT\",
+    \"Description\" : \"Launch QtQuick app on your Freebox devices\",
+    \"Url\" : \"https://dev.freebox.fr\",
+    $$dependencyList
+}

@@ -1,0 +1,10 @@
+#ifndef FREEBOX_GLOBAL_H
+#define FREEBOX_GLOBAL_H
+
+#if defined(FREEBOX_LIBRARY)
+#  define FREEBOX_EXPORT Q_DECL_EXPORT
+#else
+#  define FREEBOX_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // FREEBOX_GLOBAL_H
