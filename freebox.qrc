@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/freebox">
+        <file>images/qmlfolder.png</file>
+        <file>images/qmlproject.png</file>
+        <file>images/tvdevice.png</file>
+        <file>images/tvdevicesmall.png</file>
+    </qresource>
+</RCC>

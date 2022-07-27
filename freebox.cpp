@@ -1,5 +1,8 @@
 #include "freebox.h"
+#include "freeboxconfiguration.h"
 #include "freeboxconstants.h"
+#include "freeboxdevice.h"
+#include "freeboxruncontrol.h"
 
 #include <coreplugin/icore.h>
 #include <coreplugin/icontext.h>
@@ -8,13 +11,30 @@
 #include <coreplugin/actionmanager/actioncontainer.h>
 #include <coreplugin/coreconstants.h>
 
+#include <projectexplorer/projectexplorerconstants.h>
+#include <projectexplorer/devicesupport/devicemanager.h>
+#include <projectexplorer/kitmanager.h>
+#include <projectexplorer/runcontrol.h>
+
 #include <QAction>
 #include <QMessageBox>
 #include <QMainWindow>
 #include <QMenu>
 
+using namespace ProjectExplorer;
+using namespace ProjectExplorer::Constants;
+
 namespace Freebox {
 namespace Internal {
+
+class FreeboxRunConfigurationFactory : public RunConfigurationFactory
+{
+public:
+    FreeboxRunConfigurationFactory()
+    {
+        addSupportedTargetDeviceType(Constants::FREEBOX_DEVICE_TYPE);
+    }
+};
 
 FreeboxPlugin::FreeboxPlugin()
 {
@@ -38,6 +58,22 @@ bool FreeboxPlugin::initialize(const QStringList &arguments, QString *errorStrin
 
     Q_UNUSED(arguments)
     Q_UNUSED(errorString)
+
+    FreeboxConfiguration *configuration = new FreeboxConfiguration(this);
+
+    new FreeboxDeviceFactory;
+    auto runConfigFactory = new FreeboxRunConfigurationFactory();
+
+    new RunWorkerFactory(
+        RunWorkerFactory::make<Freebox::RunControl>(),
+        { NORMAL_RUN_MODE },
+        { runConfigFactory->runConfigurationId() }
+    );
+
+    connect(KitManager::instance(), &KitManager::kitsLoaded,
+            configuration, &FreeboxConfiguration::updateKits);
+    connect(DeviceManager::instance(), &DeviceManager::devicesLoaded,
+            configuration, &FreeboxConfiguration::updateDevices);
 
     auto action = new QAction(tr("Freebox Action"), this);
     Core::Command *cmd = Core::ActionManager::registerAction(action, Constants::ACTION_ID,
