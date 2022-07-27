@@ -2,6 +2,7 @@
 #include "freeboxconfiguration.h"
 #include "freeboxconstants.h"
 #include "freeboxdevice.h"
+#include "freeboxqmltoolingsupport.h"
 #include "freeboxruncontrol.h"
 
 #include <coreplugin/icore.h>
@@ -67,6 +68,12 @@ bool FreeboxPlugin::initialize(const QStringList &arguments, QString *errorStrin
     new RunWorkerFactory(
         RunWorkerFactory::make<Freebox::RunControl>(),
         { NORMAL_RUN_MODE },
+        { runConfigFactory->runConfigurationId() }
+    );
+
+    new RunWorkerFactory(
+        RunWorkerFactory::make<FreeboxQmlToolingSupport>(),
+        { QML_PROFILER_RUN_MODE },
         { runConfigFactory->runConfigurationId() }
     );
 

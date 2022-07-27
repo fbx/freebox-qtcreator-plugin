@@ -22,6 +22,7 @@ add_qtc_plugin(Freebox
   DEPENDS
     ${QtX}::Widgets
     QtCreator::ExtensionSystem
+    QtCreator::QmlDebug
     QtCreator::Utils
   SOURCES
     .github/workflows/build_cmake.yml
@@ -34,6 +35,8 @@ add_qtc_plugin(Freebox
     freeboxconfiguration.h
     freeboxdevice.cpp
     freeboxdevice.h
+    freeboxqmltoolingsupport.cpp
+    freeboxqmltoolingsupport.h
     freeboxruncontrol.cpp
     freeboxruncontrol.h
     freeboxsignaloperation.cpp

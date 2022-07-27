@@ -26,6 +26,8 @@
 #include <projectexplorer/kitinformation.h>
 #include <projectexplorer/devicesupport/idevice.h>
 
+#include <utils/url.h>
+
 namespace Freebox {
 
 RunControl::RunControl(ProjectExplorer::RunControl *runControl)
@@ -87,7 +89,11 @@ void RunControl::emitRemoteStarted(quint16 port,
                                    quint16 out,
                                    quint16 err)
 {
-    emit remoteStarted(port);
+    QUrl serverUrl;
+    serverUrl.setHost(m_address.toString());
+    serverUrl.setPort(port);
+    serverUrl.setScheme(Utils::urlTcpScheme());
+    emit remoteStarted(serverUrl);
     linkOutput(out, err);
 }
 

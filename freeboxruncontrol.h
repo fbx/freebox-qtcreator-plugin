@@ -41,7 +41,7 @@ public:
     void stop() override;
 
 signals:
-    void remoteStarted(quint16 port);
+    void remoteStarted(const QUrl &serverUrl);
     void remoteStopped();
 
 private slots:
