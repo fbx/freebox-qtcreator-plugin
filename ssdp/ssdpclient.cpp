@@ -46,7 +46,7 @@ void Client::start(const QString &nt)
     if (isRunning())
         return;
 
-    for (QNetworkInterface &iface : QNetworkInterface::allInterfaces()) {
+    for (const QNetworkInterface &iface : QNetworkInterface::allInterfaces()) {
         QNetworkInterface::InterfaceFlags flags = iface.flags();
         if (!(flags & QNetworkInterface::IsUp) ||
             !(flags & QNetworkInterface::IsRunning) ||
@@ -55,7 +55,6 @@ void Client::start(const QString &nt)
             !(flags & QNetworkInterface::CanMulticast))
             continue;
 
-        qWarning() << "create UDP listener on iface" << iface;
         mListeners << new UdpListener(iface);
 
         for (const QNetworkAddressEntry &addr : iface.addressEntries()) {
@@ -83,15 +82,11 @@ void Client::stop()
     if (!isRunning())
         return;
 
-    for (UdpListener *l : mListeners) {
-        mListeners.removeAll(l);
-        delete l;
-    }
+    qDeleteAll(mListeners.begin(), mListeners.end());
+    mListeners.clear();
 
-    for (Search *s : mSearches) {
-        mSearches.removeAll(s);
-        delete s;
-    }
+    qDeleteAll(mSearches.begin(), mSearches.end());
+    mSearches.clear();
 
     mRunning = false;
 }

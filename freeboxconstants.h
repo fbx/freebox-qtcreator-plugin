@@ -3,6 +3,8 @@
 namespace Freebox {
 namespace Constants {
 
+const char FREEBOX_KIT_ID[] = "Freebox Kit";
+
 const char FREEBOX_DEVICE_ID[] = "Freebox Device";
 const char FREEBOX_DEVICE_TYPE[] = "Freebox";
 const char FREEBOX_DEVICE_NT[] = "fbx:devel";

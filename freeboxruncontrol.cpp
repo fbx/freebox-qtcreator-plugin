@@ -40,14 +40,9 @@ RunControl::RunControl(ProjectExplorer::RunControl *runControl)
             ProjectExplorer::DeviceKitAspect::device(kit);
     FreeboxDevice::ConstPtr fbxDevice = device.dynamicCast<const FreeboxDevice>();
 
-    qDebug() << "DEVICE " << device->id() << device->displayName();
-
     if (fbxDevice) {
         m_address = fbxDevice->address();
         m_qmlRemote.setAddress(m_address);
-        qDebug() << "address set to" << m_address;
-    } else {
-        qDebug() << "not a freebox device ?!";
     }
 
     if (project)
@@ -72,8 +67,10 @@ void RunControl::start()
             ProjectExplorer::DeviceKitAspect::device(kit);
     FreeboxDevice::ConstPtr fbxDevice = device.dynamicCast<const FreeboxDevice>();
 
-    m_server.listen();
-    m_qmlRemote.start("classic", m_server.serverPort(), m_debug);
+    m_server.listen(QHostAddress::Any, 8234);
+
+    // FIXME: use entry points populated from manifest
+    m_qmlRemote.start("main", m_server.serverPort(), m_debug);
 
     reportStarted();
 }

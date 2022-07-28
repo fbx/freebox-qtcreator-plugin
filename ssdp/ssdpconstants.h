@@ -19,8 +19,6 @@
 */
 #pragma once
 
-#include <stdint.h>
-
 namespace Freebox {
 namespace Ssdp {
 namespace Constants {

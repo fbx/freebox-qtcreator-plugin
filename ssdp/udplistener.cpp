@@ -42,7 +42,12 @@ UdpListener::UdpListener(const QNetworkInterface &iface,
     }
 }
 
-UdpListener::~UdpListener() = default;
+UdpListener::~UdpListener()
+{
+    disconnect(this, &UdpSocket::stateChanged,
+               this, &UdpListener::join);
+
+}
 
 void UdpListener::join(QAbstractSocket::SocketState state)
 {

@@ -9,6 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(QtCreator REQUIRED COMPONENTS Core)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
@@ -18,6 +19,7 @@ add_qtc_plugin(Freebox
   PLUGIN_DEPENDS
     QtCreator::Core
     QtCreator::ProjectExplorer
+    QtCreator::QmlProjectManager
     QtCreator::QtSupport
   DEPENDS
     ${QtX}::Widgets
@@ -37,6 +39,8 @@ add_qtc_plugin(Freebox
     freeboxdevice.h
     freeboxqmltoolingsupport.cpp
     freeboxqmltoolingsupport.h
+    freeboxrunconfiguration.cpp
+    freeboxrunconfiguration.h
     freeboxruncontrol.cpp
     freeboxruncontrol.h
     freeboxsignaloperation.cpp

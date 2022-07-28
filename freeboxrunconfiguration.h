@@ -15,40 +15,19 @@
   License along with this library; if not see
   http://www.gnu.org/licenses/lgpl-2.1.html.
 
-  Copyright (c) 2014, Freebox SAS, See AUTHORS for details.
+  Copyright (c) 2022, Freebox SAS, See AUTHORS for details.
 */
+#pragma once
 
-#include "udpsocket.h"
-
-#include <QNetworkProxy>
+#include <projectexplorer/runconfiguration.h>
 
 namespace Freebox {
-namespace Ssdp {
 
-UdpSocket::UdpSocket(QObject *parent) :
-    QUdpSocket(parent)
+class FreeboxRunConfiguration : public ProjectExplorer::RunConfiguration
 {
-    setProxy(QNetworkProxy::NoProxy);
-    connect(this, &QUdpSocket::readyRead,
-            this, &UdpSocket::datagramRead);
-}
+    Q_OBJECT
+public:
+    explicit FreeboxRunConfiguration(ProjectExplorer::Target *target, Utils::Id id);
+};
 
-UdpSocket::~UdpSocket()
-{
-}
-
-void UdpSocket::datagramRead()
-{
-    while (hasPendingDatagrams()) {
-        QByteArray data;
-        QHostAddress from;
-
-        data.resize(pendingDatagramSize());
-        readDatagram(data.data(), data.size(), &from);
-
-        emit datagramReceived(from, data);
-    }
-}
-
-} // namespace Ssdp
 } // namespace Freebox

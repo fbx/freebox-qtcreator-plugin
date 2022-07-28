@@ -20,9 +20,6 @@ public:
     bool initialize(const QStringList &arguments, QString *errorString) override;
     void extensionsInitialized() override;
     ShutdownFlag aboutToShutdown() override;
-
-private:
-    void triggerAction();
 };
 
 } // namespace Internal

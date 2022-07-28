@@ -49,7 +49,7 @@ Message::Message(const char *data) :
     else
         qWarning("Unknown SSDP message %s", mTypeString.toLocal8Bit().constData());
 
-    for (QString &f : fields) {
+    for (const QString &f : fields) {
         if (field.indexIn(f) < 0) {
             qWarning("Invalid field %s", f.toLocal8Bit().constData());
         } else {

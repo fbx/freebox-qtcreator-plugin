@@ -24,6 +24,8 @@
 #include "ssdp/ssdpclient.h"
 #include "ssdp/ssdpmessage.h"
 
+#include <debugger/debuggerkitinformation.h>
+
 #include <projectexplorer/devicesupport/idevice.h>
 #include <projectexplorer/devicesupport/devicemanager.h>
 #include <projectexplorer/kitmanager.h>
@@ -48,54 +50,49 @@ FreeboxConfiguration::FreeboxConfiguration(QObject *parent) :
 
 void FreeboxConfiguration::updateKits()
 {
-    qWarning() << "updateKits";
-
-    QSet<QString> ids = mFreebox;
+    Kit *existingKit = nullptr;
 
     for (Kit *kit : KitManager::kits()) {
-        if (DeviceTypeKitAspect::deviceTypeId(kit) != Constants::FREEBOX_DEVICE_TYPE)
-            continue;
-
-        IDevice::ConstPtr device = DeviceKitAspect::device(kit);
-        if (!device) {
-            KitManager::deregisterKit(kit);
-            continue;
+        if (DeviceTypeKitAspect::deviceTypeId(kit) == Constants::FREEBOX_DEVICE_TYPE) {
+            if (kit->id() == Constants::FREEBOX_KIT_ID)
+                existingKit = kit;
+            else
+                KitManager::deregisterKit(kit);
         }
-
-        if (ids.contains(device->id().toString()))
-            ids.remove(device->id().toString());
-        else
-            KitManager::deregisterKit(kit);
     }
 
-    for (const QString &usn : ids) {
-        Utils::Id deviceId = Utils::Id::fromString(usn);
+    const auto initializeKit = [](Kit *k) {
+        k->setAutoDetected(true);
+        k->setAutoDetectionSource("FreeboxConfiguration");
+        k->setUnexpandedDisplayName("Freebox");
+        k->setMutable(DeviceKitAspect::id(), true);
+        k->setSticky(DeviceTypeKitAspect::id(), true);
+        k->setIrrelevantAspects({
+            QtSupport::QtKitAspect::id(),
+            ToolChainKitAspect::id(),
+            SysRootKitAspect::id(),
+            EnvironmentKitAspect::id(),
+            BuildDeviceKitAspect::id(),
+            "Debugger.Information",
+            "CMakeProjectManager.CMakeKitInformation",
+            "CMake.ConfigurationKitInformation",
+            "CMake.GeneratorKitInformation",
+            "MesonProjectManager.MesonKitInformation.Meson",
+            "Qbs.KitInformation",
+            "QtPM4.mkSpecInformation",
+        });
+        DeviceTypeKitAspect::setDeviceTypeId(k, Constants::FREEBOX_DEVICE_TYPE);
+    };
 
-        IDevice::ConstPtr device = DeviceManager::instance()->find(deviceId);
-        QTC_ASSERT(device, continue);
-
-        FreeboxDevice::ConstPtr freebox =
-                device.dynamicCast<const FreeboxDevice>();
-        QTC_ASSERT(freebox, continue);
-
-        const auto initializeKit = [deviceId, freebox](Kit *k) {
-            k->setAutoDetected(true);
-            k->setAutoDetectionSource("FreeboxConfiguration");
-            k->setUnexpandedDisplayName(tr("Freebox (%1)")
-                                            .arg(freebox->address().toString()));
-            QtSupport::QtKitAspect::setQtVersion(k, 0);
-            DeviceTypeKitAspect::setDeviceTypeId(k, Constants::FREEBOX_DEVICE_TYPE);
-            DeviceKitAspect::setDeviceId(k, deviceId);
-        };
-        KitManager::registerKit(initializeKit);
-    }
+    if (!existingKit)
+        KitManager::registerKit(initializeKit, Constants::FREEBOX_KIT_ID);
+    else
+        initializeKit(existingKit);
 }
 
 void FreeboxConfiguration::updateDevices()
 {
-    qWarning("UPDATE DEVICES");
-
-    // Remove any dummy Android device, because it won't be usable.
+    // Remove any dummy Freebox device, because it won't be usable.
     DeviceManager *const devMgr = DeviceManager::instance();
     IDevice::ConstPtr dev = devMgr->find(Constants::FREEBOX_DEVICE_ID);
     if (dev)
@@ -118,8 +115,6 @@ void FreeboxConfiguration::freeboxAdd(const QHostAddress &addr,
     device->setDeviceState(IDevice::DeviceReadyToUse);
     mFreebox.insert(usn);
     DeviceManager::instance()->addDevice(IDevice::Ptr(device));
-
-    updateKits();
 }
 
 void FreeboxConfiguration::freeboxDel(const QString &usn)
@@ -131,8 +126,6 @@ void FreeboxConfiguration::freeboxDel(const QString &usn)
 
     mFreebox.remove(usn);
     DeviceManager::instance()->removeDevice(Utils::Id::fromString(usn));
-
-    updateKits();
 }
 
 void FreeboxConfiguration::filterMessage(const QHostAddress &addr,
