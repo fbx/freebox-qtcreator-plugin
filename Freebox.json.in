@@ -1,11 +1,29 @@
 {
-    \"Name\" : \"Freebox\",
-    \"Version\" : \"0.0.1\",
-    \"CompatVersion\" : \"0.0.1\",
-    \"Vendor\" : \"Freebox\",
-    \"Copyright\" : \"(C) Freebox\",
-    \"License\" : \"MIT\",
-    \"Description\" : \"Launch QtQuick app on your Freebox devices\",
-    \"Url\" : \"https://dev.freebox.fr\",
-    $$dependencyList
+    "Id" : "freebox",
+    "DisplayName" : "Freebox",
+    "Name" : "Freebox",
+    "Version" : "1.0.0",
+    "CompatVersion" : "1.0.0",
+    "Vendor" : "Freebox",
+    "VendorId" : "freebox",
+    "Copyright" : "(c) Freebox",
+    "License" : "MIT",
+    "Category" : "Device Support",
+    "Description" : "Launch QML app on your Freebox devices",
+    "Url" : "https://dev.freebox.fr",
+    "DocumentationUrl" : "https://dev.freebox.fr/sdk/player.html",
+    ${IDE_PLUGIN_DEPENDENCIES},
+
+    "JsonWizardPaths" : [":/freebox/wizards/"],
+
+    "Mimetypes" : [
+        "<?xml version='1.0' encoding='UTF-8'?>",
+        "<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>",
+        "  <mime-type type='application/vnd.fbx-qmlproject'>",
+        "    <sub-class-of type='application/x-qmlproject'/>",
+        "    <comment>Freebox QML Project file</comment>",
+        "    <glob pattern='*.fbxproject'/>",
+        "  </mime-type>",
+        "</mime-info>"
+    ]
 }

@@ -1,0 +1,130 @@
+name: Build Qt Creator Plugin
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+
+env:
+  QT_VERSION: '6.10.0'
+  QTC_VERSION: '18.0.0'
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "Ubuntu Latest GCC"
+            os: ubuntu-latest
+            platform: "linux_x64"
+            cmake_generator: "Unix Makefiles"
+          - name: "Windows Latest MSVC"
+            os: windows-latest
+            platform: "windows_x64"
+            cmake_generator: "Visual Studio 17 2022"
+          - name: "macOS Latest Clang"
+            os: macos-latest
+            platform: "mac_x64"
+            cmake_generator: "Unix Makefiles"
+
+    steps:
+      - name: Checkout Plugin Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Linux Dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake \
+            libssl-dev libsecret-1-dev libcups2-dev \
+            libgl1-mesa-dev libvulkan-dev \
+            libxcb-xinput-dev libxcb-xinerama0-dev libxkbcommon-dev libxkbcommon-x11-dev \
+            libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xkb1 libxcb-randr0 libxcb-icccm4
+
+      - name: Install Qt SDK
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          tools: ''
+          modules: 'qt5compat qtshadertools qtimageformats'
+          set-env: true
+          cache: true
+          dir: '${{ github.workspace }}/qt_install'
+          # prerelease: true
+
+      - name: Install Qt Creator Dev
+        id: qtc_dev
+        uses: qt-creator/install-dev-package@v2.1
+        with:
+          version: ${{ env.QTC_VERSION }}
+          platform: ${{ matrix.platform }}
+          unzip-to: 'qtcreator_dev'
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          SEARCH_ROOT="${{ github.workspace }}/qtcreator_dev"
+
+          CONFIG_FILE=$(find "$SEARCH_ROOT" -name "QtCreatorConfig.cmake" -print -quit)
+
+          if [ -z "$CONFIG_FILE" ]; then
+             echo "FATAL: QtCreatorConfig.cmake cannot be found !"
+             ls -R "$SEARCH_ROOT" | head -n 50
+             exit 1
+          fi
+
+          QTC_CONFIG_DIR=$(dirname "$CONFIG_FILE")
+          QTC_ROOT_PATH="${CONFIG_FILE%%/lib/cmake/*}"
+          QTC_ROOT_PATH="${QTC_ROOT_PATH%%/share/cmake/*}"
+
+          echo "Config Dir (QtCreator_DIR) : $QTC_CONFIG_DIR"
+          echo "Root (QTC_BUILD_PATH)    : $QTC_ROOT_PATH"
+
+          EXTRA_ARGS=""
+          if [ "${{ runner.os }}" == "Windows" ]; then
+             QT_ARCH="win64_msvc2022_64"
+          elif [ "${{ runner.os }}" == "macOS" ]; then
+             QT_ARCH="macos"
+             export CMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+          else
+             QT_ARCH="gcc_64"
+          fi
+
+          QT_SDK_PATH="${{ github.workspace }}/qt_install/Qt/${{ env.QT_VERSION }}/$QT_ARCH"
+          echo "Qt SDK Path: $QT_SDK_PATH"
+
+          cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DQtCreator_DIR="$QTC_CONFIG_DIR" \
+            -DQTC_BUILD_PATH="$QTC_ROOT_PATH" \
+            -DCMAKE_PREFIX_PATH="$QT_SDK_PATH" \
+            $EXTRA_ARGS
+
+
+      - name: Build
+        shell: bash
+        run: cmake --build build --config Release
+
+      - name: Prepare Artifacts
+        shell: bash
+        run: |
+          mkdir -p dist
+
+          find build -type f \( -name "libFreebox.so" -o -name "Freebox.dll" -o -name "libFreebox.dylib" -o -name "Freebox.json" \) -exec cp -v {} dist/ \;
+
+          if [ -z "$(ls -A dist)" ]; then
+             echo "FATAL: No plugin found !"
+             exit 1
+          fi
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FreeboxPlugin-${{ matrix.os }}
+          path: dist/*

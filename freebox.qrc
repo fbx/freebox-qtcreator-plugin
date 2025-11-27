@@ -4,5 +4,14 @@
         <file>images/qmlproject.png</file>
         <file>images/tvdevice.png</file>
         <file>images/tvdevicesmall.png</file>
+        <file>wizards/minimalqmlproject/wizard.json</file>
+        <file>wizards/icon.png</file>
+        <file>wizards/icon@2x.png</file>
+        <file>wizards/minimalqmlproject/qml_wizard.png</file>
+        <file>wizards/minimalqmlproject/manifest.json</file>
+        <file>wizards/minimalqmlproject/app.qmlproject</file>
+        <file>wizards/minimalqmlproject/Main.qml.tpl</file>
+        <file>wizards/git.ignore</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

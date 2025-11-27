@@ -1,0 +1,11 @@
+{
+    "name": "%{AppName}",
+    "identifier": "%{AppIdentifier}",
+    "description": "%{AppDescription}",
+    "entryPoints": {
+        "main": {
+            "file": "%{MainQmlFileName}",
+            "default": true
+        }
+    }
+}
